@@ -8,5 +8,7 @@ Simulateur d'évolution intégralement en Python.
 ** Visuel
 
 ** Logique
+
     0 Map + Bob
+    
     1 Nourriture
