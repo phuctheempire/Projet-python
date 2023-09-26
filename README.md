@@ -9,4 +9,6 @@ Simulateur d'évolution intégralement en Python.
 
 ** Logique
 
-  1 Nourriture
+    0 Map + Bob
+    
+    1 Nourriture
