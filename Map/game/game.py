@@ -42,40 +42,16 @@ class Game:
         self.camera.update()
         
     def draw(self):
-        self.screen.fill( (137, 207, 240)) #fill the screen with a color
-        
-        self.screen.blit(self.world.grass_tiles , (self.camera.scroll.x, self.camera.scroll.y)) #pg.surface to be self.world.grass_tiles, coordinates to be the movement of the camera
+        self.screen.fill((137, 207, 240))
+        self.world.draw(self.screen, self.camera)
 
-        for x in range(self.world.grid_length_x): # 10
-            for y in range(self.world.grid_length_y): # 10
-
-                # sq = self.world.world[x][y]["cart_rect"]
-                # rect = pg.Rect(sq[0][0], sq[0][1], TILE_SIZE, TILE_SIZE)
-                # pg.draw.rect(self.screen, (0, 0, 255), rect, 1)
-
-                render_pos =  self.world.world[x][y]["render_pos"]
-                #self.screen.blit(self.world.tiles["block"], (render_pos[0] + self.width/2, render_pos[1] + self.height/4))
-                # the render position of the coordinate x, y of the world ( world is a dictionary)
-
-
-                tile = self.world.world[x][y]["tile"]
-                # call for random tile 
-                if tile != "":
-                    self.screen.blit(self.world.tiles[tile], # in the class World: self.tiles = self.load_images()
-                                    (render_pos[0] + self.world.grass_tiles.get_width()/2 + self.camera.scroll.x,
-                                     render_pos[1]  - (self.world.tiles[tile].get_height() - TILE_SIZE) + self.camera.scroll.y))
-                    # draw the trees and the rocks following the camera movement and in the range of the map 
-
-                # p = self.world.world[x][y]["iso_poly"]
-                # p = [(x + self.width/2, y + self.height/4) for x, y in p]
-                # pg.draw.polygon(self.screen, (255, 0, 0), p, 1)
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),
             25,
-            (0, 0, 0),
+            (255, 255, 255),
             (10, 10)
-        )            
+        )  
 
         pg.display.flip()
 
