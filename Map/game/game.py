@@ -4,6 +4,7 @@ from .world import World
 from .settings import TILE_SIZE
 from .utils import draw_text
 from .camera import Camera
+from .bob import Bob
 
 class Game:
 
@@ -13,7 +14,9 @@ class Game:
         self.width, self.height = self.screen.get_size()
 
         # Initialize the world
-        self.world = World(50, 50, self.width, self.height) 
+        self.world = World(20, 20, self.width, self.height) 
+        #for _ in range(10): 
+        Bob(self.world.world[5][5], self.world)
         
         # Initialize the camera
         self.camera = Camera(self.width, self.height)

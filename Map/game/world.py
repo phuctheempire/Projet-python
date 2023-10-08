@@ -12,7 +12,7 @@ class World:
         self.grid_length_y = grid_length_y
         self.width = width
         self.height = height
-
+        self.bob = [[None for x in range(self.grid_length_x)] for y in range(self.grid_length_y)]
         self.grass_tiles = pg.Surface((grid_length_x* TILE_SIZE * 2, grid_length_y * TILE_SIZE + 2 * TILE_SIZE)) #create a surface with the render area of the grids
         self.tiles = self.load_images() #dictionary of images
         self.world = self.create_world() #world to be a double list
@@ -35,31 +35,34 @@ class World:
         return world
     def draw(self, screen, camera):
         screen.blit(self.grass_tiles, (camera.scroll.x, camera.scroll.y))
-        for x in range(self.world.grid_length_x): # 10
-            for y in range(self.world.grid_length_y): # 10
+        for x in range(self.grid_length_x): # 10
+            for y in range(self.grid_length_y): # 10
 
                 # sq = self.world.world[x][y]["cart_rect"]
                 # rect = pg.Rect(sq[0][0], sq[0][1], TILE_SIZE, TILE_SIZE)
                 # pg.draw.rect(self.screen, (0, 0, 255), rect, 1)
 
-                render_pos =  self.world.world[x][y]["render_pos"]
+                render_pos =  self.world[x][y]["render_pos"]
                 #self.screen.blit(self.world.tiles["block"], (render_pos[0] + self.width/2, render_pos[1] + self.height/4))
                 # the render position of the coordinate x, y of the world ( world is a dictionary)
 
 
-                tile = self.world.world[x][y]["tile"]
+                tile = self.world[x][y]["tile"]
                 # call for random tile 
                 if tile != "":
-                    self.screen.blit(self.world.tiles[tile], # in the class World: self.tiles = self.load_images()
-                                    (render_pos[0] + self.world.grass_tiles.get_width()/2 + self.camera.scroll.x,
-                                     render_pos[1]  - (self.world.tiles[tile].get_height() - TILE_SIZE) + self.camera.scroll.y))
+                    screen.blit(self.tiles[tile], # in the class World: self.tiles = self.load_images()
+                                    (render_pos[0] + self.grass_tiles.get_width()/2 + camera.scroll.x,
+                                     render_pos[1]  - (self.tiles[tile].get_height() - TILE_SIZE) + camera.scroll.y))
                     # draw the trees and the rocks following the camera movement and in the range of the map 
 
                 # p = self.world.world[x][y]["iso_poly"]
                 # p = [(x + self.width/2, y + self.height/4) for x, y in p]
                 # pg.draw.polygon(self.screen, (255, 0, 0), p, 1)
-
-
+                bob = self.bob[x][y]
+                if bob is not None:
+                    screen.blit(bob.image,
+                                    (render_pos[0] + self.grass_tiles.get_width()/2 + camera.scroll.x,
+                                     render_pos[1] - (bob.image.get_height() - TILE_SIZE) + camera.scroll.y))
     def grid_to_world(self, grid_x, grid_y):
 
         rect = [
@@ -108,9 +111,9 @@ class World:
 
     def load_images(self):
 
-        block = pg.image.load("Map/assets/graphics/block.png")
-        tree = pg.image.load("Map/assets/graphics/tree.png")
-        rock = pg.image.load("Map/assets/graphics/rock.png")
+        block = pg.image.load("Map/assets/graphics/grass.png").convert_alpha()
+        tree = pg.image.load("Map/assets/graphics/tree.png").convert_alpha()
+        rock = pg.image.load("Map/assets/graphics/rock.png").convert_alpha()
 
         return {"block": block, "tree": tree, "rock": rock}
 
