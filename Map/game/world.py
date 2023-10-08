@@ -111,7 +111,7 @@ class World:
 
     def load_images(self):
 
-        block = pg.image.load("Map/assets/graphics/grass.png").convert_alpha()
+        block = pg.image.load("Map/assets/graphics/ABC.png").convert_alpha()
         tree = pg.image.load("Map/assets/graphics/tree.png").convert_alpha()
         rock = pg.image.load("Map/assets/graphics/rock.png").convert_alpha()
 
