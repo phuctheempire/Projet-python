@@ -29,9 +29,13 @@ class World:
                 world[grid_x].append(world_tile) #append the dictionary to the list
 
                 render_pos = world_tile["render_pos"]  #get the render position of the tile
-                self.grass_tiles.blit(self.tiles["block"] , (render_pos[0] + self.grass_tiles.get_width()/2, render_pos[1] )) #blit(surface, coordinates) to draw the surface with the block image
+                r = random.randint(1, 100)
+                if r > 10:
+                    self.grass_tiles.blit(self.tiles["block"] , (render_pos[0] + self.grass_tiles.get_width()/2, render_pos[1] )) #blit(surface, coordinates) to draw the surface with the block image
                 #draw the surface with the block image+
-
+                else:
+                    self.grass_tiles.blit(self.tiles["flower"] , (render_pos[0] + self.grass_tiles.get_width()/2, render_pos[1] ))
+                    
         return world
     def draw(self, screen, camera):
         screen.blit(self.grass_tiles, (camera.scroll.x, camera.scroll.y))
@@ -111,10 +115,11 @@ class World:
 
     def load_images(self):
 
-        block = pg.image.load("Map/assets/graphics/ABC.png").convert_alpha()
+        block = pg.image.load("Map/assets/graphics/grass1.png").convert_alpha()
         tree = pg.image.load("Map/assets/graphics/tree.png").convert_alpha()
         rock = pg.image.load("Map/assets/graphics/rock.png").convert_alpha()
+        flower = pg.image.load("Map/assets/graphics/ABC (1).png").convert_alpha()
 
-        return {"block": block, "tree": tree, "rock": rock}
+        return {"block": block, "tree": tree, "rock": rock, "flower": flower}
 
 
