@@ -30,7 +30,7 @@ class World:
 
                 render_pos = world_tile["render_pos"]  #get the render position of the tile
                 r = random.randint(1, 100)
-                if r > 10:
+                if r > 40:
                     self.grass_tiles.blit(self.tiles["block"] , (render_pos[0] + self.grass_tiles.get_width()/2, render_pos[1] )) #blit(surface, coordinates) to draw the surface with the block image
                 #draw the surface with the block image+
                 else:
@@ -115,10 +115,10 @@ class World:
 
     def load_images(self):
 
-        block = pg.image.load("Map/assets/graphics/grass1.png").convert_alpha()
+        block = pg.image.load("Map/assets/graphics/grass.png").convert_alpha()
         tree = pg.image.load("Map/assets/graphics/tree.png").convert_alpha()
         rock = pg.image.load("Map/assets/graphics/rock.png").convert_alpha()
-        flower = pg.image.load("Map/assets/graphics/ABC (1).png").convert_alpha()
+        flower = pg.image.load("Map/assets/graphics/flower.png").convert_alpha()
 
         return {"block": block, "tree": tree, "rock": rock, "flower": flower}
 
