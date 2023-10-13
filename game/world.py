@@ -115,10 +115,10 @@ class World:
 
     def load_images(self):
 
-        block = pg.image.load("Map/assets/graphics/grass.png").convert_alpha()
-        tree = pg.image.load("Map/assets/graphics/tree.png").convert_alpha()
-        rock = pg.image.load("Map/assets/graphics/rock.png").convert_alpha()
-        flower = pg.image.load("Map/assets/graphics/flower.png").convert_alpha()
+        block = pg.image.load("assets/graphics/grass.png").convert_alpha()
+        tree = pg.image.load("assets/graphics/tree.png").convert_alpha()
+        rock = pg.image.load("assets/graphics/rock.png").convert_alpha()
+        flower = pg.image.load("assets/graphics/flower.png").convert_alpha()
 
         return {"block": block, "tree": tree, "rock": rock, "flower": flower}
 
