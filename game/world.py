@@ -13,6 +13,7 @@ class World:
         self.width = width
         self.height = height
         self.bob = [[None for x in range(self.grid_length_x)] for y in range(self.grid_length_y)]
+        #TODO générer des Bobs
         self.grass_tiles = pg.Surface((grid_length_x* TILE_SIZE * 2, grid_length_y * TILE_SIZE + 2 * TILE_SIZE)) #create a surface with the render area of the grids
         self.tiles = self.load_images() #dictionary of images
         self.world = self.create_world() #world to be a double list
