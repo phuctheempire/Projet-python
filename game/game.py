@@ -5,6 +5,7 @@ from .settings import TILE_SIZE
 from .utils import draw_text
 from .camera import Camera
 from .bob import Bob
+import random
 
 class Game:
 
@@ -15,8 +16,17 @@ class Game:
 
         # Initialize the world
         self.world = World(20, 20, self.width, self.height) 
-        #for _ in range(10): 
-        Bob(self.world.world[5][5], self.world)
+
+        # Put the bobs in the world
+        check = []
+        for _ in range(10):
+            r = random.randint(0, 19)
+            h = random.randint(0, 19)
+            while (r, h) in check:
+                r = random.randint(0, 19)
+                h = random.randint(0, 19)
+            check.append((r, h))
+            Bob(self.world.world[r][h], self.world)
         
         # Initialize the camera
         self.camera = Camera(self.width, self.height)
@@ -47,6 +57,8 @@ class Game:
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
+
+        # self.world = World(20, 20, self.width, self.height) 
 
         draw_text(
             self.screen,
