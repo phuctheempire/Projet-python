@@ -13,7 +13,7 @@ class Bob:
         # self.world.world[5][5] is a dictionary >> self.tile is a dictionary
         #
         image = pg.image.load("assets/graphics/bob.png").convert_alpha()
-        self.image = pg.transform.scale(image, (image.get_width()*2, image.get_height()*2))
+        self.image = pg.transform.scale(image, (image.get_width()*1, image.get_height()*1))
         self.name = "bob"
         self.world.bob[tile["grid"][0]][tile["grid"][1]] = self # assign bob to the attribute bob in the world class
         # self.world.bob is a double list of dictionaries of NONE (innitially)

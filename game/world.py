@@ -120,10 +120,12 @@ class World:
     def load_images(self):
 
         block = pg.image.load("assets/graphics/grass.png").convert_alpha()
-        tree = pg.image.load("assets/graphics/tree.png").convert_alpha()
-        rock = pg.image.load("assets/graphics/rock.png").convert_alpha()
+        # tree = pg.image.load("assets/graphics/tree.png").convert_alpha()
+        # rock = pg.image.load("assets/graphics/rock.png").convert_alpha()
         flower = pg.image.load("assets/graphics/flower.png").convert_alpha()
-
-        return {"block": block, "tree": tree, "rock": rock, "flower": flower}
+        block = pg.transform.scale(block, (block.get_width()*0.5, block.get_height()*0.5))
+        flower = pg.transform.scale(flower, (flower.get_width()*0.5, flower.get_height()*0.5))
+        # return {"block": block, "tree": tree, "rock": rock, "flower": flower}
+        return {"block": block,  "flower": flower}
 
 
