@@ -57,7 +57,7 @@ class Game:
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
-
+        
         # self.world = World(20, 20, self.width, self.height) 
 
         draw_text(
