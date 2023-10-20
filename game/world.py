@@ -41,6 +41,7 @@ class World:
     
     def draw(self, screen, camera):
         screen.blit(self.grass_tiles, (camera.scroll.x, camera.scroll.y))
+        # pg.display.flip()  
         for x in range(self.grid_length_x): # 10
             for y in range(self.grid_length_y): # 10
 
@@ -68,7 +69,7 @@ class World:
                 if bob is not None:
                     screen.blit(bob.image,
                                     (render_pos[0] + self.grass_tiles.get_width()/2 + camera.scroll.x,
-                                     render_pos[1] - (bob.image.get_height() - TILE_SIZE) + camera.scroll.y))
+                                     render_pos[1] - (bob.image.get_height() - TILE_SIZE ) + camera.scroll.y))
     
     def grid_to_world(self, grid_x, grid_y):
 

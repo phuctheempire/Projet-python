@@ -1,1 +1,1 @@
-sform.scale(flower, (flower.get_width()*0.5, flower.get_height()*0.5))
+pg.display.flip()
