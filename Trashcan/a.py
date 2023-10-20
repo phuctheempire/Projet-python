@@ -26,7 +26,7 @@ class Player:
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
-        self.speed = 4
+        self.speed = 1
     
     def draw(self, win):
         pygame.draw.rect(win, self.color, self.rect)

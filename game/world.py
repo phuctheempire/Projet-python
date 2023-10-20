@@ -1,7 +1,9 @@
 
 import pygame as pg
+# from .bob import CardiB
 import random
 from .settings import TILE_SIZE
+
 
 
 
@@ -128,5 +130,35 @@ class World:
         flower = pg.transform.scale(flower, (flower.get_width()*0.5, flower.get_height()*0.5))
         # return {"block": block, "tree": tree, "rock": rock, "flower": flower}
         return {"block": block,  "flower": flower}
+    
+    def updateBob1( self, vectX, vectY, coordX, coordY  ):
+        # locator = []
+        # if ( dir )
+        # for x in range( self.grid_length_x ):
+        #     for y in range ( self.grid_length_y ):
+        #         if (self.bob[x][y] is not None) and ( x + a ) < self.grid_length_x and ( y + b ) < self.grid_length_y:
+        #             locator.append( ( x, y ) )
+        #         else :
+        #             pass
+        # for (x , y) in locator:
+        if ( 0 <=  coordX + vectX < self.grid_length_x ) and ( 0 <= coordY + vectY < self.grid_length_y ):
+            self.bob[coordX + vectX][coordY + vectY] = self.bob[coordX][coordY]
+            self.bob[coordX][coordY] = None
+
+    def updateGraphicBob( self, vectX, vectY ):
+        locator = []
+        for x in range( self.grid_length_x ):
+            for y in range ( self.grid_length_y ):
+                if (self.bob[x][y] is not None) and 0 <= ( x + vectX ) < self.grid_length_x and 0 <= ( y +vectY ) < self.grid_length_y:
+                    locator.append( ( x, y ) )
+                else :
+                    pass
+        for (x , y) in locator:
+            self.bob[x + vectX][y + vectY] = self.bob[x][y]
+            self.bob[x][y] = None
+        
+
+
+        
 
 

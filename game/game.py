@@ -19,14 +19,15 @@ class Game:
 
         # Put the bobs in the world
         check = []
-        for _ in range(10):
-            r = random.randint(0, 19)
-            h = random.randint(0, 19)
-            while (r, h) in check:
-                r = random.randint(0, 19)
-                h = random.randint(0, 19)
-            check.append((r, h))
-            Bob(self.world.world[r][h], self.world)
+        # for _ in range(10):
+        #     r = random.randint(0, 19)
+        #     h = random.randint(0, 19)
+        #     while (r, h) in check:
+        #         r = random.randint(0, 19)
+        #         h = random.randint(0, 19)
+        #     check.append((r, h))
+        #     Bob(self.world.world[r][h], self.world)
+        Bob(self.world.world[5][5], self.world)
         
         # Initialize the camera
         self.camera = Camera(self.width, self.height)
@@ -36,6 +37,7 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
+            # self.clock.tick(60)
             self.clock.tick(60)
             self.events()
             self.update()
@@ -52,7 +54,18 @@ class Game:
                     sys.exit()
 
     def update(self):
+        r = random.randint(0, 3)
+        match r:
+            case 0:
+                self.world.updateGraphicBob(0,1);
+            case 1:
+                self.world.updateGraphicBob(1,0);
+            case 2:
+                self.world.updateGraphicBob(0,-1);
+            case 3:
+                self.world.updateGraphicBob(-1,0);
         self.camera.update()
+        
         
     def draw(self):
         self.screen.fill((137, 207, 240))
