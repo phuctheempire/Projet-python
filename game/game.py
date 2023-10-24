@@ -38,7 +38,7 @@ class Game:
         self.playing = True
         while self.playing:
             # self.clock.tick(60)
-            self.clock.tick(10)
+            self.clock.tick(144)
             self.events()
             self.update()
             self.draw()
