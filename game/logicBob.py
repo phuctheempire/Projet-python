@@ -9,7 +9,7 @@ class logicBob:
        
     def create_bob(self, max_energy):
             return {
-                "energy": random.randint(1, max_energy),
+                "energy":100,
                 "velocity": random.uniform(0.9, 1.1),
                 "mass": random.uniform(0.9, 1.1),
                 "perception": random.randint(0, 5),
@@ -17,14 +17,4 @@ class logicBob:
                 "x": random.randint(0, 100),
                 "y": random.randint(0, 100),
             }
-
-    def simulate(self, num_days):
-        for day in range(num_days):
-            if day % self.food_spawn_rate == 0:
-                food = self.spawn_food()
-                # Add food to the world
-
-                #for bob in self.population:
-                    # Implement Bob's behaviors here
-
-                # Remove uneaten food at the end of the day
+ 
