@@ -1,5 +1,6 @@
 # define visual Bob:
 import pygame as pg
+import random
 
 class Bob:
 
@@ -23,10 +24,3 @@ class Bob:
         # tiles["grid"][1] is y coordinate
         # self.world.bob[tile["grid"][0]][tile["grid"][1]] = self ( we assign a bob into this dictionary of none)
     #def color(self, image):
-        
-
-        
-
-    
-
-
