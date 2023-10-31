@@ -1,2 +1,8 @@
+t menu goes here
 
-    # implement menus
+        while playing:
+            # game loop here
+            game.run()
+
+if __name__ == "__main__":
+    main()

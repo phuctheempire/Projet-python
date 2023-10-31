@@ -1,1 +1,1 @@
-pg.display.flip()
+# pg.display.flip()

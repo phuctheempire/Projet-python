@@ -1,10 +1,10 @@
 import pygame as pg
 import sys
-from .world import World
-from .settings import TILE_SIZE
-from .utils import draw_text
-from .camera import Camera
-from .bob import Bob
+# from .world import World
+# from .settings import TILE_SIZE
+# from .utils import draw_text
+# from .camera import Camera
+# from .bob import Bob
 import random
 
 class Game:
