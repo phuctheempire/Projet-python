@@ -1,8 +1,8 @@
-t menu goes here
+# t menu goes here
 
-        while playing:
-            # game loop here
-            game.run()
+#         while playing:
+#             # game loop here
+#             game.run()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
