@@ -43,6 +43,15 @@ class View:
                     self.pgCell.blit(self.images["block"] , (render_position[0] + self.pgCell.get_width()/2, render_position[1] ))
                 else:
                     self.pgCell.blit(self.images["flower"] , (render_position[0] + self.pgCell.get_width()/2, render_position[1] ))
+
+    def drawBob(self, screen, camera):
+            for x in range(self.lengthX):
+                for y in range(self.lengthY):
+                    if (self.logicMap[x][y] != [] ) :
+                        render_position = self.GraphicMap[x][y]["render_pos"]
+                        screen.blit(self.images["bob"],(render_position[0] + self.pgCell.get_width()/2 + camera.scroll.x, render_position[1] - (self.images["bob"].get_height() - TILE_SIZE ) + camera.scroll.y))
+
+
                     
 
     def cart_to_iso(self, x, y):
@@ -76,6 +85,8 @@ class View:
 
         block = pg.image.load("assets/graphics/grass.png").convert_alpha()
         flower = pg.image.load("assets/graphics/flower.png").convert_alpha()
+        bob = pg.image.load("assets/graphics/bob.png").convert_alpha()
         block = pg.transform.scale(block, (block.get_width()*0.5, block.get_height()*0.5))
+        bob = pg.transform.scale(bob, (bob.get_width()*1, bob.get_height()*1))
         flower = pg.transform.scale(flower, (flower.get_width()*0.5, flower.get_height()*0.5))
-        return {"block": block,  "flower": flower}
+        return {"block": block,  "flower": flower, "bob": bob}

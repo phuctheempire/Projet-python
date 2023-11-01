@@ -45,6 +45,7 @@ class Game:
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.view.draw(self.screen, self.camera)
+        self.view.drawBob(self.screen,self.camera)
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),
