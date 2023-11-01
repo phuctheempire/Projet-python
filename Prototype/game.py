@@ -4,7 +4,7 @@ from view.view import View
 from view.settings import TILE_SIZE
 from view.utils import draw_text
 from view.camera import Camera
-# from .bob import Bob
+from Model.logicMap import logicMap
 import random
 
 class Game:
@@ -13,23 +13,9 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
-
-        # Initialize the world
-        self.view = View(20, 20, self.width, self.height) 
-
-        # Put the bobs in the world
-        # check = []
-        # # for _ in range(10):
-        # #     r = random.randint(0, 19)
-        # #     h = random.randint(0, 19)
-        # #     while (r, h) in check:
-        # #         r = random.randint(0, 19)
-        # #         h = random.randint(0, 19)
-        # #     check.append((r, h))
-        # #     Bob(self.world.world[r][h], self.world)
-        # Bob(self.world.world[5][5], self.world)
-        
-        # Initialize the camera
+        # self.view = View(20, 20, self.width, self.height) 
+        self.logicMap = logicMap(20, 20)
+        self.view = View(self.logicMap, self.width,self.height)
         self.camera = Camera(self.width, self.height)
         
         
@@ -37,7 +23,6 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            # self.clock.tick(60)
             self.clock.tick(60)
             self.events()
             self.update()
@@ -54,26 +39,12 @@ class Game:
                     sys.exit()
 
     def update(self):
-        # r = random.randint(0, 3)
-        # match r:
-        #     case 0:
-        #         self.world.updateGraphicBob(0,1);
-        #     case 1:
-        #         self.world.updateGraphicBob(1,0);
-        #     case 2:
-        #         self.world.updateGraphicBob(0,-1);
-        #     case 3:
-        #         self.world.updateGraphicBob(-1,0);
         self.camera.update()
         
         
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.view.draw(self.screen, self.camera)
-
-        
-        # self.world = World(20, 20, self.width, self.height) 
-
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),

@@ -2,15 +2,21 @@ import pygame as pg
 # from .bob import CardiB
 import random
 from .settings import TILE_SIZE
+from Model.logicMap import logicMap
+
 
 class View:
-    def __init__(self, lengthX, lengthY, width, height):
-        self.lengthX = lengthX
-        self.lengthY = lengthY
+    # def __init__(self, lengthX, lengthY, width, height):
+    def __init__(self, logicMap, width, height):
+        # self.lengthX = lengthX
+        # self.lengthY = lengthY
+        self.lengthX = logicMap.lengthX
+        self.lengthY = logicMap.lengthY
+        self.logicMap = logicMap.logicMap
         self.width = width
         self.height = height
-        self.map = self.createMap()
-        self.pgCell = pg.Surface((lengthX* TILE_SIZE * 2, lengthY * TILE_SIZE + 2 * TILE_SIZE))
+        self.GraphicMap = self.createMap()
+        self.pgCell = pg.Surface((self.lengthX* TILE_SIZE * 2, self.lengthY * TILE_SIZE + 2 * TILE_SIZE))
         self.images = self.load_images()
         self.drawMap()
         # pass
@@ -31,11 +37,10 @@ class View:
         self.pgCell.fill(( 137, 207, 240))
         for x in range(self.lengthX):
             for y in range(self.lengthY):
-                render_position = self.map[x][y]["render_pos"]
+                render_position = self.GraphicMap[x][y]["render_pos"]
                 r = random.randint(1, 100)
                 if r > 40:
-                    self.pgCell.blit(self.images["block"] , (render_position[0] + self.pgCell.get_width()/2, render_position[1] )) #blit(surface, coordinates) to draw the surface with the block image
-                #draw the surface with the block image+
+                    self.pgCell.blit(self.images["block"] , (render_position[0] + self.pgCell.get_width()/2, render_position[1] ))
                 else:
                     self.pgCell.blit(self.images["flower"] , (render_position[0] + self.pgCell.get_width()/2, render_position[1] ))
                     
