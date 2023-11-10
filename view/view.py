@@ -1,7 +1,7 @@
 import pygame as pg
 # from .bob import CardiB
 import random
-from .settings import TILE_SIZE
+from GameControl.settings import TILE_SIZE
 from Model.logicMap import logicMap
 
 

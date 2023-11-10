@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from view.view import View
-from view.settings import TILE_SIZE
+from .settings import TILE_SIZE
 from view.utils import draw_text
 from view.camera import Camera
 from Model.logicMap import logicMap
