@@ -14,7 +14,7 @@ class logicMap:
         for x in range(lengthX):
             logicMap.append([])
             for y in range(lengthY):
-                logicMap[x].append()
+                logicMap[x].append([])
         return logicMap
 
     def implementBob(self):

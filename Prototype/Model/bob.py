@@ -11,6 +11,6 @@ class Bob ( ):
     
     
         
-{ "1": bob; }
+# { "1": bob; }
 
-bob = Bob( 1, 1 )
+# bob = Bob( 1, 1 )
