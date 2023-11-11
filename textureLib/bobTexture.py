@@ -1,7 +1,7 @@
 from enum import Enum
 
 class BobTexture(Enum):
-    BOB__SmallLightSlow = 111
+    BOB_SmallLightSlow = 111
     BOB_SmallLightFast = 112
     BOB_SmallHeavySlow = 121
     BOB_SmallHeavyFast = 122
