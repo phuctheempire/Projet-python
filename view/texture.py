@@ -4,18 +4,32 @@ from enum import Enum
 
 from ..TextureLib.bobTexture import BobTexture
 from ..TextureLib.foodTexture import FoodTexture
-from ..TextureLib.orientTexture import OrientTexture
+from ..TextureLib.directionTexture import DirectionTexture
+from ..TextureLib.eatenTexture import EatenTexture
+from ..TextureLib.grassTexture import GrassTexture
 
 from GameControl.settings import IMAGE_PATH
 
 class Texture:
-    texture: dict[Enum, pg.Surface | dict[int, pg.Surface]] = {}
-    bob_texture: dict[BobTexture, dict[OrientTexture, dict[int, pg.Surface]]] = {}
-    eatenTexture: dict[pg.Surface] = {}
+    grass_texture: dict[GrassTexture, pg.Surface] = {}
+    bob_texture: dict[BobTexture, dict[DirectionTexture, dict[int, pg.Surface]]] = {}
+    food_texture: dict[FoodTexture, pg.Surface] = {}
+    eaten_texture: dict[EatenTexture, pg.Surface] = {}
+
 
     @staticmethod
     def getTexture( ID: any, Number: int = 0) -> pg.surface:
 
     @staticmethod
-    def getBobTexture( ID: BobTexture, orient: OrientTexture, frame: int = 0) -> pg.surface:
+    def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
 
+    @staticmethod
+    def getFoodTexture( ID: FoodTexture, Number: int = 0) -> pg.surface:
+    # @staticmethod
+    # def getEatenTexture( ID: EatenTexture, Number: int = 0 ) -> pg.surface:
+    
+    @staticmethod
+    def init(screen):
+        Texture.texture{
+            grassTexture.GRASS: pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
+        }
