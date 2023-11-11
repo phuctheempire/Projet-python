@@ -7,12 +7,13 @@ import pygame as pg
 
 from enum import Enum
 
-from ..TextureLib.bobTexture import BobTexture
-from ..TextureLib.foodTexture import FoodTexture
-from ..TextureLib.directionTexture import DirectionTexture
-from ..TextureLib.eatenTexture import EatenTexture
-from ..TextureLib.grassTexture import GrassTexture
-# Import libraries
+from ..TextureLibrary.bobTexture import BobTexture
+from ..TextureLibrary.foodTexture import FoodTexture
+from ..TextureLibrary.directionTexture import DirectionTexture
+from ..TextureLibrary.eatenTexture import EatenTexture
+from ..TextureLibrary.grassTexture import GrassTexture
+# Import Library
+#raries
 from GameControl.settings import IMAGE_PATH
 # import imgpath
 class Texture:
