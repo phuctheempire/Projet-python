@@ -32,7 +32,7 @@ class Texture:
     @staticmethod
     def getFoodTexture( ID: FoodTexture, Number: int = 0) -> pg.surface:
         pass
-
+    #Continuez ici
     # @staticmethod
     # def getEatenTexture( ID: EatenTexture, Number: int = 0 ) -> pg.surface:
 
@@ -49,3 +49,6 @@ class Texture:
         }
 
         # Gerer et implémenter Bobs et orientation ici 
+        #Continuer ici
+
+    
