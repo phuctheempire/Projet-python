@@ -4,7 +4,7 @@ from GameControl.game import Game
 
 from GameControl.settings import *
 
-class World:
+class Render:
     def __init__(self, width, height, ) -> None:
         # self.gameController = GameController.getInstance()
         self.width = width

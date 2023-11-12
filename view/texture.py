@@ -27,18 +27,22 @@ class Texture:
     @staticmethod
     def getTexture( ID: any, Number: int = 0) -> pg.surface:
         pass
+        # Il faut return la surface
     @staticmethod
     def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
         pass
+        # Il faut return la surface
     @staticmethod
     def getFoodTexture( ID: FoodTexture, Number: int = 0) -> pg.surface:
         pass
+        # Il faut return la surface
     #Continuez ici
     # @staticmethod
     # def getEatenTexture( ID: EatenTexture, Number: int = 0 ) -> pg.surface:
 
     @staticmethod
     def init(screen):
+        # See Texturelibrary for more info
         Texture.grass_texture = {
             GrassTexture.GRASS: pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
             GrassTexture.FLOWER: pg.image.load(IMAGE_PATH + "flower.png").convert_alpha(screen),
