@@ -51,6 +51,9 @@ class Tile:
         def removeBob(self, bob: 'Bob'):
             self.listBob.remove(bob)
         
+        // Need a function that return the list of tiles in a certain radius ( get vision tiles )
+
+        
 
 
 
