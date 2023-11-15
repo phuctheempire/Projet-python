@@ -53,6 +53,11 @@ class Tile:
         
         # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
 
+        def getNearbyBobs(self, radius) -> list['Bob']:
+            pass
+        
+        def getNearbyFood(self, radius) -> list['Food']:
+            pass 
         
 
 
