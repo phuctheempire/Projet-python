@@ -38,7 +38,8 @@ class Tile:
             return self.isoCoord
         def getGameCoord(self):
             return (self.gridX, self.gridY)
-        
+        def distanceofTile(tile1: 'Tile', tile2:'Tile'):
+            return abs(tile1.gridX - tile2.gridX) + abs(tile1.gridY - tile2.gridY)
 
 
         #Texture calling

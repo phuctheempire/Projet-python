@@ -18,7 +18,11 @@ class Bob:
         self.Nexttile = Optional[Tile]
         self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
         self.targetTile = Optional[Tile]
-
+        self.memory: 'int' = 0
+        self.memoryTile = Optional[Tile]
+        
+    def getCurrentTile(self) -> Tile:
+        return self.CurrentTile
     
     def getNearbyBobs(self) -> list['Bob']:
         NearTiles = self.CurrentTile.getNearbyTile(self.vision)
@@ -40,8 +44,50 @@ class Bob:
 
         return seenFood
     
-    def getTargetTile(self):
+    def ListPredator(self) -> list['Bob']:
+        listBobs = self.getNearbyBobs()
+        listPredator = []
+        for bob in listBobs:
+            if ( bob.mass > (3/2)*self.mass):
+                listPredator.append(bob)
+        if ( listPredator == []):
+            self.huntOrRun = 1
+        else:
+            self.huntOrRun = 0
+        return listPredator
+    
+    def NearestPredatorTarget(self) -> Tile:
+        listPredator = self.ListPredator()
+        if ( listPredator != []):
+            predator = listPredator[0]
+            for pred in listPredator:
+                if ( Tile.distanceofTile(self.CurrentTile, pred.CurrentTile) < Tile.distanceofTile(self.CurrentTile, predator.CurrentTile)):
+                    predator = pred
+            return predator.CurrentTile
+        else: pass
+
+    def scanForTarget(self) -> Tile:
+        listFood = self.getNearbyFood()
+        if ( listFood != []):
+            temp = listFood[0]
+            for food in listFood:
+                if ( food.energy > temp):
+                    temp = food
+            temp.getCurrentTile()
+        else:
+            listBobs = self.getNearbyBobs()
+            temp = listBobs[0]
+            for bob in listBobs:
+                if ( bob.mass < temp.mass):
+                    temp = bob
+            temp.getCurrentTile()
         
+            
+            
+        
+
+    def getNextTile(self):
+        # there are many logic here
         
 
         
