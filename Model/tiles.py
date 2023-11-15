@@ -53,7 +53,26 @@ class Tile:
         
         # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
 
+        def getNearbyTiles(self, radius) -> list['Tile']:
+            tempMap = GameController.getInstance().getMap();
+            tempCoord = []
+            if radius == 0:
+                tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+            else:
+                tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
+
+            for coord in tempCoord:
+                try:
+                    if self.x + coord[0] > GRID_LENGTH-1 or self.y + coord[1] > GRID_LENGTH-1 or self.x + coord[0] < 0 or self.y + coord[1] < 0:
+                        continue
+                    tempCoord.append(tempMap[self.x + coord[0]][self.y + coord[1]])
+                except IndexError:
+                    continue
+
+            return tempCoord    
+
         def getNearbyBobs(self, radius) -> list['Bob']:
+            
             pass
         
         def getNearbyFood(self, radius) -> list['Food']:

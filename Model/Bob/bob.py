@@ -10,7 +10,7 @@ class Bob:
         self.energy = 100
         self.mass: 'int' = 1
         self.memory = Optional[Tile]; 
-        self.vision = Optional[list[Tile]]
+        self.vision: 'int' = 0
         self.velocity = -1
         self.id
         self.CurrentTile = Optional[Tile]
@@ -21,7 +21,7 @@ class Bob:
 
     
     def getNearbyBobs(self) -> list['Bob']:
-        NearTiles = self.CurrentTile.getNearbyBobs(self.vision)
+        NearTiles = self.CurrentTile.getNearbyTile(self.vision)
         seenBobs = []
         for listBobs in NearTiles:
             if ( listBobs != []):
@@ -41,6 +41,7 @@ class Bob:
         return seenFood
     
     def getTargetTile(self):
+        
         
 
         
