@@ -6,8 +6,8 @@ if TYPE_CHECKING:
     # from Tiles.tiles import Tile
 
 
-class gameControl:
-    # instance = None
+class GameControl:
+    instance = None
     #initialisation of grids:
     def __init__(self):
         self.grid = list[list[Tile]]
@@ -22,7 +22,11 @@ class gameControl:
         self.grid = map
     def getMap(self):
         return self.grid
-    
+    @staticmethod
+    def get_instance():
+        if GameControl.instance is None:
+            GameControl.instance = GameControl()
+        return GameControl.instance
 
     # def update():
 
