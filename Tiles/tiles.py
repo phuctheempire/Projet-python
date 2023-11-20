@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import random
-from GameControl.gameControl import GameControl
+
 from view.texture import Texture
-# from TextureLib.grassTexture import GrassTexture
-# from TextureLib.foodTexture import FoodTexture
+from TextureLib.grassTexture import GrassTexture
+from TextureLib.foodTexture import FoodTexture
 from GameControl.settings import GRID_LENGTH, TILE_SIZE
 
 if TYPE_CHECKING:
@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from Tiles.Food.food import Food
 
 class Tile:
+    from GameControl.gameControl import GameControl
     def __init__(self, gridX: int, gridY: int ):
 
         self.grassImg = Texture.getGrassTexture("Grass") if random.randint(0, 1) == 0 else Texture.getGrassTexture("Grass2")
