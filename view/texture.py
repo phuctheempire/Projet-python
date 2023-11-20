@@ -16,16 +16,16 @@ from enum import Enum
 from GameControl.settings import IMAGE_PATH
 # import imgpath
 class Texture:
-    # grass_texture: dict[GrassTexture, pg.Surface] = {}
+    grass_texture: dict[int , pg.Surface] = {}
     # bob_texture: dict[BobTexture, dict[DirectionTexture, dict[int, pg.Surface]]] = {}
     # food_texture: dict[FoodTexture, pg.Surface] = {}
     # eaten_texture: dict[EatenTexture, pg.Surface] = {}
 
     # # We make dictionaries of each component of the texture
 
-    # @staticmethod
-    # def getGrassTexture( ID: any, Number: int = 0) -> pg.surface:
-    #     return Texture.grass_texture[ID]
+    @staticmethod
+    def getGrassTexture( ID: any) -> pg.surface:
+        return Texture.grass_texture[ID]
     # @staticmethod
     # def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
     #     pass
@@ -38,14 +38,14 @@ class Texture:
 
     def init(screen):
         Texture.grass_texture = {
-            "Grass": pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
-            "Flower": pg.image.load(IMAGE_PATH + "flower.png").convert_alpha(screen),
+            1: pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
+            2: pg.image.load(IMAGE_PATH + "flower.png").convert_alpha(screen),
         }
-        Texture.food_texture = {
-            "Large": pg.image.load(IMAGE_PATH + "apple.png").convert_alpha(screen), #example
-            "Medium": pg.image.load(IMAGE_PATH + "banana.png").convert_alpha(screen),
-            "Small": pg.image.load(IMAGE_PATH + "pear.png").convert_alpha(screen),
-        }
+        # Texture.food_texture = {
+        #     "Large": pg.image.load(IMAGE_PATH + "apple.png").convert_alpha(screen), #example
+        #     "Medium": pg.image.load(IMAGE_PATH + "banana.png").convert_alpha(screen),
+        #     "Small": pg.image.load(IMAGE_PATH + "pear.png").convert_alpha(screen),
+        # }
 
         # Gerer et implémenter Bobs et orientation ici 
         #Continuer ici

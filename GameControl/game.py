@@ -7,7 +7,7 @@ from view.camera import Camera
 # from Model.logicMap import logicMap
 from view.world import World
 # import random
-from GameControl.gameControl import gameControl
+from .gameControl import gameControl
 
 
 class Game:
@@ -20,6 +20,7 @@ class Game:
         # self.logicMap = logicMap(20, 20)
         # self.view = View(self.logicMap, self.width,self.height)
         self.world = World(self.width, self.height)
+        self
         self.camera = Camera(self.width, self.height)
         
     

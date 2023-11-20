@@ -15,7 +15,7 @@ class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
 
-        self.grassImg = Texture.getGrassTexture("Grass") if random.randint(0, 1) == 0 else Texture.getGrassTexture("Grass2")
+        self.grassImg = Texture.getGrassTexture(1) if random.randint(0, 1) == 0 else Texture.getGrassTexture(2)
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY

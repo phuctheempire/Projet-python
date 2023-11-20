@@ -1,7 +1,9 @@
 import pygame as pg
 from typing import TYPE_CHECKING
 from GameControl.gameControl import GameControl
-from Tiles.tiles import Tile
+if TYPE_CHECKING:
+    from Tiles.tiles import Tile
+
 from GameControl.settings import *
 from view.camera import Camera
 class World:
@@ -10,7 +12,7 @@ class World:
         self.width = width
         self.height = height
         # self.overlay.getInstance()
-        self.surface = pg.Surface(SURFACE_WIDTH, SURFACE_HEIGHT).convert_alpha()
+        self.surface = pg.Surface((SURFACE_WIDTH, SURFACE_HEIGHT)).convert_alpha()
         if ( GameControl.getInstance().getMap() == None):
             self.Map = GameControl.getInstance().getMap()
         else:
@@ -34,7 +36,8 @@ class World:
         for i in range(lengthX):
                 world.append([])
                 for j in range(lengthY):
-                    world[i].append(Tile(i, j))
+                    tile = Tile(i, j)
+                    world[i].append(tile)
         self.gameController.setMap(world)
         
 
