@@ -1,15 +1,15 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import random
-from ..GameControl.gameControl import GameControl
+from GameControl.gameControl import GameControl
 from view.texture import Texture
 from ..TextureLib.grassTexture import GrassTexture
 from ..TextureLib.foodTexture import FoodTexture
 from GameControl.settings import GRID_LENGTH, TILE_SIZE
 
 if TYPE_CHECKING:
-    from Bob.bob import Bob
-    from Food.food import Food
+    from Tiles.Bob.bob import Bob
+    from Tiles.Food.food import Food
 
 class Tile:
     def __init__(self, gridX: int, gridY: int ):

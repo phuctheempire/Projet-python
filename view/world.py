@@ -1,9 +1,9 @@
 import pygame as pg
 
 from GameControl.gameControl import gameControl
-from ..Model.tiles import Tile
+from Tiles.tiles import Tile
 from GameControl.settings import *
-from ..view.camera import Camera
+from view.camera import Camera
 class World:
     def __init__(self, width, height ) -> None:
         self.gameController = gameControl.getInstance()

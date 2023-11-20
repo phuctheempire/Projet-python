@@ -1,11 +1,11 @@
 import pygame as pg
 import sys
-from view.view import View
-from .settings import *
+# from view.view import View
+from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
 # from Model.logicMap import logicMap
-from ..view.world import World
+from view.world import World
 import random
 from .gameControl import gameControl
 

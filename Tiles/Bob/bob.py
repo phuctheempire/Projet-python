@@ -1,7 +1,7 @@
 # For path pinding purposes
 from typing import Optional
-from ..tiles import Tile
-from ..Food.food import Food
+from Tiles.tiles import Tile
+from Tiles.Food.food import Food
 # We need a function that search for the source of energy in the map ( both bob and tiles ): We need to call the visionTiles function
 # We need a function that compare the mass of the other bob ( call the other tile ) 
 # Function that make bob move according to the vision, the memory and the predator 
@@ -82,7 +82,7 @@ class Bob:
                     temp = bob
             temp.getCurrentTile()
     
-    def getNextTile(self):
+    # def getNextTile(self):
         
         # there are many logic here
         

@@ -1,9 +1,9 @@
-from ..Model.tiles import Tile
+from Tiles.tiles import Tile
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..Model.Bob import Bob
-    from ..Model.Food import Food
-    from ..Model.tiles import Tile
+    from Tiles.Bob import Bob
+    from Tiles.Food import Food
+    from Tiles.tiles import Tile
 
 
 class gameControl:
