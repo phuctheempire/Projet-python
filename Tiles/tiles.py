@@ -3,8 +3,8 @@ import pygame as pg
 import random
 from GameControl.gameControl import GameControl
 from view.texture import Texture
-from ..TextureLib.grassTexture import GrassTexture
-from ..TextureLib.foodTexture import FoodTexture
+# from TextureLib.grassTexture import GrassTexture
+# from TextureLib.foodTexture import FoodTexture
 from GameControl.settings import GRID_LENGTH, TILE_SIZE
 
 if TYPE_CHECKING:

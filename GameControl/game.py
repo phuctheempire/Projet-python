@@ -6,8 +6,8 @@ from view.utils import draw_text
 from view.camera import Camera
 # from Model.logicMap import logicMap
 from view.world import World
-import random
-from .gameControl import gameControl
+# import random
+# from GameControl.gameControl import gameControl
 
 
 class Game:

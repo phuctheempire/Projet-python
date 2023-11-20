@@ -1,7 +1,8 @@
 import pygame as pg
-
-from GameControl.gameControl import gameControl
-from Tiles.tiles import Tile
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from GameControl.gameControl import gameControl
+    from Tiles.tiles import Tile
 from GameControl.settings import *
 from view.camera import Camera
 class World:

@@ -2,12 +2,12 @@ from Tiles.tiles import Tile
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Tiles.Bob import Bob
-    from Tiles.Food import Food
-    from Tiles.tiles import Tile
+    # from Tiles.Food import Food
+    # from Tiles.tiles import Tile
 
 
 class gameControl:
-    instance = None
+    # instance = None
     #initialisation of grids:
     def __init__(self):
         self.grid = list[list[Tile]]
