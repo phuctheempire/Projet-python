@@ -1,8 +1,7 @@
 import pygame as pg
 from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from GameControl.gameControl import GameControl
-    from Tiles.tiles import Tile
+from GameControl.gameControl import GameControl
+from Tiles.tiles import Tile
 from GameControl.settings import *
 from view.camera import Camera
 class World:
@@ -17,7 +16,7 @@ class World:
         else:
             self.createWorld(width, height)
         # self.createStaticMap()
-        
+
 
     def draw(self, screen, camera):
         screen.blit(self.surface, Camera.scroll.x, Camera.scroll.y)

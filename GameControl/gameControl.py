@@ -23,7 +23,7 @@ class GameControl:
     def getMap(self):
         return self.grid
     @staticmethod
-    def get_instance():
+    def getInstance():
         if GameControl.instance is None:
             GameControl.instance = GameControl()
         return GameControl.instance
