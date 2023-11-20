@@ -21,20 +21,20 @@ class Texture:
     food_texture: dict[FoodTexture, pg.Surface] = {}
     eaten_texture: dict[EatenTexture, pg.Surface] = {}
 
-    # We make dictionaries of each component of the texture
+    # # We make dictionaries of each component of the texture
 
-    @staticmethod
-    def getGrassTexture( ID: any, Number: int = 0) -> pg.surface:
-        return Texture.grass_texture[ID]
-    @staticmethod
-    def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
-        pass
-    @staticmethod
-    def getFoodTexture( ID: FoodTexture, Number: int = 0) -> pg.surface:
-        pass
-    #Continuez ici
     # @staticmethod
-    # def getEatenTexture( ID: EatenTexture, Number: int = 0 ) -> pg.surface:
+    # def getGrassTexture( ID: any, Number: int = 0) -> pg.surface:
+    #     return Texture.grass_texture[ID]
+    # @staticmethod
+    # def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
+    #     pass
+    # @staticmethod
+    # def getFoodTexture( ID: FoodTexture, Number: int = 0) -> pg.surface:
+    #     pass
+    # #Continuez ici
+    # # @staticmethod
+    # # def getEatenTexture( ID: EatenTexture, Number: int = 0 ) -> pg.surface:
 
     @staticmethod
     def init(screen):
