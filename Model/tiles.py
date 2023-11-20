@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import random
+from ..GameControl.gameControl import GameControl
 from view.texture import Texture
 from ..TextureLib.grassTexture import GrassTexture
 from ..TextureLib.foodTexture import FoodTexture
@@ -56,7 +57,7 @@ class Tile:
         # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
 
         def getNearbyTiles(self, radius) -> list['Tile']:
-            tempMap = GameController.getInstance().getMap();
+            tempMap = GameControl.getInstance().getMap();
             tempCoord = []
             if radius == 0:
                 tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]

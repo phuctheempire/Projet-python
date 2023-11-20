@@ -1,10 +1,11 @@
 import pygame as pg
 import sys
 from view.view import View
-from .settings import TILE_SIZE
+from .settings import *
 from view.utils import draw_text
 from view.camera import Camera
-from Model.logicMap import logicMap
+# from Model.logicMap import logicMap
+from ..view.world import World
 import random
 from .gameControl import gameControl
 
@@ -16,8 +17,9 @@ class Game:
         self.clock = clock
         self.width, self.height = self.screen.get_size()
         # self.view = View(20, 20, self.width, self.height) 
-        self.logicMap = logicMap(20, 20)
-        self.view = View(self.logicMap, self.width,self.height)
+        # self.logicMap = logicMap(20, 20)
+        # self.view = View(self.logicMap, self.width,self.height)
+        self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height)
         
         
@@ -46,7 +48,7 @@ class Game:
         
     def draw(self):
         self.screen.fill((137, 207, 240))
-        self.view.draw(self.screen, self.camera)
+        self.world.draw(self.screen, self.camera)
         # self.view.drawBob(self.screen,self.camera)
         draw_text(
             self.screen,

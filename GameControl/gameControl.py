@@ -20,8 +20,11 @@ class gameControl:
 
     def setMap(self, map):
         self.grid = map
+    def getMap(self):
+        return self.grid
+    
 
-    def update():
+    # def update():
 
 
 
