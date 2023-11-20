@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import random
+from view.texture import Texture
 from GameControl.gameControl import GameControl
 from view.texture import Texture
 # from TextureLib.grassTexture import GrassTexture
@@ -15,7 +16,7 @@ class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
 
-        self.grassImg = Texture.getGrassTexture(1) if random.randint(0, 1) == 0 else Texture.getGrassTexture(2)
+        self.grassImg = Texture.loadGrassImage()["Grass"] if random.randint(0,1) == 0 else Texture.loadGrassImage()["Flower"]
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY

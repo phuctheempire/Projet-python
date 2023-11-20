@@ -1,8 +1,7 @@
 import pygame as pg
 from typing import TYPE_CHECKING
 from GameControl.gameControl import GameControl
-if TYPE_CHECKING:
-    from Tiles.tiles import Tile
+from Tiles.tiles import Tile
 
 from GameControl.settings import *
 from view.camera import Camera
