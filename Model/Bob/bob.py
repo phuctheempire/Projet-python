@@ -81,13 +81,11 @@ class Bob:
                 if ( bob.mass < temp.mass):
                     temp = bob
             temp.getCurrentTile()
-        
-            
-            
-        
-
+    
     def getNextTile(self):
+        
         # there are many logic here
+        
         
 
         

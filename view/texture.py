@@ -24,8 +24,8 @@ class Texture:
     # We make dictionaries of each component of the texture
 
     @staticmethod
-    def getTexture( ID: any, Number: int = 0) -> pg.surface:
-        pass
+    def getGrassTexture( ID: any, Number: int = 0) -> pg.surface:
+        return Texture.grass_texture[ID]
     @staticmethod
     def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
         pass
@@ -39,8 +39,8 @@ class Texture:
     @staticmethod
     def init(screen):
         Texture.grass_texture = {
-            GrassTexture.GRASS: pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
-            GrassTexture.FLOWER: pg.image.load(IMAGE_PATH + "flower.png").convert_alpha(screen),
+            "Grass": pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
+            "Flower": pg.image.load(IMAGE_PATH + "flower.png").convert_alpha(screen),
         }
         Texture.food_texture = {
             FoodTexture.LARGE: pg.image.load(IMAGE_PATH + "apple.png").convert_alpha(screen), #example

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 import pygame as pg
-
+import random
 from view.texture import Texture
 from ..TextureLib.grassTexture import GrassTexture
 from ..TextureLib.foodTexture import FoodTexture
@@ -11,8 +11,9 @@ if TYPE_CHECKING:
     from Food.food import Food
 
 class Tile:
-    def __init__(self, gridX: int, gridY: int, grass_type: GrassTexture = GrassTexture.GRASS ):
-        self.grassType = grass_type
+    def __init__(self, gridX: int, gridY: int ):
+
+        self.grassImg = Texture.getGrassTexture("Grass") if random.randint(0, 1) == 0 else Texture.getGrassTexture("Grass2")
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY
@@ -43,8 +44,8 @@ class Tile:
 
 
         #Texture calling
-        def getTexture(self):
-            return Texture.getTexture(self.grassType,)
+        def getGrassTexture(self):
+            return self.grassImg
         
         def addBob( self, bob: 'Bob'):
             self.listBob.append(bob)
@@ -72,12 +73,12 @@ class Tile:
 
             return tempCoord    
 
-        def getNearbyBobs(self, radius) -> list['Bob']:
+        # def getNearbyBobs(self, radius) -> list['Bob']:
             
-            pass
+        #     pass
         
-        def getNearbyFood(self, radius) -> list['Food']:
-            pass 
+        # def getNearbyFood(self, radius) -> list['Food']:
+        #     pass 
         
 
 
