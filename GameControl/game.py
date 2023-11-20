@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 import pygame as pg
 import sys
 # from view.view import View
@@ -7,7 +8,8 @@ from view.camera import Camera
 # from Model.logicMap import logicMap
 from view.world import World
 # import random
-from .gameControl import gameControl
+if TYPE_CHECKING:   
+    from gameControl import gameControl
 
 
 class Game:
