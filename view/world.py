@@ -2,7 +2,7 @@ import pygame as pg
 from typing import TYPE_CHECKING
 from GameControl.gameControl import GameControl
 from Tiles.tiles import Tile
-
+from view.texture import *
 from GameControl.settings import *
 from view.camera import Camera
 class World:
