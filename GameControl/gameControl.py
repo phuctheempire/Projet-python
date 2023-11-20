@@ -1,17 +1,19 @@
 from Tiles.tiles import Tile
 from typing import TYPE_CHECKING
-
+# if TYPE_CHECKING:
+#     from Tiles.Bob import Bob
+#     from Tiles.Food import Food
+#     from Tiles.tiles import Tile
 
 
 class GameControl:
-    from Tiles.Bob import Bob
-    from Tiles.Food import Food
-    from Tiles.tiles import Tile
+
     instance = None
 
     
     #initialisation of grids:
     def __init__(self):
+        from Tiles.tiles import Tile
         self.grid = list[list[Tile]]
         self.nbBobs = 0
         self.nbBobsSpawned = 0
