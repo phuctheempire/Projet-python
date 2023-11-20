@@ -36,7 +36,7 @@ class World:
         for i in range(lengthX):
                 world.append([])
                 for j in range(lengthY):
-                    tile = Tile(i, j)
+                    tile = Tile(gridX=i,gridY= j)
                     world[i].append(tile)
         self.gameController.setMap(world)
         
