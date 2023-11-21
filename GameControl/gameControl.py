@@ -42,7 +42,9 @@ class GameControl:
             tile.addBob(bob)
             print(tile.listBob)
             self.nbBobs += 1
-
+    def addBob(self, bob: 'Bob'):
+        self.listBobs.append(bob)
+        self.nbBobs += 1
     def createWorld(self, lengthX, lengthY ):
         from Tiles.tiles import Tile
         world = []

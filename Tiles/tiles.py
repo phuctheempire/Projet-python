@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 import pygame as pg
 import random
 from view.texture import *
-from GameControl.gameControl import GameControl
+# from GameControl.gameControl import GameControl
 # from TextureLib.grassTexture import GrassTexture
 # from TextureLib.foodTexture import FoodTexture
 from GameControl.settings import GRID_LENGTH, TILE_SIZE
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
-        self.gameController = GameControl.getInstance()
+        # self.gameController = GameControl.getInstance()
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
         self.showTile = True
         self.gridX = gridX
@@ -51,10 +51,10 @@ class Tile:
     
     def addBob( self, bob: 'Bob'):
         self.listBob.append(bob)
-        bob.CurrentTile = self
-        bob.NextTile = bob.setNextTile()
-        print(bob.CurrentTile)
-        print(bob.getNextTile())
+        # bob.CurrentTile = self
+        # bob.NextTile = bob.setNextTile()
+        # print(bob.CurrentTile)
+        # print(bob.getNextTile())
     
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)
@@ -62,9 +62,9 @@ class Tile:
     # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
 
     def getNearbyTiles(self, radius) -> list['Tile']:
+        from GameControl.gameControl import GameControl
         print("Getting nearby tiles")
-        tempMap = self.gameController.getMap();
-
+        tempMap = GameControl.getInstance().getMap();
         tempCoord = []
         if radius == 0:
             tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
