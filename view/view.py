@@ -16,6 +16,7 @@ class View:
         self.width = width
         self.height = height
         self.GraphicMap = self.createMap()
+        #TODO retirer la notion de graphicMap (le but d'avoir une View séparée c'est justement d'afficher cette logicMap)
         self.pgCell = pg.Surface((self.lengthX* TILE_SIZE * 2, self.lengthY * TILE_SIZE + 2 * TILE_SIZE))
         self.images = self.load_images()
         self.drawMap()
@@ -47,7 +48,7 @@ class View:
     def drawBob(self, screen, camera):
             for x in range(self.lengthX):
                 for y in range(self.lengthY):
-                    if (self.logicMap[x][y] != [] ) :
+                    if not self.logicMap[(x, y)] is None:
                         render_position = self.GraphicMap[x][y]["render_pos"]
                         screen.blit(self.images["bob"],(render_position[0] + self.pgCell.get_width()/2 + camera.scroll.x, render_position[1] - (self.images["bob"].get_height() - TILE_SIZE ) + camera.scroll.y))
 
