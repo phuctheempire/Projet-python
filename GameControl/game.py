@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import sys
+from GameControl.gameControl import GameControl
 from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
@@ -18,6 +19,7 @@ class Game:
         self.width, self.height = self.screen.get_size()
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height)  
+        
     
     def run(self):
         self.playing = True

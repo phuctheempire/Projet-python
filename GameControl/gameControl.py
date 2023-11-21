@@ -35,6 +35,8 @@ class GameControl:
             tile.addBob(bob)
             self.nbBobs = self.updateNbBobs()
     
+    
+
     def updateNbBobs(self):
         for i in range(GRID_LENGTH):
             for j in range(GRID_LENGTH):
