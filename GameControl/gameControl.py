@@ -84,7 +84,6 @@ class GameControl:
     @staticmethod
     def getInstance():
         if GameControl.instance is None:
-            print("Creating instance")
             GameControl.instance = GameControl()
         return GameControl.instance
 
