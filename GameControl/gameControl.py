@@ -33,18 +33,18 @@ class GameControl:
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
             tile.addBob(bob)
-            self.nbBobs += nbBobs
+            self.nbBobs += 1
     
     
 
-    # def updateNbBobs(self):
-    #     for i in range(GRID_LENGTH):
-    #         for j in range(GRID_LENGTH):
-    #             listBob = self.grid[i][j].listBob
-    #             if (listBob != []):
-    #                 for x in listBob:
-    #                     self.listBobs.append(x)
-    #                     self.nbBobs += 1
+    def updateNbBobs(self):
+        for i in range(GRID_LENGTH):
+            for j in range(GRID_LENGTH):
+                listBob = self.grid[i][j].listBob
+                if (listBob != []):
+                    for x in listBob:
+                        self.listBobs.append(x)
+                        self.nbBobs += 1
 
 
 

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import sys
-from GameControl.gameControl import GameControl
+# from GameControl.gameControl import GameControl
 from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
@@ -46,6 +46,7 @@ class Game:
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
+        self.world.drawBob(self.screen, self.camera)
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),
