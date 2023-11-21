@@ -66,17 +66,18 @@ class Tile:
         if radius == 0:
             tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
         else:
-            tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
-
+            # tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
+            tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+        tempTiles = []
         for coord in tempCoord:
             try:
                 if self.gridX + coord[0] > GRID_LENGTH-1 or self.gridY + coord[1] > GRID_LENGTH-1 or self.gridX + coord[0] < 0 or self.gridY + coord[1] < 0:
                     continue
-                tempCoord.append(tempMap[self.gridX + coord[0]][self.gridY + coord[1]])
+                tempTiles.append(tempMap[self.gridX + coord[0]][self.gridY + coord[1]])
             except IndexError:
                 continue
 
-        return tempCoord    
+        return tempTiles    
 
     # def getNearbyBobs(self, radius) -> list['Bob']:
         

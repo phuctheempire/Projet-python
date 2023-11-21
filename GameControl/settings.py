@@ -7,4 +7,4 @@ SURFACE_HEIGHT = TILE_SIZE * GRID_LENGTH + 5 * TILE_SIZE
 
 IMAGE_PATH = 'assets/graphics/'
 
-FPS = 60
+FPS = 30

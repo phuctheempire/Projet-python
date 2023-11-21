@@ -51,7 +51,7 @@ class GameControl:
     
     def updateRenderTick(self):
         self.renderTick += 1
-        if self.renderTick == 60:
+        if self.renderTick == FPS:
             self.renderTick = 0
             self.increaseTick()
 

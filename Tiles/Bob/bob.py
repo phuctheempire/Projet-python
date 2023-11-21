@@ -17,7 +17,7 @@ class Bob:
         self.id = id
         self.CurrentTile = Optional[Tile]
         self.PreviousTile = Optional[Tile]
-        self.Nexttile = Optional[Tile]
+        self.NextTile = Optional[Tile]
         self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
         self.targetTile = Optional[Tile]
         self.memory: 'int' = 0
@@ -30,7 +30,8 @@ class Bob:
 
     def getCurrentTile(self) -> Tile:
         return self.CurrentTile
-    
+    def getNextTile(self) -> Tile:
+        return self.NextTile
     def getNearbyBobs(self) -> list['Bob']:
         NearTiles = self.CurrentTile.getNearbyTile(self.vision)
         seenBobs = []
@@ -94,18 +95,30 @@ class Bob:
         nearbyTiles = self.CurrentTile.getNearbyTiles(0)
         match random.randint(0, 3):
             case 0: 
-                self.Nexttile = nearbyTiles[0]
+                try:
+                    self.NextTile = nearbyTiles[0]
+                except IndexError:
+                    self.NextTile = nearbyTiles[0]
             case 1:
-                self.Nexttile = nearbyTiles[1]
+                try:
+                    self.NextTile = nearbyTiles[1]
+                except IndexError:
+                    self.NextTile = nearbyTiles[0]
             case 2:
-                self.Nexttile = nearbyTiles[2]
+                try:
+                    self.NextTile = nearbyTiles[2]
+                except IndexError:
+                    self.NextTile = nearbyTiles[0]
             case 3:
-                self.Nexttile = nearbyTiles[3]
+                try:
+                    self.NextTile = nearbyTiles[3]
+                except IndexError:
+                    self.NextTile = nearbyTiles[0]
+
         # there are many logic here
     def move(self):
         self.CurrentTile.removeBob(self)
-        self.CurrentTile = self.Neexttile
-        self.CurrentTile.addBob(self)
+        self.NextTile.addBob(self)
         
     def update(self):
         self.setNextTile()
