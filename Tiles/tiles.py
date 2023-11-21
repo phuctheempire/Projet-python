@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
-
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
         self.showTile = True
         self.gridX = gridX
@@ -63,7 +62,6 @@ class Tile:
     # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
 
     def getNearbyTiles(self, radius) -> list['Tile']:
-
         tempMap = GameControl.getInstance().getMap();
         tempCoord = []
         if radius == 0:
