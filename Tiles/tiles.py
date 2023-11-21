@@ -20,7 +20,6 @@ class Tile:
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY
-        
         self.listBob : list['Bob'] = []
         self.listFood : list["Food"] = []
 
@@ -53,6 +52,7 @@ class Tile:
     def addBob( self, bob: 'Bob'):
         self.listBob.append(bob)
         bob.CurrentTile = self
+        bob.NextTile = bob.setNextTile()
     
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)

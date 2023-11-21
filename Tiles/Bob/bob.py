@@ -16,7 +16,7 @@ class Bob:
         self.velocity = -1
         self.id = id
         self.CurrentTile = Optional[Tile]
-        self.PreviousTile = Optional[Tile]
+        self.PreviousTile = Optional[Tile] 
         self.NextTile = Optional[Tile]
         self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
         self.targetTile = Optional[Tile]

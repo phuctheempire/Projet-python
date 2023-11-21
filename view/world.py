@@ -24,11 +24,11 @@ class World:
     def drawBob(self, screen, camera, walkProgression: int ):
         for bob in self.gameController.listBobs:
             (x, y) = bob.getCurrentTile().getRenderCoord()
-            offset = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-            # (destX, destY) = bob.getNextTile().getRenderCoord()
-            # offset1 = (destX + self.surface.get_width()/2, y - (destY.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-            # position = (x + (destX- x) * (walkProgression/FPS), y + (destY - y) * (walkProgression/FPS))
-            screen.blit(bob.getBobTexture(), offset)
+            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            (destX, destY) = bob.getNextTile().getRenderCoord()
+            (desX, desY) = (destX + self.surface.get_width()/2, y - (destY.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position = (X + (desX- x) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))
+            screen.blit(bob.getBobTexture(), position)
 
     def drawStaticMap(self):
         self.surface.fill(( 137, 207, 240))
