@@ -17,17 +17,21 @@ class Render:
         self.screen.blit(bob.image, (bob.x, bob.y))
 
     def draw_food(self, food):
-        if food.energy > 75:
-            food_image = pg.image.load("chemin").convert_alpha()
-        elif 50 <= food.energy <= 75:
-            food_image = pg.image.load("").convert_alpha()
-        elif 25 <= food.energy < 50:
-            food_image = pg.image.load("").convert_alpha()
-        else:
-            food_image = pg.image.load("").convert_alpha()
+        energy_levels = {
+            (76, 100): "chemin1.png",
+            (50, 75): "chemin2.png",
+            (25, 49): "chemin3.png",
+            (0, 24): "chemin4.png"
+        }
 
-        food_image = pg.transform.scale(food_image, (food_image.get_width()*1, food_image.get_height()*1))
-        self.screen.blit(food_image, (food.x, food.y))
+        for energy_range, image_path in energy_levels.items():
+            if energy_range[0] <= food.energy <= energy_range[1]:
+                food_image = pg.image.load(image_path).convert_alpha()
+                self.screen.blit(food_image, (food.x, food.y))
+                break
+        else:
+            default_image = pg.image.load("default_path.png").convert_alpha()
+            self.screen.blit(default_image, (food.x, food.y)) 
 
 
     def render_frame(self):
