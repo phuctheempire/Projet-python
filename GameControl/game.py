@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import sys
-# from view.view import View
 from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
-# from Model.logicMap import logicMap
 from view.world import World
 # import random
 if TYPE_CHECKING:   
@@ -18,13 +16,8 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
-        # self.view = View(20, 20, self.width, self.height) 
-        # self.logicMap = logicMap(20, 20)
-        # self.view = View(self.logicMap, self.width,self.height)
         self.world = World(self.width, self.height)
-        self
-        self.camera = Camera(self.width, self.height)
-        
+        self.camera = Camera(self.width, self.height)  
     
     def run(self):
         self.playing = True
@@ -51,7 +44,6 @@ class Game:
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
-        # self.view.drawBob(self.screen,self.camera)
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),
