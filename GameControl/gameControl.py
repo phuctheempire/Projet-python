@@ -11,8 +11,6 @@ class GameControl:
     instance = None
     #initialisation of grids:
     def __init__(self):
-        if (GameControl.instance is not None):
-            raise Exception("This class is a singleton!")
         self.grid : list[list['Tile']] = None
         self.nbBobs: 'int'= 0
         self.nbBobsSpawned = 0
@@ -80,6 +78,8 @@ class GameControl:
     @staticmethod
     def getInstance():
         if GameControl.instance is None:
+            if (GameControl.instance is not None):
+                raise Exception("This class is a singleton!")
             GameControl.instance = GameControl()
         return GameControl.instance
 

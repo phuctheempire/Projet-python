@@ -26,8 +26,8 @@ class Bob:
         self.image = self.getBobTexture()
 
     def spawn(self, tile: 'Tile'):
-        self.current_tile = tile
-        self.current_tile.addBob(self)
+        self.CurrentTile = tile
+        self.CurrentTile.addBob(self)
         GameControl.getInstance().addBob(self)
         self.NextTile = self.setNextTile()
 
