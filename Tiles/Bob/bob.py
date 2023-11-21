@@ -91,6 +91,10 @@ class Bob:
             temp.getCurrentTile()
     
     def setNextTile(self):
+        print("Setting next tile")
+        print("x")
+        print(self.CurrentTile.getNearbyTiles(0))
+        print("ABC")
         #Temporary
         nearbyTiles = self.CurrentTile.getNearbyTiles(0)
         match random.randint(0, 3):
