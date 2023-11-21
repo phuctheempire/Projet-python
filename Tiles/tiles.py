@@ -8,6 +8,7 @@ from view.texture import *
 # from TextureLib.foodTexture import FoodTexture
 from GameControl.settings import GRID_LENGTH, TILE_SIZE
 
+
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
     from Tiles.Food.food import Food
@@ -62,7 +63,7 @@ class Tile:
     # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
 
     def getNearbyTiles(self, radius) -> list['Tile']:
-        from GameControl.gameControl import GameControl
+
         tempMap = GameControl.getInstance().getMap();
         tempCoord = []
         if radius == 0:
