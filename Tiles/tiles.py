@@ -66,7 +66,7 @@ class Tile:
         if radius == 0:
             tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
         else:
-            tempCoord = [[x, y] for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
+            tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
 
         for coord in tempCoord:
             try:
