@@ -93,7 +93,7 @@ class Bob:
     def setNextTile(self):
         print("Setting next tile")
         print("x")
-        # print(self.CurrentTile.getNearbyTiles(0))
+        print(self.CurrentTile)
 
         #Temporary
         nearbyTiles = self.CurrentTile.getNearbyTiles(0)
