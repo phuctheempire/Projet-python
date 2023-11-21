@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 import pygame as pg
 import random
 from view.texture import *
-# from GameControl.gameControl import GameControl
+from GameControl.gameControl import GameControl
 # from TextureLib.grassTexture import GrassTexture
 # from TextureLib.foodTexture import FoodTexture
 from GameControl.settings import GRID_LENGTH, TILE_SIZE
