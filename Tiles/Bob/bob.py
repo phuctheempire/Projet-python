@@ -1,6 +1,7 @@
 # For path pinding purposes
 from typing import Optional
 from Tiles.tiles import Tile
+from GameControl.gameControl import GameControl
 from view.texture import loadBobImage
 import random
 # from Tiles.Food.food import Food
@@ -23,6 +24,12 @@ class Bob:
         self.memory: 'int' = 0
         self.memoryTile = Optional[Tile]
         self.image = self.getBobTexture()
+
+    def spawn(self, tile: 'Tile'):
+        self.current_tile = tile
+        self.current_tile.addBob(self)
+        GameControl.getInstance().addBob(self)
+        self.NextTile = self.setNextTile()
 
     def getBobTexture(self):
         match self.mass:
