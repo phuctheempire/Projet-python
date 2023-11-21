@@ -52,7 +52,8 @@ class Tile:
     def addBob( self, bob: 'Bob'):
         self.listBob.append(bob)
         bob.CurrentTile = self
-        bob.NextTile = bob.getNextTile()
+        bob.NextTile = bob.setNextTile()
+        print(bob.NextTile)
     
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)

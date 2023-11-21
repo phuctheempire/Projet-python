@@ -26,6 +26,7 @@ class World:
             (x, y) = bob.getCurrentTile().getRenderCoord()
             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
             position = (X, Y)
+            print(bob.getNextTile())
             (destX, destY) = bob.getNextTile().getRenderCoord()
             (desX, desY) = (destX + self.surface.get_width()/2, y - (destY.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
             position = (X + (desX - X) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))

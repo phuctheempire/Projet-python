@@ -31,12 +31,14 @@ class GameControl:
     def spawnBobs(self, nbBobs):
         from Tiles.Bob.bob import Bob
         for _ in range(nbBobs):
+            print("Adding bob")
             x = random.randint(0, GRID_LENGTH - 1)
             y = random.randint(0, GRID_LENGTH - 1)
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
             self.listBobs.append(bob)
             tile.addBob(bob)
+            print(tile.listBob)
             self.nbBobs += 1
 
     def createWorld(self, lengthX, lengthY ):
