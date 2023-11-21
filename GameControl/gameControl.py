@@ -38,13 +38,13 @@ class GameControl:
             y = random.randint(0, GRID_LENGTH - 1)
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
-            self.listBobs.append(bob)
-            tile.addBob(bob)
+            bob.spawn(tile)
             print(tile.listBob)
             self.nbBobs += 1
     def addBob(self, bob: 'Bob'):
         self.listBobs.append(bob)
         self.nbBobs += 1
+
     def createWorld(self, lengthX, lengthY ):
         from Tiles.tiles import Tile
         world = []

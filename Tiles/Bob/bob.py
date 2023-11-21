@@ -2,6 +2,7 @@
 from typing import Optional
 from Tiles.tiles import Tile
 from view.texture import loadBobImage
+from GameControl.gameControl import GameControl
 import random
 # from Tiles.Food.food import Food
 # We need a function that search for the source of energy in the map ( both bob and tiles ): We need to call the visionTiles function
@@ -17,12 +18,18 @@ class Bob:
         self.id = id
         self.CurrentTile : Optional[Tile] = None
         self.PreviousTile : Optional[Tile] = None
-        self.NextTile : Optional[Tile] = None
+        self.NextTile : Optional[Tile] = None 
         self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
         self.targetTile = Optional[Tile]
         self.memory: 'int' = 0
         self.memoryTile = Optional[Tile]
         self.image = self.getBobTexture()
+
+    def spawn(self, tile: 'Tile'):
+        self.current_tile = tile
+        self.current_tile.addBob(self)
+        GameControl.getInstance().addBob(self)
+        self.next_tile = self.setNextTile()
 
     def getBobTexture(self):
         match self.mass:
@@ -93,33 +100,12 @@ class Bob:
     def setNextTile(self):
         print("Setting next tile")
         print("x")
-        print(self.CurrentTile.getNearbyTiles(0))
+        print(self.CurrentTile)
 
         #Temporary
         nearbyTiles = self.CurrentTile.getNearbyTiles(0)
         print("ABC")
-        match random.randint(0, 3):
-            case 0: 
-                try:
-                    self.NextTile = nearbyTiles[0]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-            case 1:
-                try:
-                    self.NextTile = nearbyTiles[1]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-            case 2:
-                try:
-                    self.NextTile = nearbyTiles[2]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-            case 3:
-                try:
-                    self.NextTile = nearbyTiles[3]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-
+        return random.choice(nearbyTiles)
         # there are many logic here
     def move(self):
         self.CurrentTile.removeBob(self)
