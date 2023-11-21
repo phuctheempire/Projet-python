@@ -6,7 +6,7 @@ from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
 from view.world import World
-from GameControl.settings import *
+# from GameControl.settings import *
 # import random
 
 from GameControl.gameControl import GameControl
