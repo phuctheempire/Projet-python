@@ -21,7 +21,9 @@ class Game:
         self.clock = clock
         self.width, self.height = self.screen.get_size()
         self.world = World(self.width, self.height)
-        self.camera = Camera(self.width, self.height)  
+        self.camera = Camera(self.width, self.height) 
+        self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
+        self.gameController.spawnBobs(10)
         
     
     def run(self):

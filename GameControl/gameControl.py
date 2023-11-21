@@ -18,8 +18,8 @@ class GameControl:
         self.listBobs : list['Bob'] = []
         self.currentTick = 0
         self.currentDay = 0
-        self.createWorld(GRID_LENGTH,GRID_LENGTH)
-        self.spawnBobs(10)
+        # self.createWorld(GRID_LENGTH,GRID_LENGTH)
+        # self.spawnBobs(10)
         self.renderTick = 0
 
     def setMap(self, map):
@@ -37,10 +37,12 @@ class GameControl:
             y = random.randint(0, GRID_LENGTH - 1)
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
-            self.listBobs.append(bob)
-            tile.addBob(bob)
-            print(tile.listBob)
-            self.nbBobs += 1
+            bob.spawn(tile)
+    
+    def addBob(self, bob: 'Bob'):
+        self.listBobs.append(bob)
+        self.nbBobs += 1
+        self.nbBobsSpawned += 1
 
     def createWorld(self, lengthX, lengthY ):
         from Tiles.tiles import Tile
@@ -77,7 +79,7 @@ class GameControl:
     def getDay(self):
         return self.currentDay
     
-    
+
     @staticmethod
     def getInstance():
         if GameControl.instance is None:
