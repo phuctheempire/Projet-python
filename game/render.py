@@ -2,7 +2,7 @@ import pygame as pg
 from .bob import Bob
 from .food import Food
 
-class Renderer:
+class Render:
     def __init__(self, screen, clock, world):
         self.screen = screen
         self.clock = clock
