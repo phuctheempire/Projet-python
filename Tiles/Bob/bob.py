@@ -104,36 +104,20 @@ class Bob:
         print("ABC")
         #Temporary
         nearbyTiles = self.CurrentTile.getNearbyTiles(0)
-        match random.randint(0, 3):
-            case 0: 
-                try:
-                    self.NextTile = nearbyTiles[0]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-            case 1:
-                try:
-                    self.NextTile = nearbyTiles[1]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-            case 2:
-                try:
-                    self.NextTile = nearbyTiles[2]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
-            case 3:
-                try:
-                    self.NextTile = nearbyTiles[3]
-                except IndexError:
-                    self.NextTile = nearbyTiles[0]
+        return random.choice(nearbyTiles)
 
         # there are many logic here
     def move(self):
         self.CurrentTile.removeBob(self)
         self.NextTile.addBob(self)
+        self.CurrentTile = self.NextTile
+        self.PreviousTile = self.CurrentTile
+        self.NextTile = self.setNextTile()
         
-    def update(self):
-        self.setNextTile()
-        self.move()
+    # def update(self):
+    #     self.move()
+    #     self.setNextTile()
+
 
         
         

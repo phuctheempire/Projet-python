@@ -27,10 +27,10 @@ class World:
             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
             position = (X, Y)
             # print(bob.getNextTile())
-            # (destX, destY) = bob.getNextTile().getRenderCoord()
-            # (desX, desY) = (destX + self.surface.get_width()/2, y - (destY.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-            # position = (X + (desX - X) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))
-            screen.blit(bob.getBobTexture(), position)
+            (destX, destY) = bob.getNextTile().getRenderCoord()
+            (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position1 = (X + (desX - X) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))
+            screen.blit(bob.getBobTexture(), position1)
 
     def drawStaticMap(self):
         self.surface.fill(( 137, 207, 240))

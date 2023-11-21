@@ -64,7 +64,7 @@ class GameControl:
     def increaseTick(self):
         # we must do something here
         for bob in self.listBobs:
-            bob.update()
+            bob.move()
         self.currentTick += 1
         if self.currentTick == 100:
             self.currentTick = 0
