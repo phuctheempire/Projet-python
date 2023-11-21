@@ -17,6 +17,9 @@ class GameControl:
         self.listBobs : list['Bob'] = []
         self.currentTick = 0
         self.currentDay = 0
+        self.createWorld(GRID_LENGTH,GRID_LENGTH)
+        self.spawnBobs(10)
+        self.renderTick = 0
 
     def setMap(self, map):
         self.grid = map
@@ -32,22 +35,40 @@ class GameControl:
             y = random.randint(0, GRID_LENGTH - 1)
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
+            self.listBobs.append(bob)
             tile.addBob(bob)
             self.nbBobs += 1
+
+    def createWorld(self, lengthX, lengthY ):
+        from Tiles.tiles import Tile
+        world = []
+        for i in range(lengthX):
+                world.append([])
+                for j in range(lengthY):
+                    tile = Tile(gridX=i,gridY= j)
+                    world[i].append(tile)
+        self.setMap(world)
     
+    def updateRenderTick(self):
+        self.renderTick += 1
+        if self.renderTick == 60:
+            self.renderTick = 0
+            self.increaseTick()
+
+
+    def increaseTick(self):
+        # we must do something here
+        for bob in self.listBobs:
+            bob.update()
+        self.currentTick += 1
+        if self.currentTick == 100:
+            self.currentTick = 0
+            self.increaseDay()
+    def increaseDay(self):
+        self.currentDay += 1
     
-
-    def updateNbBobs(self):
-        for i in range(GRID_LENGTH):
-            for j in range(GRID_LENGTH):
-                listBob = self.grid[i][j].listBob
-                if (listBob != []):
-                    for x in listBob:
-                        self.listBobs.append(x)
-                        self.nbBobs += 1
-
-
-
+    def getRenderTick(self):
+        return self.renderTick
     def getTick(self):
         return self.currentTick
     def getDay(self):

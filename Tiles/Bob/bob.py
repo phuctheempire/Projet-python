@@ -2,6 +2,7 @@
 from typing import Optional
 from Tiles.tiles import Tile
 from view.texture import loadBobImage
+import random
 # from Tiles.Food.food import Food
 # We need a function that search for the source of energy in the map ( both bob and tiles ): We need to call the visionTiles function
 # We need a function that compare the mass of the other bob ( call the other tile ) 
@@ -88,11 +89,27 @@ class Bob:
                     temp = bob
             temp.getCurrentTile()
     
-    # def getNextTile(self):
-        
+    def setNextTile(self):
+        #Temporary
+        nearbyTiles = self.CurrentTile.getNearbyTile(0)
+        match random.randint(0, 3):
+            case 0: 
+                self.Nexttile = nearbyTiles[0]
+            case 1:
+                self.Nexttile = nearbyTiles[1]
+            case 2:
+                self.Nexttile = nearbyTiles[2]
+            case 3:
+                self.Nexttile = nearbyTiles[3]
         # there are many logic here
+    def move(self):
+        self.CurrentTile.removeBob(self)
+        self.CurrentTile = self.Neexttile
+        self.CurrentTile.addBob(self)
         
-        
+    def update(self):
+        self.setNextTile()
+        self.move()
 
         
         

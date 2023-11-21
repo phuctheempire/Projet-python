@@ -10,18 +10,14 @@ class World:
         self.gameController = GameControl.getInstance()
         self.width = width
         self.height = height
-
+        self.renderTick = 0
         self.surface = pg.Surface((SURFACE_WIDTH, SURFACE_HEIGHT)).convert_alpha()
-        if ( GameControl.getInstance().getMap() != None):
-            self.Map = GameControl.getInstance().getMap()
-        else:
-            self.createWorld(GRID_LENGTH,GRID_LENGTH)
         self.drawStaticMap()
-        self.gameController.spawnBobs(10)
         self.drawBob(self.surface, Camera(self.width, self.height))
 
 
     def draw(self, screen, camera):
+        self.drawBob(self.surface, Camera(self.width, self.height))
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
 
     def drawBob(self, screen, camera):

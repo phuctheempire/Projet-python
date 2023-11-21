@@ -1,19 +1,22 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import sys
-# from GameControl.gameControl import GameControl
+# from GameControl.gameControl import GameControlư
 from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
 from view.world import World
+from GameControl.settings import *
 # import random
-if TYPE_CHECKING:   
-    from gameControl import gameControl
+
+from GameControl.gameControl import GameControl
 
 
 class Game:
 
     def __init__(self, screen, clock):
+
+        self.gameController = GameControl.getInstance()
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
@@ -24,7 +27,8 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(60)
+            self.clock.tick(FPS)
+            self.gameController.updateRenderTick()
             self.events()
             self.update()
             self.draw()
@@ -46,13 +50,33 @@ class Game:
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
-        self.world.drawBob(self.screen, self.camera)
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),
             25,
-            (255, 255, 255),
+            (0,0,0),
             (10, 10)
+        )  
+        draw_text(
+            self.screen,
+            'gameTick={}'.format(round(self.gameController.getRenderTick())),
+            25,
+            (0,0,0),
+            (10, 30)
+        )  
+        draw_text(
+            self.screen,
+            'Tick={}'.format(round(self.gameController.getTick())),
+            25,
+            (0,0,0),
+            (10, 50)
+        )  
+        draw_text(
+            self.screen,
+            'Day={}'.format(round(self.gameController.getDay())),
+            25,
+            (0,0,0),
+            (10, 70)
         )  
 
         pg.display.flip()
