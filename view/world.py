@@ -41,13 +41,13 @@ class World:
                 offset = (x + self.surface.get_width()/2, y)
                 self.surface.blit(textureImg, offset)
         
-    def createWorld(self, lengthX, lengthY ):
-        world = []
-        for i in range(lengthX):
-                world.append([])
-                for j in range(lengthY):
-                    tile = Tile(gridX=i,gridY= j)
-                    world[i].append(tile)
-        self.gameController.setMap(world)
+    # def createWorld(self, lengthX, lengthY ):
+    #     world = []
+    #     for i in range(lengthX):
+    #             world.append([])
+    #             for j in range(lengthY):
+    #                 tile = Tile(gridX=i,gridY= j)
+    #                 world[i].append(tile)
+    #     self.gameController.setMap(world)
         
 
