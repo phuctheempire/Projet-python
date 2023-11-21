@@ -1,5 +1,9 @@
-from .bob import Bob
+
 import random
+from collections import defaultdict
+
+from Model.logicBob import Bob
+
 
 class logicMap:
     def __init__(self, lengthX, lengthY):
@@ -10,11 +14,7 @@ class logicMap:
         print(self.logicMap)
 
     def createLogicMap(self, lengthX, lengthY):
-        logicMap = []
-        for x in range(lengthX):
-            logicMap.append([])
-            for y in range(lengthY):
-                logicMap[x].append([])
+        logicMap = defaultdict(lambda:None)
         return logicMap
 
     def implementBob(self):
@@ -22,7 +22,7 @@ class logicMap:
             x = random.randint(0, self.lengthX -1)
             y = random.randint(0, self.lengthY -1)
             bob = Bob(x,y)
-            self.logicMap[x][y].append(bob)
+            self.logicMap[(x,y)] = bob
     
 
 
