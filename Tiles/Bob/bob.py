@@ -91,7 +91,7 @@ class Bob:
     
     def setNextTile(self):
         #Temporary
-        nearbyTiles = self.CurrentTile.getNearbyTile(0)
+        nearbyTiles = self.CurrentTile.getNearbyTiles(0)
         match random.randint(0, 3):
             case 0: 
                 self.Nexttile = nearbyTiles[0]

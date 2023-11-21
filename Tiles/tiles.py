@@ -70,9 +70,9 @@ class Tile:
 
         for coord in tempCoord:
             try:
-                if self.x + coord[0] > GRID_LENGTH-1 or self.y + coord[1] > GRID_LENGTH-1 or self.x + coord[0] < 0 or self.y + coord[1] < 0:
+                if self.gridX + coord[0] > GRID_LENGTH-1 or self.gridY + coord[1] > GRID_LENGTH-1 or self.gridX + coord[0] < 0 or self.gridY + coord[1] < 0:
                     continue
-                tempCoord.append(tempMap[self.x + coord[0]][self.y + coord[1]])
+                tempCoord.append(tempMap[self.gridX + coord[0]][self.gridY + coord[1]])
             except IndexError:
                 continue
 
