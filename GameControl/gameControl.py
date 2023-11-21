@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 
 class GameControl:
+
     instance = None
     #initialisation of grids:
     def __init__(self):
@@ -20,6 +21,7 @@ class GameControl:
         self.createWorld(GRID_LENGTH,GRID_LENGTH)
         self.spawnBobs(10)
         self.renderTick = 0
+        
 
     def setMap(self, map):
         self.grid = map
@@ -75,9 +77,12 @@ class GameControl:
         return self.currentTick
     def getDay(self):
         return self.currentDay
+    
+
     @staticmethod
     def getInstance():
         if GameControl.instance is None:
+            print("Creating instance")
             GameControl.instance = GameControl()
         return GameControl.instance
 
