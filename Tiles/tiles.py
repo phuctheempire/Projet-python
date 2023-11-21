@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
-
+        self.gameController = GameControl.getInstance()
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
         self.showTile = True
         self.gridX = gridX
