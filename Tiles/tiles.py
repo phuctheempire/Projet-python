@@ -53,11 +53,12 @@ class Tile:
         self.listBob.append(bob)
         bob.CurrentTile = self
         print(self)  
-        bob.NextTile = bob.setNextTile()
+        bob.setNextTile()
         # print(bob.CurrentTile)
         # print(bob.getNextTile())
     
     def removeBob(self, bob: 'Bob'):
+        
         self.listBob.remove(bob)
     
     # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
