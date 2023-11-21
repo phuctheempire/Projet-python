@@ -12,7 +12,7 @@ class GameControl:
     #initialisation of grids:
     def __init__(self):
         self.grid : list[list['Tile']] = None
-        self.nbBobs = 0
+        self.nbBobs: 'int'= 0
         self.nbBobsSpawned = 0
         self.listBobs : list['Bob'] = []
         self.currentTick = 0
@@ -33,18 +33,18 @@ class GameControl:
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
             tile.addBob(bob)
-            self.nbBobs = self.updateNbBobs()
+            self.nbBobs += nbBobs
     
     
 
-    def updateNbBobs(self):
-        for i in range(GRID_LENGTH):
-            for j in range(GRID_LENGTH):
-                listBob = self.grid[i][j].listBob
-                if (listBob != []):
-                    for x in listBob:
-                        self.listBobs.append(x)
-                        self.nbBobs += 1
+    # def updateNbBobs(self):
+    #     for i in range(GRID_LENGTH):
+    #         for j in range(GRID_LENGTH):
+    #             listBob = self.grid[i][j].listBob
+    #             if (listBob != []):
+    #                 for x in listBob:
+    #                     self.listBobs.append(x)
+    #                     self.nbBobs += 1
 
 
 
