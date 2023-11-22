@@ -34,6 +34,52 @@ class Bob:
         self.TargetTile = self.setTargetTile()
         self.NextTile = self.setNextTile()
 
+    def eat(self, other: 'Bob'):
+        if self.energy + other.energy <=  self.energyMax:
+            self.energy += other.energy
+            other.die()
+        else:
+            self.energy = self.energyMax
+            other.die()
+
+    def Consumefood(self):
+        food = self.CurrentTile.getFood()
+        if ( food == None):
+            pass
+        else:
+            if(self.energy == self.energyMax):
+                pass
+            else:
+                if ( self.energy + food.energy <= self.energyMax):
+                    self.energy += food.energy
+                    food.energy = 0
+                else:
+                    self.energy = self.energyMax
+                    food.energy -= self.energyMax - self.energy
+        bobs = self.CurrentTile.getBobs()
+        if ( bobs == []):
+            pass
+        else:
+            unluckyBob = random.choice(self.getPrayInSameTile())
+            self.eat(unluckyBob)
+            
+            
+    def getPrayInSameTile(self):
+        bobs = self.CurrentTile.getBobs()
+        if ( bobs == []):
+            pass
+        else:
+            preyBob : list['Bob'] = None
+            for bob in bobs:
+                if ( bob.mass * 3 / 2 < self.mass):
+                    preyBob.append(bob)
+            return preyBob
+        
+    
+    def die(self):
+        self.CurrentTile.removeBob(self)
+        GameControl.getInstance().removeBob(self)
+
     def getBobTexture(self):
         match self.mass:
             case 1: return loadBobImage()["Bob"]
