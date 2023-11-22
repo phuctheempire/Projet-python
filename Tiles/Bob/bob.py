@@ -9,18 +9,20 @@ import random
 # We need a function that compare the mass of the other bob ( call the other tile ) 
 # Function that make bob move according to the vision, the memory and the predator 
 class Bob: 
-    def __init__( self, id: 'int' = 0,  ):
+    def __init__( self, id: 'int' = 0, velocity = 1, mass = 1  ):
         self.energy = 100
-        self.mass: 'int' = 1
+        self.energyMax = 200
+        self.mass = mass
         self.memory = Optional[Tile]; 
         self.vision: 'int' = 0
-        self.velocity = -1
+        self.velocity = velocity
         self.id = id
         self.CurrentTile : Optional[Tile] = None
-        self.PreviousTile : Optional[Tile] = None
+        self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
-        self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
-        self.targetTile = Optional[Tile]
+        self.PredatorTile : Optional[Tile] = None
+        # self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
+        # self.targetTile : Optional[Tile] = None
         self.memory: 'int' = 0
         self.memoryTile = Optional[Tile]
         self.image = self.getBobTexture()
@@ -29,6 +31,7 @@ class Bob:
         self.CurrentTile = tile
         self.CurrentTile.addBob(self)
         GameControl.getInstance().addBob(self)
+        self.TargetTile = self.setTargetTile()
         self.NextTile = self.setNextTile()
 
     def getBobTexture(self):
@@ -79,7 +82,7 @@ class Bob:
                 if ( Tile.distanceofTile(self.CurrentTile, pred.CurrentTile) < Tile.distanceofTile(self.CurrentTile, predator.CurrentTile)):
                     predator = pred
             return predator.CurrentTile
-        else: pass
+        else: return None
 
     def scanForTarget(self) -> Tile:
         listFood = self.getNearbyFood()
@@ -98,20 +101,48 @@ class Bob:
             temp.getCurrentTile()
     
     def setNextTile(self):
-        print("Setting next tile")
-        print("x")
-        print(self.CurrentTile.getNearbyTiles(0))
-        print("ABC")
         #Temporary
+        target = self.TargetTile
+        if self.CurrentTile == self.TargetTile:
+            return self.TargetTile
+        elif ( target == self.CurrentTile.getNearbyTiles(0)):
+            return target
+        else:
+            (x,y) = Tile.CountofTile(target, self.CurrentTile)
+            if ( y == 0 and x != 0 ):
+                if ( x > 0):
+                    return self.CurrentTile.getDirectionTiles("Right")
+                else:
+                    return self.CurrentTile.getDirectionTiles("Left")
+            elif ( x == 0 and y != 0):
+                if ( y > 0):
+                    return self.CurrentTile.getDirectionTiles("Up")
+                else:
+                    return self.CurrentTile.getDirectionTiles("Down")
+            else:
+                if ( x > 0 and y > 0):
+                    upright = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
+                    return random.choice (upright)
+                elif ( x > 0 and y < 0):
+                    downRight = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
+                    return random.choice (downRight)
+                elif ( x < 0 and y > 0):
+                    upLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left"))
+                    return random.choice(upLeft)
+                else:
+                    downLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left"))
+                    return random.choice(downLeft)
+    def setTargetTile(self):     
         nearbyTiles = self.CurrentTile.getNearbyTiles(0)
         return random.choice(nearbyTiles)
+        # return GameControl.getInstance().getMap()[0][0]
 
         # there are many logic here
     def move(self):
         self.CurrentTile.removeBob(self)
         self.NextTile.addBob(self)
         self.CurrentTile = self.NextTile
-        self.PreviousTile = self.CurrentTile
+        self.TargetTile = self.setTargetTile()
         self.NextTile = self.setNextTile()
         
     # def update(self):

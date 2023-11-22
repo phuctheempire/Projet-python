@@ -7,4 +7,5 @@ SURFACE_HEIGHT = TILE_SIZE * GRID_LENGTH + 5 * TILE_SIZE
 
 IMAGE_PATH = 'assets/graphics/'
 
+NB_BOB = 5
 FPS = 60

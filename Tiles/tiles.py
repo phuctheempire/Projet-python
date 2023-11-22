@@ -37,9 +37,10 @@ class Tile:
         return self.isoCoord
     def getGameCoord(self):
         return (self.gridX, self.gridY)
-    def distanceofTile(tile1: 'Tile', tile2:'Tile'):
+    def distanceofTile(tile1: 'Tile', tile2:'Tile') -> 'int':
         return abs(tile1.gridX - tile2.gridX) + abs(tile1.gridY - tile2.gridY)
-
+    def CountofTile(tile: 'Tile', tile2 = 'Tile') -> ('int', 'int'):
+        return (tile.gridX - tile2.gridX, tile.gridY - tile2.gridY)
 
     #Texture calling
     def getGrassImage(self):
@@ -56,6 +57,15 @@ class Tile:
         self.listBob.remove(bob)
     
     # // Need a function that return the list of tiles in a certain radius ( get vision tiles )
+    def getDirectionTiles(self, orientation: int)-> list['Tile']:
+        tempmap = GameControl.getInstance().getMap()
+        coord = {
+            "Up": tempmap[self.gridX][self.gridY+1] if self.gridY+1 < GRID_LENGTH else None,
+            "Down": tempmap[self.gridX][self.gridY-1] if self.gridY-1 >= 0 else None,
+            "Left": tempmap[self.gridX-1][self.gridY] if self.gridX-1 >= 0 else None,
+            "Right": tempmap[self.gridX+1][self.gridY] if self.gridX+1 < GRID_LENGTH else None
+        }
+        return coord[orientation]
 
     def getNearbyTiles(self, radius) -> list['Tile']:
         from GameControl.gameControl import GameControl

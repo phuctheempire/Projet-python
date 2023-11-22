@@ -23,7 +23,7 @@ class Game:
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height) 
         self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
-        self.gameController.spawnBobs(5)
+        self.gameController.spawnBobs(NB_BOB)
         
     
     def run(self):
