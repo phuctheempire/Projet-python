@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 import pygame as pg
 import random
 from view.texture import *
-from GameControl.settings import GRID_LENGTH, TILE_SIZE
+from GameControl.settings import *
 from GameControl.gameControl import GameControl
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
@@ -12,8 +12,9 @@ class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
         self.gameController = GameControl.getInstance()
-        self.foodEnergy = 100
+        self.foodEnergy = 0
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
+        self.foodImg = loadFoodImage()["Food"]
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY
@@ -45,8 +46,12 @@ class Tile:
     #Texture calling
     def getGrassImage(self):
         return self.grassImg
+    def getFoodImage(self):
+        return self.foodImg
     def getEnergy(self):
         return self.foodEnergy
+    def getBobs(self):
+        return self.listBob
     def addBob( self, bob: 'Bob'):
         self.listBob.append(bob)
         # bob.CurrentTile = self
@@ -57,7 +62,7 @@ class Tile:
     def removeFood(self):
         self.foodEnergy = 0
     def spawnFood(self):
-        self.foodEnergy = 100
+        self.foodEnergy += FOOD_MAX_ENERGY
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)
     
@@ -79,8 +84,8 @@ class Tile:
         if radius == 0:
             tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
         else:
-            # tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
-            tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+            tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
+            # tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
         tempTiles = []
         for coord in tempCoord:
             try:

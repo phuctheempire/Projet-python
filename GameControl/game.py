@@ -24,16 +24,19 @@ class Game:
         self.camera = Camera(self.width, self.height) 
         self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
         self.gameController.spawnBobs(NB_BOB)
+        self.gameController.respawnFood()
         
     
     def run(self):
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
-            self.gameController.updateRenderTick()
             self.events()
             self.update()
             self.draw()
+            self.gameController.updateRenderTick()
+            
+
 
     def events(self):
         for event in pg.event.get():

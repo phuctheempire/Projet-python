@@ -26,4 +26,11 @@ def loadBobImage():
         "Bob": bob
     }
     return image
+def loadFoodImage():
+    food = pg.image.load(IMAGE_PATH + "tree.png").convert_alpha()
+    food = pg.transform.scale(food, (food.get_width()*0.5, food.get_height()*0.5))
+    image = {
+        "Food": food
+    }
+    return image
 

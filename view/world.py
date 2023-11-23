@@ -19,6 +19,7 @@ class World:
         # self.drawBob(self.surface, Camera(self.width, self.height))
         self.drawStaticMap()
         self.drawBob(self.surface, Camera(self.width, self.height), self.gameController.renderTick)
+        self.drawFood(self.surface, Camera(self.width, self.height))
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
 
     def drawBob(self, screen, camera, walkProgression ):
@@ -30,7 +31,18 @@ class World:
             (destX, destY) = bob.getNextTile().getRenderCoord()
             (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
             position1 = (X + (desX - X) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))
+            bar_width = int((bob.energy / bob.energyMax) * 50)
+            pg.draw.rect(screen, (255, 0, 0), (position1[0], position1[1] - 5, bar_width, 5))
             screen.blit(bob.getBobTexture(), position1)
+    def drawFood(self, screen, camera):
+        for food in self.gameController.getFoodTiles():
+            (x, y) = food.getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (food.getFoodImage().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position = (X, Y)
+            bar_width = int((food.foodEnergy / FOOD_MAX_ENERGY) * 50)
+            pg.draw.rect(screen, (0, 0, 255), (position[0], position[1] - 5, bar_width, 5))
+            screen.blit(food.getFoodImage(), position)
+
 
     def drawStaticMap(self):
         self.surface.fill(( 137, 207, 240))
