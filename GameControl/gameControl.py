@@ -57,10 +57,12 @@ class GameControl:
         self.setMap(world)
     
     def wipeFood(self):
-        for tile in self.getInstance().getMap():
-            tile.removeFood()
-    def respawnFood
-        for _ in NB_SPAWN_FOOD:
+        for row in self.getInstance().getMap():
+            for tile in row:
+                if tile.getEnergy() == 200:
+                    tile.removeFood()
+    def respawnFood(self):
+        pass
             
 
     def updateRenderTick(self):
