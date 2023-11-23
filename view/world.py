@@ -4,17 +4,10 @@ from GameControl.gameControl import GameControl
 from Tiles.tiles import Tile
 from view.texture import *
 from GameControl.settings import *
-<<<<<<< HEAD:view/Render.py
-
-class Render:
-    def __init__(self, width, height, ) -> None:
-        # self.gameController = GameController.getInstance()
-=======
 from view.camera import Camera
 class World:
     def __init__(self, width, height ) -> None:
         self.gameController = GameControl.getInstance()
->>>>>>> phucss:view/world.py
         self.width = width
         self.height = height
         self.renderTick = 0
