@@ -7,13 +7,12 @@ import pygame as pg
 
 from enum import Enum
 
-from ..TextureLibrary.bobTexture import BobTexture
-from ..TextureLibrary.foodTexture import FoodTexture
-from ..TextureLibrary.directionTexture import DirectionTexture
-from ..TextureLibrary.eatenTexture import EatenTexture
-from ..TextureLibrary.grassTexture import GrassTexture
-# Import Library
-#raries
+from ..TextureLib.bobTexture import BobTexture
+from ..TextureLib.foodTexture import FoodTexture
+from ..TextureLib.directionTexture import DirectionTexture
+from ..TextureLib.eatenTexture import EatenTexture
+from ..TextureLib.grassTexture import GrassTexture
+# Import libraries
 from GameControl.settings import IMAGE_PATH
 # import imgpath
 class Texture:
@@ -27,22 +26,18 @@ class Texture:
     @staticmethod
     def getTexture( ID: any, Number: int = 0) -> pg.surface:
         pass
-        # Il faut return la surface
     @staticmethod
     def getBobTexture( ID: BobTexture, direction: DirectionTexture, frame: int = 0) -> pg.surface:
         pass
-        # Il faut return la surface
     @staticmethod
     def getFoodTexture( ID: FoodTexture, Number: int = 0) -> pg.surface:
         pass
-        # Il faut return la surface
     #Continuez ici
     # @staticmethod
     # def getEatenTexture( ID: EatenTexture, Number: int = 0 ) -> pg.surface:
 
     @staticmethod
     def init(screen):
-        # See Texturelibrary for more info
         Texture.grass_texture = {
             GrassTexture.GRASS: pg.image.load(IMAGE_PATH + "grass.png").convert_alpha(screen),
             GrassTexture.FLOWER: pg.image.load(IMAGE_PATH + "flower.png").convert_alpha(screen),
@@ -56,4 +51,3 @@ class Texture:
         # Gerer et implémenter Bobs et orientation ici 
         #Continuer ici
 
-    

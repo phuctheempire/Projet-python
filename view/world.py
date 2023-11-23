@@ -1,0 +1,72 @@
+import pygame as pg
+from typing import TYPE_CHECKING
+from GameControl.gameControl import GameControl
+from Tiles.tiles import Tile
+from view.texture import *
+from GameControl.settings import *
+<<<<<<< HEAD:view/Render.py
+
+class Render:
+    def __init__(self, width, height, ) -> None:
+        # self.gameController = GameController.getInstance()
+=======
+from view.camera import Camera
+class World:
+    def __init__(self, width, height ) -> None:
+        self.gameController = GameControl.getInstance()
+>>>>>>> phucss:view/world.py
+        self.width = width
+        self.height = height
+        self.renderTick = 0
+        self.surface = pg.Surface((SURFACE_WIDTH, SURFACE_HEIGHT)).convert_alpha()
+
+
+
+    def draw(self, screen, camera):
+        # self.drawBob(self.surface, Camera(self.width, self.height))
+        self.drawStaticMap()
+        self.drawBob(self.surface, Camera(self.width, self.height), self.gameController.renderTick)
+        self.drawFood(self.surface, Camera(self.width, self.height))
+        screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
+
+    def drawBob(self, screen, camera, walkProgression ):
+        for bob in self.gameController.listBobs:
+            (x, y) = bob.getCurrentTile().getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position = (X, Y)
+            # print(bob.getNextTile())
+            (destX, destY) = bob.getNextTile().getRenderCoord()
+            (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position1 = (X + (desX - X) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))
+            bar_width = int((bob.energy / bob.energyMax) * 50)
+            pg.draw.rect(screen, (255, 0, 0), (position1[0], position1[1] - 5, bar_width, 5))
+            screen.blit(bob.getBobTexture(), position1)
+    def drawFood(self, screen, camera):
+        for food in self.gameController.getFoodTiles():
+            (x, y) = food.getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (food.getFoodImage().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position = (X, Y)
+            bar_width = int((food.foodEnergy / FOOD_MAX_ENERGY) * 50)
+            pg.draw.rect(screen, (0, 0, 255), (position[0], position[1] - 5, bar_width, 5))
+            screen.blit(food.getFoodImage(), position)
+
+
+    def drawStaticMap(self):
+        self.surface.fill(( 137, 207, 240))
+        for row in self.gameController.getMap(): # x is a list of a double list Map
+            for tile in row: # tile is an object in list
+                textureImg = tile.getGrassImage()
+                (x, y) = tile.getRenderCoord()
+                offset = (x + self.surface.get_width()/2, y)
+                self.surface.blit(textureImg, offset)
+        
+    # def createWorld(self, lengthX, lengthY ):
+    #     world = []
+    #     for i in range(lengthX):
+    #             world.append([])
+    #             for j in range(lengthY):
+    #                 tile = Tile(gridX=i,gridY= j)
+    #                 world[i].append(tile)
+    #     self.gameController.setMap(world)
+        
+

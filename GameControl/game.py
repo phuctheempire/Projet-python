@@ -1,32 +1,42 @@
+from typing import TYPE_CHECKING
 import pygame as pg
 import sys
-from view.view import View
-from .settings import TILE_SIZE
+# from GameControl.gameControl import GameControlư
+from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera
-from Model.logicMap import logicMap
-import random
+from view.world import World
+# from GameControl.settings import *
+# import random
+
+from GameControl.gameControl import GameControl
+
 
 class Game:
 
     def __init__(self, screen, clock):
+
+        self.gameController = GameControl.getInstance()
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
-        # self.view = View(20, 20, self.width, self.height) 
-        self.logicMap = logicMap(20, 20)
-        self.view = View(self.logicMap, self.width,self.height)
-        self.camera = Camera(self.width, self.height)
+        self.world = World(self.width, self.height)
+        self.camera = Camera(self.width, self.height) 
+        self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
+        self.gameController.spawnBobs(NB_BOB)
+        self.gameController.respawnFood()
         
-        
-
+    
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(60)
+            self.clock.tick(FPS)
             self.events()
             self.update()
             self.draw()
+            self.gameController.updateRenderTick()
+            
+
 
     def events(self):
         for event in pg.event.get():
@@ -44,14 +54,34 @@ class Game:
         
     def draw(self):
         self.screen.fill((137, 207, 240))
-        self.view.draw(self.screen, self.camera)
-        self.view.drawBob(self.screen,self.camera)
+        self.world.draw(self.screen, self.camera)
         draw_text(
             self.screen,
             'fps={}'.format(round(self.clock.get_fps())),
             25,
-            (255, 255, 255),
+            (0,0,0),
             (10, 10)
+        )  
+        draw_text(
+            self.screen,
+            'gameTick={}'.format(round(self.gameController.getRenderTick())),
+            25,
+            (0,0,0),
+            (10, 30)
+        )  
+        draw_text(
+            self.screen,
+            'Tick={}'.format(round(self.gameController.getTick())),
+            25,
+            (0,0,0),
+            (10, 50)
+        )  
+        draw_text(
+            self.screen,
+            'Day={}'.format(round(self.gameController.getDay())),
+            25,
+            (0,0,0),
+            (10, 70)
         )  
 
         pg.display.flip()
