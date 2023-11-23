@@ -38,7 +38,9 @@ class GameControl:
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
             bob.spawn(tile)
+            # bob.initiateNextTiles()
     
+
     def addBob(self, bob: 'Bob'):
         self.listBobs.append(bob)
         self.nbBobs += 1
@@ -54,6 +56,13 @@ class GameControl:
                     world[i].append(tile)
         self.setMap(world)
     
+    def wipeFood(self):
+        for tile in self.getInstance().getMap():
+            tile.removeFood()
+    def respawnFood
+        for _ in NB_SPAWN_FOOD:
+            
+
     def updateRenderTick(self):
         self.renderTick += 1
         if self.renderTick == FPS:

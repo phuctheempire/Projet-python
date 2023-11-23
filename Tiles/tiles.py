@@ -12,6 +12,7 @@ class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
         self.gameController = GameControl.getInstance()
+        self.foodEnergy = 100
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
         self.showTile = True
         self.gridX = gridX
@@ -41,11 +42,11 @@ class Tile:
         return abs(tile1.gridX - tile2.gridX) + abs(tile1.gridY - tile2.gridY)
     def CountofTile(tile: 'Tile', tile2 = 'Tile') -> ('int', 'int'):
         return (tile.gridX - tile2.gridX, tile.gridY - tile2.gridY)
-
     #Texture calling
     def getGrassImage(self):
         return self.grassImg
-    
+    def getEnergy(self):
+        return self.foodEnergy
     def addBob( self, bob: 'Bob'):
         self.listBob.append(bob)
         # bob.CurrentTile = self
@@ -53,6 +54,10 @@ class Tile:
         # print(bob.CurrentTile)
         # print(bob.getNextTile())
     
+    def removeFood(self):
+        self.foodEnergy = 0
+    def spawnFood(self):
+        self.foodEnergy = 100
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)
     
