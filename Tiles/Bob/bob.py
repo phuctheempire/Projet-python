@@ -18,6 +18,7 @@ class Bob:
         self.vision: 'int' = VISION
         self.velocity = 1
         self.id = id
+        self.alive = True
         self.CurrentTile : Optional[Tile] = None
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
@@ -112,9 +113,9 @@ class Bob:
         else:
             smallestMass = preyBob[0]
             for bob in preyBob:
-                if ( bob.mass < smallestBob.mass):
-                    smallestBob = bob
-            return smallestBob
+                if ( bob.mass < smallestMass.mass):
+                    smallestMass = bob
+            return smallestMass
     
     def die(self):
         GameControl.getInstance().removeBob(self)

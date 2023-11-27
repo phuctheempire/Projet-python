@@ -21,6 +21,7 @@ class GameControl:
         # self.createWorld(GRID_LENGTH,GRID_LENGTH)
         # self.spawnBobs(10)
         self.renderTick = 0
+        self.diedBobs: list['Bob'] = []
 
     def setMap(self, map):
         self.grid = map
@@ -35,7 +36,7 @@ class GameControl:
         return foodTiles
     def updateTick(self):
         self.currentTick += 1
-    
+
     def spawnBobs(self, nbBobs):
         from Tiles.Bob.bob import Bob
         for _ in range(nbBobs):
@@ -47,6 +48,7 @@ class GameControl:
             bob.spawn(tile)
             # bob.initiateNextTiles()
     
+
 
     def addBob(self, bob: 'Bob'):
         self.listBobs.append(bob)
