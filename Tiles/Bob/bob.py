@@ -117,9 +117,10 @@ class Bob:
                     smallestMass = bob
             return smallestMass
     
-    def die(self):
-        GameControl.getInstance().removeBob(self)
-        self.CurrentTile.removeBob(self)
+    def dyingBob(self):
+        GameControl.getInstance().diedBobs.append(self)
+        self.alive = False
+        # self.CurrentTile.removeBob()
 
 
     def getBobTexture(self):

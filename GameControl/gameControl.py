@@ -18,15 +18,15 @@ class GameControl:
         self.listBobs : list['Bob'] = []
         self.currentTick = 0
         self.currentDay = 0
-        # self.createWorld(GRID_LENGTH,GRID_LENGTH)
-        # self.spawnBobs(10)
         self.renderTick = 0
         self.diedBobs: list['Bob'] = []
 
     def setMap(self, map):
         self.grid = map
+
     def getMap(self):
         return self.grid
+    
     def getFoodTiles(self) -> list['Tile']:
         foodTiles = []
         for row in self.getMap():
@@ -34,6 +34,7 @@ class GameControl:
                 if tile.getEnergy() > 0:
                     foodTiles.append(tile)
         return foodTiles
+    
     def updateTick(self):
         self.currentTick += 1
 
@@ -47,9 +48,6 @@ class GameControl:
             bob = Bob(random.randint(0, 1000))
             bob.spawn(tile)
             # bob.initiateNextTiles()
-    
-
-
     def addBob(self, bob: 'Bob'):
         self.listBobs.append(bob)
         self.nbBobs += 1
@@ -74,6 +72,7 @@ class GameControl:
             for tile in row:
                 if tile.getEnergy() == FOOD_MAX_ENERGY:
                     tile.removeFood()
+    
     def respawnFood(self):
         couples: list[tuple] = []
         for _ in range(NB_SPAWN_FOOD):
@@ -84,7 +83,6 @@ class GameControl:
                 y = random.randint(0,GRID_LENGTH-1)
             self.getMap()[x][y].spawnFood()
             couples.append((x, y))
-            
 
     def updateRenderTick(self):
         self.renderTick += 1
@@ -92,26 +90,29 @@ class GameControl:
             self.renderTick = 0
             self.increaseTick()
         
-
-
-
     def increaseTick(self):
         # we must do something here
-        i = 0
-        bobs = self.listBobs
-        while i < len(bobs):
-            bob = bobs[i]
-            bob.move()
-            print("Length of bobs:", len(bobs))
-            if bob not in bobs:
-                pass
-            else: i += 1
-            
-
+        # i = 0
+        # bobs = self.listBobs
+        # while i < len(bobs):
+        #     bob = bobs[i]
+        #     bob.move()
+        #     print("Length of bobs:", len(bobs))
+        #     if bob not in bobs:
+        #         pass
+        #     else: i += 1
+        self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
+        for bob in self.listBobs:
+            if (bob.alive):
+                bob.move() 
         self.currentTick += 1
         if self.currentTick == TICKS_PER_DAY:
             self.currentTick = 0
             self.increaseDay()
+    def wipeBobs(self):
+        for bob in self.diedBobs:
+            bob.CurrentTile.removeBob(bob)
+            self.removeBob(bob)
     def increaseDay(self):
         self.wipeFood()
         self.respawnFood()
