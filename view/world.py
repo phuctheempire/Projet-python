@@ -25,16 +25,26 @@ class World:
 
     def drawBob(self, screen, camera, walkProgression ):
         for bob in self.gameController.listBobs:
-            (x, y) = bob.getCurrentTile().getRenderCoord()
-            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-            position = (X, Y)
-            # print(bob.getNextTile())
-            (destX, destY) = bob.getNextTile().getRenderCoord()
-            (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-            position1 = (X + (desX - X) * (walkProgression/FPS), Y + (desY - Y) * (walkProgression/FPS))
-            bar_width = int((bob.energy / bob.energyMax) * 50)
-            pg.draw.rect(screen, (255, 0, 0), (position1[0], position1[1] - 5, bar_width, 5))
-            screen.blit(bob.getBobTexture(), position1)
+            if bob not in self.gameController.diedBobs:
+                (x, y) = bob.getCurrentTile().getRenderCoord()
+                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                position = (X, Y)
+                # print(bob.getNextTile())
+                (destX, destY) = bob.getNextTile().getRenderCoord()
+                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+                bar_width = int((bob.energy / bob.energyMax) * 50)
+                if (walkProgression < FPS/2):
+                    pg.draw.rect(screen, (255, 0, 0), (position1[0], position1[1] - 5, bar_width, 5))
+                    screen.blit(bob.getBobTexture(), position1)
+                else:
+                    pg.draw.rect(screen, (255, 0, 0), (desX, desY - 5, bar_width, 5))
+                    screen.blit(bob.getBobTexture(), (desX, desY))
+            else:
+                (x, y) = bob.getCurrentTile().getRenderCoord()
+                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                position = (X, Y)
+
     def drawFood(self, screen, camera):
         for food in self.gameController.getFoodTiles():
             (x, y) = food.getRenderCoord()
@@ -47,12 +57,12 @@ class World:
 
     def drawStaticMap(self):
         self.surface.fill(( 137, 207, 240))
-        for row in self.gameController.getMap(): # x is a list of a double list Map
-            for tile in row: # tile is an object in list
-                textureImg = tile.getGrassImage()
-                (x, y) = tile.getRenderCoord()
-                offset = (x + self.surface.get_width()/2, y)
-                self.surface.blit(textureImg, offset)
+        # for row in self.gameController.getMap(): # x is a list of a double list Map
+        #     for tile in row: # tile is an object in list
+        #         textureImg = tile.getGrassImage()
+        #         (x, y) = tile.getRenderCoord()
+        #         offset = (x + self.surface.get_width()/2, y)
+        #         self.surface.blit(textureImg, offset)
         
     # def createWorld(self, lengthX, lengthY ):
     #     world = []

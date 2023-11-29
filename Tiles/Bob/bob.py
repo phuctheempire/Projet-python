@@ -131,9 +131,9 @@ class Bob:
     def getNextTile(self) -> Tile:
         return self.NextTile
 
-    # def die(self):
-    #     self.CurrentTile.removeBob(self)
-    #     GameControl.getInstance().removeBob(self)
+    def die(self):
+        self.CurrentTile.removeBob(self)
+        GameControl.getInstance().removeBob(self)
         
     def ListPredator(self) -> list['Bob']:
         listBobs = self.getNearbyBobs()

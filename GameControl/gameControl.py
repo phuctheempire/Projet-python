@@ -92,19 +92,21 @@ class GameControl:
         
     def increaseTick(self):
         # we must do something here
-        # i = 0
-        # bobs = self.listBobs
-        # while i < len(bobs):
-        #     bob = bobs[i]
-        #     bob.move()
-        #     print("Length of bobs:", len(bobs))
-        #     if bob not in bobs:
-        #         pass
-        #     else: i += 1
-        self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
-        for bob in self.listBobs:
-            if (bob.alive):
-                bob.move() 
+        i = 0
+        bobs = self.listBobs
+        while i < len(bobs):
+            bob = bobs[i]
+            bob.move()
+            print("Length of bobs:", len(bobs))
+            if bob not in bobs:
+                pass
+            else: i += 1
+        # self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
+        # for bob in self.listBobs:
+        #     if (bob.alive):
+        #         bob.move()
+        #         bob.interact()
+            
         self.currentTick += 1
         if self.currentTick == TICKS_PER_DAY:
             self.currentTick = 0
