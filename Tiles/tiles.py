@@ -18,7 +18,7 @@ class Tile:
         self.gridX = gridX
         self.gridY = gridY
         self.listBob : list['Bob'] = []
-        self.listFood : list["Food"] = []
+        # self.listFood : list["Food"] = []
 
         CartCoord = [(gridX*TILE_SIZE, gridY*TILE_SIZE), 
                      (gridX*TILE_SIZE + TILE_SIZE, gridY*TILE_SIZE), 
