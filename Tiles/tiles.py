@@ -6,7 +6,6 @@ from GameControl.settings import *
 from GameControl.gameControl import GameControl
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
-    from Tiles.Food.food import Food
 
 class Tile:
 
