@@ -3,7 +3,6 @@ from GameControl.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
-    from Tiles.Food import Food
     from Tiles.tiles import Tile
 
 
@@ -52,6 +51,7 @@ class GameControl:
         self.listBobs.append(bob)
         self.nbBobs += 1
         self.nbBobsSpawned += 1
+
     def removeBob(self, bob: 'Bob'):
         print("Removing bob:", bob.id)
         self.listBobs.remove(bob)
@@ -63,15 +63,14 @@ class GameControl:
         for i in range(lengthX):
                 world.append([])
                 for j in range(lengthY):
-                    tile = Tile(gridX=i,gridY= j)
+                    tile = Tile(gridX=i,gridY=j)
                     world[i].append(tile)
         self.setMap(world)
     
     def wipeFood(self):
         for row in self.getInstance().getMap():
             for tile in row:
-                if tile.getEnergy() == FOOD_MAX_ENERGY:
-                    tile.removeFood()
+                tile.removeFood()
     
     def respawnFood(self):
         couples: list[tuple] = []
@@ -111,14 +110,16 @@ class GameControl:
         if self.currentTick == TICKS_PER_DAY:
             self.currentTick = 0
             self.increaseDay()
+
     def wipeBobs(self):
         for bob in self.diedBobs:
             bob.CurrentTile.removeBob(bob)
             self.removeBob(bob)
+
     def increaseDay(self):
         self.wipeFood()
-        self.respawnFood()
         self.currentDay += 1
+        self.respawnFood()
     
     def getRenderTick(self):
         return self.renderTick
@@ -131,8 +132,6 @@ class GameControl:
     @staticmethod
     def getInstance():
         if GameControl.instance is None:
-            if (GameControl.instance is not None):
-                raise Exception("This class is a singleton!")
             GameControl.instance = GameControl()
         return GameControl.instance
 

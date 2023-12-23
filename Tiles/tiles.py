@@ -9,24 +9,30 @@ if TYPE_CHECKING:
 
 class Tile:
 
-    def __init__(self, gridX: int, gridY: int ):
+    def __init__(self, gridX: int, gridY: int):
         self.gameController = GameControl.getInstance()
+
         self.foodEnergy = 0
+
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
         self.foodImg = loadFoodImage()["Food"]
-        self.showTile = True
+
+        # self.showTile = True
+
         self.gridX = gridX
         self.gridY = gridY
+
         self.listBob : list['Bob'] = []
         # self.listFood : list["Food"] = []
 
         CartCoord = [(gridX*TILE_SIZE, gridY*TILE_SIZE), 
                      (gridX*TILE_SIZE + TILE_SIZE, gridY*TILE_SIZE), 
                      (gridX*TILE_SIZE + TILE_SIZE, gridY*TILE_SIZE + TILE_SIZE), 
-                     (gridX*TILE_SIZE, gridY*TILE_SIZE + TILE_SIZE)]
+                     (gridX*TILE_SIZE, gridY*TILE_SIZE + TILE_SIZE)] 
 
         def CartToIso(x, y):
             return (x - y, (x + y) / 2)
+        
         self.isoCoord = [CartToIso(x, y) for x, y in CartCoord]
 
         self.renderCoord = (min([x for x, y in self.isoCoord]), min([y for x, y in self.isoCoord]))
@@ -34,23 +40,31 @@ class Tile:
     # Setter and getter
     def getRenderCoord(self):
         return self.renderCoord
+    
     def getIsoCoord(self):
         return self.isoCoord
+    
     def getGameCoord(self):
         return (self.gridX, self.gridY)
+    
     def distanceofTile(tile1: 'Tile', tile2:'Tile') -> 'int':
         return abs(tile1.gridX - tile2.gridX) + abs(tile1.gridY - tile2.gridY)
+    
     def CountofTile(tile: 'Tile', tile2 = 'Tile') -> ('int', 'int'):
         return (tile.gridX - tile2.gridX, tile.gridY - tile2.gridY)
     #Texture calling
     def getGrassImage(self):
         return self.grassImg
+    
     def getFoodImage(self):
         return self.foodImg
+    
     def getEnergy(self):
         return self.foodEnergy
+    
     def getBobs(self):
         return self.listBob
+    
     def addBob( self, bob: 'Bob'):
         self.listBob.append(bob)
         # bob.CurrentTile = self
@@ -60,8 +74,10 @@ class Tile:
     
     def removeFood(self):
         self.foodEnergy = 0
+
     def spawnFood(self):
         self.foodEnergy += FOOD_MAX_ENERGY
+
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)
     

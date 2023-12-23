@@ -1,4 +1,4 @@
-# For path pinding purposes
+ # For path pinding purposes
 from typing import Optional
 from Tiles.tiles import Tile
 from GameControl.gameControl import GameControl
@@ -11,6 +11,7 @@ from GameControl.settings import *
 # Function that make bob move according to the vision, the memory and the predator 
 class Bob: 
     def __init__( self, id: 'int' = 0  ):
+        # add static id
         self.energy = 100
         self.energyMax = 200
         self.mass = 1
@@ -19,7 +20,7 @@ class Bob:
         self.velocity = 1
         self.id = id
         self.alive = True
-        self.CurrentTile : Optional[Tile] = None
+        self.CurrentTile : Tile = None
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
         self.PredatorTile : Optional[Tile] = None
@@ -89,7 +90,7 @@ class Bob:
         newBob.mass = random.uniform(self.mass - VAR_MASS, self.mass + VAR_MASS)
         newBob.velocity = random.uniform(self.velocity - VAR_VELO, self.velocity + VAR_VELO)
         newBob.spawn(self.CurrentTile)
-        self.energy = 150
+        self.energy = 50
         
     def interact(self):
         self.Consumefood() # si possible
