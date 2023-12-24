@@ -3,6 +3,7 @@ from typing import Optional
 from Tiles.tiles import Tile
 from GameControl.gameControl import GameControl
 from view.texture import loadBobImage
+from view.texture import loadExplosionImage
 import random
 from GameControl.settings import *
 # from Tiles.Food.food import Food
@@ -45,6 +46,7 @@ class Bob:
 ################## Action ##################################
 
     def action(self):
+        print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
         self.move()
         self.energy -= 3
         self.interact()
@@ -53,7 +55,7 @@ class Bob:
             # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
             self.die()
         # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
-        self.determineNextTile()
+        # self.determineNextTile()
 
     def move(self):
         self.CurrentTile.removeBob(self)
@@ -84,6 +86,8 @@ class Bob:
 
         while ( self.energy < self.energyMax):
             preyBobs = self.getPraysInListBob(self.CurrentTile.getBobs())
+            print("Same tile bob = ", self.CurrentTile.getBobs())
+            print("Spot prey = ", preyBobs)
             if ( preyBobs == []):
                 break
             else:
@@ -111,7 +115,7 @@ class Bob:
                 if ( bob.mass * 3 / 2 < self.mass):
                     preyBob.append(bob)
             return preyBob
-    def getSmallestPreys(self, listPray: list['Bob']) -> 'Bob':
+    def getSmallestPrey(self, listPray: list['Bob']) -> 'Bob':
         if ( listPray == []):
             return None
         else:
@@ -141,13 +145,15 @@ class Bob:
     # Map Scanning
     def getNearbyBobs(self) -> list['Bob']:
         NearTiles = self.CurrentTile.getNearbyTiles(self.vision)
-        NearTiles.append(self.CurrentTile)
+        # NearTiles.append(self.CurrentTile)
         seenBobs: list['Bob'] = []
         for tile in NearTiles:
             if ( tile.listBob != []):
                 for bob in tile.listBob:
-                    seenBobs.append(bob)
+                    if ( bob != self):
+                        seenBobs.append(bob)
             else: pass
+        print("Seen bobs = ", seenBobs)
         return seenBobs   
 ######################## Hunt ###############################################
     def Hunt(self):
@@ -157,7 +163,7 @@ class Bob:
             self.NextTile = self.HuntNextTile()
         else:
         # We find prey :
-            Prey = self.getSmallestPreys(self.getPraysInListBob(self.getNearbyBobs()))
+            Prey = self.getSmallestPrey(self.getPraysInListBob(self.getNearbyBobs()))
             if Prey != None:
                 self.TargetTile = Prey.CurrentTile
                 self.NextTile = self.HuntNextTile()

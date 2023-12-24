@@ -24,7 +24,7 @@ class World:
 
     def drawBob(self, screen, camera, walkProgression ):
         for bob in self.gameController.listBobs:
-            if bob not in self.gameController.diedQueue or self.gameController.newBornQueue:
+            if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
                 (x, y) = bob.getCurrentTile().getRenderCoord()
                 (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                 position = (X, Y)
@@ -44,8 +44,22 @@ class World:
             (x, y) = bob.getCurrentTile().getRenderCoord()
             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
             position = (X, Y)
-            # if walkProgression < FPS/2:
-            screen.blit(bob.getBobTexture(), position) # need to change to dead bob texture later
+            if walkProgression < FPS/8:
+                screen.blit(bob.getExplodeTexture(1), position)
+            elif FPS/8 <= walkProgression < FPS/4:
+                screen.blit(bob.getExplodeTexture(2), position)
+            elif FPS/4 <= walkProgression < 3*FPS/8:
+                screen.blit(bob.getExplodeTexture(3), position)
+            elif 3*FPS/8 <= walkProgression < FPS/2:
+                screen.blit(bob.getExplodeTexture(4), position)
+            elif FPS/2 <= walkProgression < 5*FPS/8:
+                screen.blit(bob.getExplodeTexture(5), position)
+            elif 5*FPS/8 <= walkProgression < 3*FPS/4:
+                screen.blit(bob.getExplodeTexture(6), position)
+            elif 3*FPS/4 <= walkProgression < 7*FPS/8:
+                screen.blit(bob.getExplodeTexture(7), position)
+            else:
+                screen.blit(bob.getExplodeTexture(8), position)
   
         for bob in self.gameController.newBornQueue:
             if bob not in self.gameController.diedQueue:
@@ -76,12 +90,12 @@ class World:
 
     def drawStaticMap(self):
         self.surface.fill(( 137, 207, 240))
-        # for row in self.gameController.getMap(): # x is a list of a double list Map
-        #     for tile in row: # tile is an object in list
-        #         textureImg = tile.getGrassImage()
-        #         (x, y) = tile.getRenderCoord()
-        #         offset = (x + self.surface.get_width()/2, y)
-        #         self.surface.blit(textureImg, offset)
+        for row in self.gameController.getMap(): # x is a list of a double list Map
+            for tile in row: # tile is an object in list
+                textureImg = tile.getGrassImage()
+                (x, y) = tile.getRenderCoord()
+                offset = (x + self.surface.get_width()/2, y)
+                self.surface.blit(textureImg, offset)
         
     # def createWorld(self, lengthX, lengthY ):
     #     world = []

@@ -80,10 +80,10 @@ class Tile:
         from GameControl.gameControl import GameControl
         tempMap = GameControl.getInstance().getMap();
         tempCoord = []
-        if radius == 0:
-            tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
-        else:
-            tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
+        # if radius == 0:
+        #     tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+        # else:
+        tempCoord = [(x, y) for x in range(-radius, radius+1) for y in range(-radius, radius+1) if abs(x) + abs(y) <= radius] 
             # tempCoord = [(0, 1), (1, 0), (-1, 0), (0, -1)]
         tempTiles = []
         for coord in tempCoord:

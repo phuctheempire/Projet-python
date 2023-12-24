@@ -48,6 +48,25 @@ class GameControl:
             bob.spawn(tile)
         self.pushToList()
 
+    def eatingTest(self):
+        from Tiles.Bob.bob import Bob
+        x1 = random.randint(0, GRID_LENGTH - 1)
+        y1 = random.randint(0, GRID_LENGTH - 1)
+        tile1 = self.getMap()[x1][y1]
+        bob1 = Bob(random.randint(0, 1000))
+        bob1.spawn(tile1)
+        bob1.mass = 2
+        bob1.velocity = 2
+        x2 = random.randint(0, GRID_LENGTH - 1)
+        y2 = random.randint(0, GRID_LENGTH - 1)
+        tile2 = self.getMap()[x2][y2]
+        bob2 = Bob(random.randint(0, 1000))
+        bob2.spawn(tile2)
+        bob2.mass = 1
+        bob2.velocity = 1
+        self.pushToList()
+
+
     def pushToList(self):
         for bob in self.newBornQueue:
             self.listBobs.append(bob)
@@ -107,6 +126,9 @@ class GameControl:
         for bob in self.listBobs:
             if bob not in self.diedQueue:
                 bob.action()
+        for bob in self.listBobs:
+            if bob not in self.diedQueue:
+                bob.determineNextTile()
         self.currentTick += 1
         if self.currentTick == TICKS_PER_DAY:
             self.currentTick = 0
