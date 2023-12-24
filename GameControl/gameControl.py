@@ -3,7 +3,7 @@ from GameControl.settings import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
-    from Tiles.Food import Food
+    # from Tiles.Food import Food
     from Tiles.tiles import Tile
 
 
@@ -16,10 +16,12 @@ class GameControl:
         self.nbBobs: 'int'= 0
         self.nbBobsSpawned = 0
         self.listBobs : list['Bob'] = []
+        self.newBornQueue : list['Bob'] = []
+        self.diedQueue: list['Bob'] = []
         self.currentTick = 0
         self.currentDay = 0
         self.renderTick = 0
-        self.diedBobs: list['Bob'] = []
+
 
     def setMap(self, map):
         self.grid = map
@@ -34,11 +36,8 @@ class GameControl:
                 if tile.getEnergy() > 0:
                     foodTiles.append(tile)
         return foodTiles
-    
-    def updateTick(self):
-        self.currentTick += 1
 
-    def spawnBobs(self, nbBobs):
+    def initiateBobs(self, nbBobs):
         from Tiles.Bob.bob import Bob
         for _ in range(nbBobs):
             print("Adding bob")
@@ -47,15 +46,25 @@ class GameControl:
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
             bob.spawn(tile)
-            # bob.initiateNextTiles()
-    def addBob(self, bob: 'Bob'):
-        self.listBobs.append(bob)
-        self.nbBobs += 1
-        self.nbBobsSpawned += 1
-    def removeBob(self, bob: 'Bob'):
-        print("Removing bob:", bob.id)
-        self.listBobs.remove(bob)
-        self.nbBobs -= 1
+        self.pushToList()
+
+    def pushToList(self):
+        for bob in self.newBornQueue:
+            self.listBobs.append(bob)
+            self.nbBobs += 1
+            self.nbBobsSpawned += 1
+        self.newBornQueue.clear()
+
+    def addToNewBornQueue(self, bob: 'Bob'):
+        self.newBornQueue.append(bob)
+    def addToDiedQueue(self, bob: 'Bob'):
+        self.diedQueue.append(bob)
+
+    def wipeBobs(self):
+        for bob in self.diedQueue:
+            self.listBobs.remove(bob)
+            self.nbBobs -= 1
+        self.diedQueue.clear()
 
     def createWorld(self, lengthX, lengthY ):
         from Tiles.tiles import Tile 
@@ -90,36 +99,26 @@ class GameControl:
             self.renderTick = 0
             self.increaseTick()
         
+
     def increaseTick(self):
-        # we must do something here
-        i = 0
-        bobs = self.listBobs
-        while i < len(bobs):
-            bob = bobs[i]
-            bob.move()
-            print("Length of bobs:", len(bobs))
-            if bob not in bobs:
-                pass
-            else: i += 1
-        # self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
-        # for bob in self.listBobs:
-        #     if (bob.alive):
-        #         bob.move()
-        #         bob.interact()
-            
+        self.pushToList()
+        self.wipeBobs()
+        self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
+        for bob in self.listBobs:
+            if bob not in self.diedQueue:
+                bob.action()
         self.currentTick += 1
         if self.currentTick == TICKS_PER_DAY:
             self.currentTick = 0
             self.increaseDay()
-    def wipeBobs(self):
-        for bob in self.diedBobs:
-            bob.CurrentTile.removeBob(bob)
-            self.removeBob(bob)
+
+        # At the end of the tick, we have listBob, newBornQueue, diedQueue
+        
     def increaseDay(self):
         self.wipeFood()
         self.respawnFood()
         self.currentDay += 1
-    
+
     def getRenderTick(self):
         return self.renderTick
     def getTick(self):
@@ -127,7 +126,6 @@ class GameControl:
     def getDay(self):
         return self.currentDay
     
-
     @staticmethod
     def getInstance():
         if GameControl.instance is None:

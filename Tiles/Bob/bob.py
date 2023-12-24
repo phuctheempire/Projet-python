@@ -29,25 +29,45 @@ class Bob:
         self.memoryTile = Optional[Tile]
         self.image = self.getBobTexture()
 
+################ Die and Born ############################
     def spawn(self, tile: 'Tile'):
         self.CurrentTile = tile
         self.CurrentTile.addBob(self)
-        GameControl.getInstance().addBob(self)
-        self.TargetTile = self.CurrentTile
-        self.NextTile = self.CurrentTile
+        GameControl.getInstance().addToNewBornQueue(self)
+        self.determineNextTile()  
 
-    def initiateNextTiles(self):
-        self.TargetTile = self.setTargetTile()
-        self.NextTile = self.setNextTile()
+    def die(self):
+        self.CurrentTile.removeBob(self)
+        GameControl.getInstance().addToDiedQueue(self)
+        self.alive = False
+############################################################
+        
+################## Action ##################################
 
-    def eat(self, other: 'Bob'):
-        if self.energy + other.energy <=  self.energyMax:
-            self.energy += other.energy # need rework here
-            other.die()
-        else:
-            self.energy = self.energyMax
-            other.die()
+    def action(self):
+        self.move()
+        self.energy -= 3
+        self.interact()
+        # print("interacting")
+        if ( self.energy <= 0):
+            # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
+            self.die()
+        # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
+        self.determineNextTile()
 
+    def move(self):
+        self.CurrentTile.removeBob(self)
+        self.NextTile.addBob(self)
+        self.CurrentTile = self.NextTile
+
+##################### Interact in one tick  #############################
+    def interact(self):
+        self.Consumefood() # si possible
+        # needto Have sex if possible 
+        if ( self.energy == self.energyMax):
+            self.reproduce() # si possible
+
+##################### Eating process #####################################
     def Consumefood(self):
         energy = self.CurrentTile.getEnergy()
         if ( energy == 0):
@@ -62,41 +82,26 @@ class Bob:
                     self.CurrentTile.foodEnergy -= (self.energyMax - self.energy)
                     self.energy = FOOD_MAX_ENERGY
 
-
-        # if self.energy != self.energyMax:
-        #     preyBobs = self.getPraysInListBob(self.CurrentTile.getBobs())
-        #     if ( preyBobs == None):
-        #         pass
-        #     else:
-        #         unluckyBob = self.getSmallestPrey(preyBobs)
-        #         if ( unluckyBob == None):
-        #             pass
-        #         else:
-        #             self.eat(unluckyBob)
-        # else: pass
-        while ( self.energy != self.energyMax):
+        while ( self.energy < self.energyMax):
             preyBobs = self.getPraysInListBob(self.CurrentTile.getBobs())
             if ( preyBobs == []):
                 break
             else:
-                unluckyBob = random.choice(preyBobs)
+                unluckyBob = self.getSmallestPrey(preyBobs)
+                # if ( unluckyBob == None):
+                #     break
+                # else:
                 self.eat(unluckyBob)
-
-        
-    def reproduce(self):
-        newBob = Bob(random.randint(0, 1000))
-        newBob.energy = 50
-        newBob.mass = random.uniform(self.mass - VAR_MASS, self.mass + VAR_MASS)
-        newBob.velocity = random.uniform(self.velocity - VAR_VELO, self.velocity + VAR_VELO)
-        newBob.spawn(self.CurrentTile)
-        self.energy = 150
-        
-    def interact(self):
-        self.Consumefood() # si possible
-        # needto Have sex if possible 
-        if ( self.energy == self.energyMax):
-            self.reproduce() # si possible
     
+    def eat(self, other: 'Bob'):
+        if self.energy + other.energy <=  self.energyMax:
+            self.energy += other.energy # need rework here
+            other.die()
+        else:
+            self.energy = self.energyMax
+            other.die()
+
+################### Determine which bob to eat ###########################
     def getPraysInListBob(self, listBob: list['Bob']) -> list['Bob']:
         if ( listBob == []):
             return []
@@ -107,134 +112,44 @@ class Bob:
                     preyBob.append(bob)
             return preyBob
     def getSmallestPreys(self, listPray: list['Bob']) -> 'Bob':
-        preyBob = self.getPraysInListBob(listPray)
-        if ( preyBob == []):
+        if ( listPray == []):
             return None
         else:
-            smallestMass = preyBob[0]
-            for bob in preyBob:
-                if ( bob.mass < smallestMass.mass):
-                    smallestMass = bob
-            return smallestMass
-    
-    def dyingBob(self):
-        GameControl.getInstance().diedBobs.append(self)
-        self.alive = False
-        # self.CurrentTile.removeBob()
+            smallestMassBob = listPray[0]
+            for bob in listPray:
+                if ( bob.mass < smallestMassBob.mass):
+                    smallestMassBob = bob
+            return smallestMassBob
 
 
-    def getBobTexture(self):
-        return loadBobImage()["Bob"]
 
-    def getCurrentTile(self) -> Tile:
-        return self.CurrentTile
-    def getNextTile(self) -> Tile:
-        return self.NextTile
 
-    def die(self):
-        self.CurrentTile.removeBob(self)
-        GameControl.getInstance().removeBob(self)
+####################### Reproduction #####################################
         
-    def ListPredator(self) -> list['Bob']:
-        listBobs = self.getNearbyBobs()
-        listPredator = []
-        for bob in listBobs:
-            if ( bob.mass > (3/2)*self.mass):
-                listPredator.append(bob)
-        if ( listPredator == []):
-            self.huntOrRun = 1
-        else:
-            self.huntOrRun = 0
-        return listPredator
-    
-    def NearestPredatorTarget(self) -> Tile:
-        listPredator = self.ListPredator()
-        if ( listPredator != []):
-            predator = listPredator[0]
-            for pred in listPredator:
-                if ( Tile.distanceofTile(self.CurrentTile, pred.CurrentTile) < Tile.distanceofTile(self.CurrentTile, predator.CurrentTile)):
-                    predator = pred
-            return predator.CurrentTile
-        else: return None
-
-    def scanForTarget(self) -> Tile:
-        listFood = self.getNearbyFood()
-        if ( listFood != []):
-            temp = listFood[0]
-            for food in listFood:
-                if ( food.energy > temp):
-                    temp = food
-            temp.getCurrentTile()
-        else:
-            listBobs = self.getNearbyBobs()
-            temp = listBobs[0]
-            for bob in listBobs:
-                if ( bob.mass < temp.mass):
-                    temp = bob
-            temp.getCurrentTile()
-    
-    def HuntNextTile(self):
-        #Temporary
-        target = self.TargetTile
-        if self.CurrentTile == self.TargetTile:
-            return self.TargetTile
-        elif ( target == self.CurrentTile.getNearbyTiles(0)):
-            return target
-        else:
-            (x,y) = Tile.CountofTile(target, self.CurrentTile)
-            if ( y == 0 and x != 0 ):
-                if ( x > 0):
-                    return self.CurrentTile.getDirectionTiles("Right")
-                else:
-                    return self.CurrentTile.getDirectionTiles("Left")
-            elif ( x == 0 and y != 0):
-                if ( y > 0):
-                    return self.CurrentTile.getDirectionTiles("Up")
-                else:
-                    return self.CurrentTile.getDirectionTiles("Down")
-            else:
-                if ( x > 0 and y > 0):
-                    upright = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (upright)
-                elif ( x > 0 and y < 0):
-                    downRight = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (downRight)
-                elif ( x < 0 and y > 0):
-                    upLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left"))
-                    return random.choice(upLeft)
-                else:
-                    downLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left"))
-                    return random.choice(downLeft)
-    def setRandomTile(self):     
-        nearbyTiles = self.CurrentTile.getNearbyTiles(0)
-        return random.choice(nearbyTiles)
-
-    def move(self):
-        self.CurrentTile.removeBob(self)
-        self.NextTile.addBob(self)
-        self.CurrentTile = self.NextTile
-        self.energy -= 3
-        self.interact()
-        # print("interacting")
-        if ( self.energy <= 0):
-            # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
-            self.die()
-        # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
+    def reproduce(self):
+        newBob = Bob(random.randint(0, 1000))
+        newBob.energy = 50
+        newBob.mass = random.uniform(self.mass - VAR_MASS, self.mass + VAR_MASS)
+        newBob.velocity = random.uniform(self.velocity - VAR_VELO, self.velocity + VAR_VELO)
+        newBob.spawn(self.CurrentTile)
+        self.energy = 150
+        
+######################## Find next tile #####################################
+    def determineNextTile(self):
         self.Hunt()
 
-
-        # self.interact()
-        # self.Hunt()
-        # pred = self.NearestPredatorTarget()
-        # if ( pred != None):
-        #     self.Run
-        # else:
-        #     self.Hunt
-        # self.TargetTile = self.setRandomTile()
-        # self.NextTile = self.HuntNextTile()
-        
-
-
+    # Map Scanning
+    def getNearbyBobs(self) -> list['Bob']:
+        NearTiles = self.CurrentTile.getNearbyTiles(self.vision)
+        NearTiles.append(self.CurrentTile)
+        seenBobs: list['Bob'] = []
+        for tile in NearTiles:
+            if ( tile.listBob != []):
+                for bob in tile.listBob:
+                    seenBobs.append(bob)
+            else: pass
+        return seenBobs   
+######################## Hunt ###############################################
     def Hunt(self):
         Target = self.getLargestAndNearestFoodTile()
         if ( Target != None):
@@ -285,18 +200,110 @@ class Bob:
                 else: pass
             #random the nearestFoodTile in the list
             return random.choice(nearestLargeFoodTiles)
-        
+    
+    def HuntNextTile(self):
+        #Temporary
+        target = self.TargetTile
+        if self.CurrentTile == self.TargetTile:
+            return self.TargetTile
+        elif ( target == self.CurrentTile.getNearbyTiles(0)):
+            return target
+        else:
+            (x,y) = Tile.CountofTile(target, self.CurrentTile)
+            if ( y == 0 and x != 0 ):
+                if ( x > 0):
+                    return self.CurrentTile.getDirectionTiles("Right")
+                else:
+                    return self.CurrentTile.getDirectionTiles("Left")
+            elif ( x == 0 and y != 0):
+                if ( y > 0):
+                    return self.CurrentTile.getDirectionTiles("Up")
+                else:
+                    return self.CurrentTile.getDirectionTiles("Down")
+            else:
+                if ( x > 0 and y > 0):
+                    upright = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
+                    return random.choice (upright)
+                elif ( x > 0 and y < 0):
+                    downRight = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
+                    return random.choice (downRight)
+                elif ( x < 0 and y > 0):
+                    upLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left"))
+                    return random.choice(upLeft)
+                else:
+                    downLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left"))
+                    return random.choice(downLeft)
 
-    def getNearbyBobs(self) -> list['Bob']:
-        NearTiles = self.CurrentTile.getNearbyTiles(self.vision)
-        NearTiles.append(self.CurrentTile)
-        seenBobs: list['Bob'] = []
-        for tile in NearTiles:
-            if ( tile.listBob != []):
-                for bob in tile.listBob:
-                    seenBobs.append(bob)
-            else: pass
-        return seenBobs        
+############################# Run ###########################################
+
+    def ListPredator(self) -> list['Bob']:
+        listBobs = self.getNearbyBobs()
+        listPredator = []
+        for bob in listBobs:
+            if ( bob.mass > (3/2)*self.mass):
+                listPredator.append(bob)
+        if ( listPredator == []):
+            self.huntOrRun = 1
+        else:
+            self.huntOrRun = 0
+        return listPredator
+    
+    def NearestPredator(self) -> Tile:
+        listPredator = self.ListPredator()
+        if ( listPredator != []):
+            predator = listPredator[0]
+            for pred in listPredator:
+                if ( Tile.distanceofTile(self.CurrentTile, pred.CurrentTile) < Tile.distanceofTile(self.CurrentTile, predator.CurrentTile)):
+                    predator = pred
+            return predator.CurrentTile
+        else: return None
+
+    # def scanForTarget(self) -> Tile:
+    #     listFood = self.getNearbyFood()
+    #     if ( listFood != []):
+    #         temp = listFood[0]
+    #         for food in listFood:
+    #             if ( food.energy > temp):
+    #                 temp = food
+    #         temp.getCurrentTile()
+    #     else:
+    #         listBobs = self.getNearbyBobs()
+    #         temp = listBobs[0]
+    #         for bob in listBobs:
+    #             if ( bob.mass < temp.mass):
+    #                 temp = bob
+    #         temp.getCurrentTile()
+    
+
+    def setRandomTile(self):     
+        nearbyTiles = self.CurrentTile.getNearbyTiles(0)
+        return random.choice(nearbyTiles)
+
+    def getBobTexture(self):
+        return loadBobImage()["Bob"]
+    def getExplodeTexture(self, progression):
+        return loadExplosionImage()[progression]
+
+    def getCurrentTile(self) -> Tile:
+        return self.CurrentTile
+    def getNextTile(self) -> Tile:
+        return self.NextTile
+
+
+
+
+
+        # self.interact()
+        # self.Hunt()
+        # pred = self.NearestPredatorTarget()
+        # if ( pred != None):
+        #     self.Run
+        # else:
+        #     self.Hunt
+        # self.TargetTile = self.setRandomTile()
+        # self.NextTile = self.HuntNextTile()
+        
+     
             
 
     # def SpotSmallestPrey(self) -> 'Bob':
@@ -339,38 +346,7 @@ class Bob:
     #                 largestFoodTile = foodTile
     #         return largestFoodTile
 
-    def HuntNextTile(self):
-        #Temporary
-        target = self.TargetTile
-        if self.CurrentTile == self.TargetTile:
-            return self.TargetTile
-        elif ( target == self.CurrentTile.getNearbyTiles(0)):
-            return target
-        else:
-            (x,y) = Tile.CountofTile(target, self.CurrentTile)
-            if ( y == 0 and x != 0 ):
-                if ( x > 0):
-                    return self.CurrentTile.getDirectionTiles("Right")
-                else:
-                    return self.CurrentTile.getDirectionTiles("Left")
-            elif ( x == 0 and y != 0):
-                if ( y > 0):
-                    return self.CurrentTile.getDirectionTiles("Up")
-                else:
-                    return self.CurrentTile.getDirectionTiles("Down")
-            else:
-                if ( x > 0 and y > 0):
-                    upright = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (upright)
-                elif ( x > 0 and y < 0):
-                    downRight = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (downRight)
-                elif ( x < 0 and y > 0):
-                    upLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left"))
-                    return random.choice(upLeft)
-                else:
-                    downLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left"))
-                    return random.choice(downLeft)
+
     
         
 

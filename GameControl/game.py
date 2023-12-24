@@ -23,7 +23,7 @@ class Game:
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height) 
         self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
-        self.gameController.spawnBobs(NB_BOB)
+        self.gameController.initiateBobs(NB_BOB)
         self.gameController.respawnFood()
         
     
@@ -33,8 +33,9 @@ class Game:
             self.clock.tick(FPS)
             self.events()
             self.update()
-            self.draw()
+            # self.draw()
             self.gameController.updateRenderTick()
+            self.draw()
             
 
 

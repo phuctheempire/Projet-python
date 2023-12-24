@@ -20,30 +20,49 @@ class World:
         self.drawStaticMap()
         self.drawFood(self.surface, Camera(self.width, self.height))
         self.drawBob(self.surface, Camera(self.width, self.height), self.gameController.renderTick)
-
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
 
     def drawBob(self, screen, camera, walkProgression ):
         for bob in self.gameController.listBobs:
-            if bob not in self.gameController.diedBobs:
+            if bob not in self.gameController.diedQueue or self.gameController.newBornQueue:
                 (x, y) = bob.getCurrentTile().getRenderCoord()
                 (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                 position = (X, Y)
                 # print(bob.getNextTile())
                 (destX, destY) = bob.getNextTile().getRenderCoord()
                 (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+                # position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+                position2 = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2* walkProgression/FPS -1))
                 bar_width = int((bob.energy / bob.energyMax) * 50)
                 if (walkProgression < FPS/2):
-                    pg.draw.rect(screen, (255, 0, 0), (position1[0], position1[1] - 5, bar_width, 5))
-                    screen.blit(bob.getBobTexture(), position1)
+                    pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
+                    screen.blit(bob.getBobTexture(), position)
                 else:
-                    pg.draw.rect(screen, (255, 0, 0), (desX, desY - 5, bar_width, 5))
-                    screen.blit(bob.getBobTexture(), (desX, desY))
-            else:
+                    pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
+                    screen.blit(bob.getBobTexture(), position2)
+        for bob in self.gameController.diedQueue:
+            (x, y) = bob.getCurrentTile().getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position = (X, Y)
+            # if walkProgression < FPS/2:
+            screen.blit(bob.getBobTexture(), position) # need to change to dead bob texture later
+  
+        for bob in self.gameController.newBornQueue:
+            if bob not in self.gameController.diedQueue:
                 (x, y) = bob.getCurrentTile().getRenderCoord()
                 (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                (destX, destY) = bob.getNextTile().getRenderCoord()
+                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                 position = (X, Y)
+                position2 = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2* walkProgression/FPS -1))
+                if walkProgression < FPS/2:
+                    screen.blit(bob.getBobTexture(), position) # need to change to newborn bob texture later
+                    pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
+                else:
+                    screen.blit(bob.getBobTexture(), position2)
+                    pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
+
+
 
     def drawFood(self, screen, camera):
         for food in self.gameController.getFoodTiles():
