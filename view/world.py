@@ -75,6 +75,62 @@ class World:
                 else:
                     screen.blit(bob.getBobTexture(), position2)
                     pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
+        
+    # def drawBob(self, screen, camera, walkProgression ):
+    #     for bob in self.gameController.listBobs:
+    #         if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
+    #             (x, y) = bob.getPreviousTile().getRenderCoord()
+    #             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+    #             position = (X, Y)
+    #             # print(bob.getNextTile())
+    #             (destX, destY) = bob.getCurrentTile().getRenderCoord()
+    #             (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+    #             # position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+    #             position2 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+    #             position3 = (desX, desY)
+    #             bar_width = int((bob.energy / bob.energyMax) * 50)
+    #             if (walkProgression < FPS/2):
+    #                 pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
+    #                 screen.blit(bob.getBobTexture(), position2)
+    #             else:
+    #                 pg.draw.rect(screen, (255, 0, 0), (desX, desY - 5, bar_width, 5))
+    #                 screen.blit(bob.getBobTexture(), position3)
+    #     for bob in self.gameController.diedQueue:
+    #         (x, y) = bob.getCurrentTile().getRenderCoord()
+    #         (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+    #         position = (X, Y)
+    #         if walkProgression < FPS/8:
+    #             screen.blit(bob.getExplodeTexture(1), position)
+    #         elif FPS/8 <= walkProgression < FPS/4:
+    #             screen.blit(bob.getExplodeTexture(2), position)
+    #         elif FPS/4 <= walkProgression < 3*FPS/8:
+    #             screen.blit(bob.getExplodeTexture(3), position)
+    #         elif 3*FPS/8 <= walkProgression < FPS/2:
+    #             screen.blit(bob.getExplodeTexture(4), position)
+    #         elif FPS/2 <= walkProgression < 5*FPS/8:
+    #             screen.blit(bob.getExplodeTexture(5), position)
+    #         elif 5*FPS/8 <= walkProgression < 3*FPS/4:
+    #             screen.blit(bob.getExplodeTexture(6), position)
+    #         elif 3*FPS/4 <= walkProgression < 7*FPS/8:
+    #             screen.blit(bob.getExplodeTexture(7), position)
+    #         else:
+    #             screen.blit(bob.getExplodeTexture(8), position)
+  
+    #     for bob in self.gameController.newBornQueue:
+    #         if bob not in self.gameController.diedQueue:
+    #             (x, y) = bob.getPreviousTile().getRenderCoord()
+    #             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+    #             (destX, destY) = bob.getCurrentTile().getRenderCoord()
+    #             (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+    #             position = (X, Y)
+    #             position2 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+    #             position3 = (desX, desY)
+    #             if walkProgression < FPS/2:
+    #                 screen.blit(bob.getBobTexture(), position2) # need to change to newborn bob texture later
+    #                 pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
+    #             else:
+    #                 screen.blit(bob.getBobTexture(), position3)
+    #                 pg.draw.rect(screen, (255, 0, 0), (destX, destY - 5, bar_width, 5))
 
 
 

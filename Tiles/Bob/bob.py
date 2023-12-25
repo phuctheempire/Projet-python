@@ -20,6 +20,7 @@ class Bob:
         self.velocity = 1
         self.id = id
         self.alive = True
+        # self.PreviousTile : Optional[Tile] = None
         self.CurrentTile : Optional[Tile] = None
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
@@ -32,6 +33,7 @@ class Bob:
 
 ################ Die and Born ############################
     def spawn(self, tile: 'Tile'):
+        # self.PreviousTile = tile
         self.CurrentTile = tile
         self.CurrentTile.addBob(self)
         GameControl.getInstance().addToNewBornQueue(self)
@@ -58,6 +60,7 @@ class Bob:
         # self.determineNextTile()
 
     def move(self):
+        # self.PreviousTile = self.CurrentTile
         self.CurrentTile.removeBob(self)
         self.NextTile.addBob(self)
         self.CurrentTile = self.NextTile
@@ -290,6 +293,8 @@ class Bob:
     def getExplodeTexture(self, progression):
         return loadExplosionImage()[progression]
 
+    def getPreviousTile(self) -> Tile:
+        return self.PreviousTile
     def getCurrentTile(self) -> Tile:
         return self.CurrentTile
     def getNextTile(self) -> Tile:
