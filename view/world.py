@@ -32,7 +32,7 @@ class World:
                 (destX, destY) = bob.getNextTile().getRenderCoord()
                 (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                 # position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
-                position2 = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2* walkProgression/FPS -1))
+                position2 = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2*walkProgression/FPS -1))
                 bar_width = int((bob.energy / bob.energyMax) * 50)
                 if (walkProgression < FPS/2):
                     pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
@@ -40,6 +40,7 @@ class World:
                 else:
                     pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
                     screen.blit(bob.getBobTexture(), position2)
+
         for bob in self.gameController.diedQueue:
             (x, y) = bob.getCurrentTile().getRenderCoord()
             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
