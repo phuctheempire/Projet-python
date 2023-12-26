@@ -22,80 +22,25 @@ class World:
         self.drawBob(self.surface, Camera(self.width, self.height), self.gameController.renderTick)
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
 
-    def drawBob(self, screen, camera, walkProgression ):
-        for bob in self.gameController.listBobs:
-            if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
-                (x, y) = bob.getCurrentTile().getRenderCoord()
-                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                position = (X, Y)
-                # print(bob.getNextTile())
-                (destX, destY) = bob.getNextTile().getRenderCoord()
-                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                # position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
-                position2 = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2*walkProgression/FPS -1))
-                bar_width = int((bob.energy / bob.energyMax) * 50)
-                if (walkProgression < FPS/2):
-                    pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
-                    screen.blit(bob.getBobTexture(), position)
-                else:
-                    pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
-                    screen.blit(bob.getBobTexture(), position2)
-
-        for bob in self.gameController.diedQueue:
-            (x, y) = bob.getCurrentTile().getRenderCoord()
-            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-            position = (X, Y)
-            if walkProgression < FPS/8:
-                screen.blit(bob.getExplodeTexture(1), position)
-            elif FPS/8 <= walkProgression < FPS/4:
-                screen.blit(bob.getExplodeTexture(2), position)
-            elif FPS/4 <= walkProgression < 3*FPS/8:
-                screen.blit(bob.getExplodeTexture(3), position)
-            elif 3*FPS/8 <= walkProgression < FPS/2:
-                screen.blit(bob.getExplodeTexture(4), position)
-            elif FPS/2 <= walkProgression < 5*FPS/8:
-                screen.blit(bob.getExplodeTexture(5), position)
-            elif 5*FPS/8 <= walkProgression < 3*FPS/4:
-                screen.blit(bob.getExplodeTexture(6), position)
-            elif 3*FPS/4 <= walkProgression < 7*FPS/8:
-                screen.blit(bob.getExplodeTexture(7), position)
-            else:
-                screen.blit(bob.getExplodeTexture(8), position)
-  
-        for bob in self.gameController.newBornQueue:
-            if bob not in self.gameController.diedQueue:
-                (x, y) = bob.getCurrentTile().getRenderCoord()
-                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                (destX, destY) = bob.getNextTile().getRenderCoord()
-                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                position = (X, Y)
-                position2 = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2* walkProgression/FPS -1))
-                if walkProgression < FPS/2:
-                    screen.blit(bob.getBobTexture(), position) # need to change to newborn bob texture later
-                    pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
-                else:
-                    screen.blit(bob.getBobTexture(), position2)
-                    pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
-        
     # def drawBob(self, screen, camera, walkProgression ):
     #     for bob in self.gameController.listBobs:
     #         if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
-    #             (x, y) = bob.getPreviousTile().getRenderCoord()
+    #             (x, y) = bob.getCurrentTile().getRenderCoord()
     #             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
     #             position = (X, Y)
     #             # print(bob.getNextTile())
-    #             (destX, destY) = bob.getCurrentTile().getRenderCoord()
+    #             (destX, destY) = bob.getNextTile().getRenderCoord()
     #             (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
     #             # position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
-    #             position2 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
-    #             position3 = (desX, desY)
+    #             start = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2*walkProgression/FPS -1))
     #             bar_width = int((bob.energy / bob.energyMax) * 50)
     #             if (walkProgression < FPS/2):
-    #                 pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
-    #                 screen.blit(bob.getBobTexture(), position2)
+    #                 pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
+    #                 screen.blit(bob.getBobTexture(), position)
     #             else:
-    #                 pg.draw.rect(screen, (255, 0, 0), (desX, desY - 5, bar_width, 5))
-    #                 screen.blit(bob.getBobTexture(), position3)
+    #                 pg.draw.rect(screen, (255, 0, 0), (start[0], start[1] - 5, bar_width, 5))
+    #                 screen.blit(bob.getBobTexture(), start)
+
     #     for bob in self.gameController.diedQueue:
     #         (x, y) = bob.getCurrentTile().getRenderCoord()
     #         (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
@@ -119,19 +64,98 @@ class World:
   
     #     for bob in self.gameController.newBornQueue:
     #         if bob not in self.gameController.diedQueue:
-    #             (x, y) = bob.getPreviousTile().getRenderCoord()
+    #             (x, y) = bob.getCurrentTile().getRenderCoord()
     #             (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-    #             (destX, destY) = bob.getCurrentTile().getRenderCoord()
+    #             (destX, destY) = bob.getNextTile().getRenderCoord()
     #             (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
     #             position = (X, Y)
-    #             position2 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
-    #             position3 = (desX, desY)
+    #             start = (X + (desX - X) * (2 *walkProgression/FPS -1), Y + (desY - Y) * (2* walkProgression/FPS -1))
     #             if walkProgression < FPS/2:
-    #                 screen.blit(bob.getBobTexture(), position2) # need to change to newborn bob texture later
-    #                 pg.draw.rect(screen, (255, 0, 0), (position2[0], position2[1] - 5, bar_width, 5))
+    #                 screen.blit(bob.getBobTexture(), position) # need to change to newborn bob texture later
+    #                 pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
     #             else:
-    #                 screen.blit(bob.getBobTexture(), position3)
-    #                 pg.draw.rect(screen, (255, 0, 0), (destX, destY - 5, bar_width, 5))
+    #                 screen.blit(bob.getBobTexture(), start)
+    #                 pg.draw.rect(screen, (255, 0, 0), (start[0], start[1] - 5, bar_width, 5))
+        
+    def drawBob(self, screen, camera, walkProgression ):
+        for bob in self.gameController.listBobs:
+            if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
+                (x, y) = bob.getPreviousTile().getRenderCoord()
+                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                position = (X, Y)
+                # print(bob.getNextTile())
+                (destX, destY) = bob.getCurrentTile().getRenderCoord()
+                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                # position1 = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS))
+                start = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS) + TILE_SIZE)
+                finish = (desX, desY + TILE_SIZE)
+                bar_width = int((bob.energy / bob.energyMax) * 50)
+                if (walkProgression < FPS/2):
+                    pg.draw.rect(screen, (255, 0, 0), (start[0], start[1] - 5, bar_width, 5))
+                    screen.blit(bob.getBobTexture(), start)
+                else:
+                    pg.draw.rect(screen, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+                    screen.blit(bob.getBobTexture(), finish)
+        for bob in self.gameController.diedQueue:
+            (x, y) = bob.getPreviousTile().getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            position = (X, Y)
+            # print(bob.getNextTile())
+            (destX, destY) = bob.getCurrentTile().getRenderCoord()
+            (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+            start = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS) + TILE_SIZE)
+            finish = (desX, desY + TILE_SIZE)
+            if (walkProgression < FPS/2):
+                screen.blit(bob.getBobTexture(), start)
+            elif FPS/2 <= walkProgression < FPS/2 + FPS/16:
+                screen.blit(bob.getExplodeTexture(1), finish)
+            elif FPS/2 + FPS/16 <= walkProgression < FPS/2 + 2*FPS/16:
+                screen.blit(bob.getExplodeTexture(2), finish)
+            elif FPS/2 + 2*FPS/16 <= walkProgression < FPS/2 + 3*FPS/16:
+                screen.blit(bob.getExplodeTexture(3), finish)
+            elif FPS/2 + 3*FPS/16 <= walkProgression < FPS/2 + 4*FPS/16:
+                screen.blit(bob.getExplodeTexture(4), finish)
+            elif FPS/2 + 4*FPS/16 <= walkProgression < FPS/2 + 5*FPS/16:
+                screen.blit(bob.getExplodeTexture(5), finish)
+            elif FPS/2 + 5*FPS/16 <= walkProgression < FPS/2 + 6*FPS/16:
+                screen.blit(bob.getExplodeTexture(6), finish)
+            elif FPS/2 + 6*FPS/16 <= walkProgression < FPS/2 + 7*FPS/16:
+                screen.blit(bob.getExplodeTexture(7), finish)
+            else:
+                screen.blit(bob.getExplodeTexture(8), finish)
+  
+        for bob in self.gameController.newBornQueue:
+            if bob not in self.gameController.diedQueue:
+                (x, y) = bob.getPreviousTile().getRenderCoord()
+                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                (destX, destY) = bob.getCurrentTile().getRenderCoord()
+                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                position = (X, Y + TILE_SIZE)
+                start = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS) + TILE_SIZE)
+                finish = (desX, desY + TILE_SIZE)
+                if walkProgression < FPS/2:
+                    # screen.blit(bob.getBobTexture(), start) # need to change to newborn bob texture later
+                    # pg.draw.rect(screen, (255, 0, 0), (start[0], start[1] - 5, bar_width, 5))
+                    pass
+                # else:
+                #     screen.blit(bob.getBobTexture(), finish)
+                #     pg.draw.rect(screen, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+                elif FPS/2 <= walkProgression < FPS/2 + FPS/16:
+                    screen.blit(bob.getSpawnTexture(1), finish)
+                elif FPS/2 + FPS/16 <= walkProgression < FPS/2 + 2*FPS/16:
+                    screen.blit(bob.getSpawnTexture(2), finish)
+                elif FPS/2 + 2*FPS/16 <= walkProgression < FPS/2 + 3*FPS/16:
+                    screen.blit(bob.getSpawnTexture(3), finish)
+                elif FPS/2 + 3*FPS/16 <= walkProgression < FPS/2 + 4*FPS/16:
+                    screen.blit(bob.getSpawnTexture(4), finish)
+                elif FPS/2 + 4*FPS/16 <= walkProgression < FPS/2 + 5*FPS/16:
+                    screen.blit(bob.getSpawnTexture(5), finish)
+                elif FPS/2 + 5*FPS/16 <= walkProgression < FPS/2 + 6*FPS/16:
+                    screen.blit(bob.getSpawnTexture(6), finish)
+                elif FPS/2 + 6*FPS/16 <= walkProgression < FPS/2 + 7*FPS/16:
+                    screen.blit(bob.getSpawnTexture(7), finish)
+                else:
+                    screen.blit(bob.getSpawnTexture(8), finish)
 
 
 
@@ -139,19 +163,19 @@ class World:
         for food in self.gameController.getFoodTiles():
             (x, y) = food.getRenderCoord()
             (X, Y) = (x + self.surface.get_width()/2 , y - (food.getFoodImage().get_height() - TILE_SIZE ) + camera.scroll.y)
-            position = (X, Y)
+            position = (X , Y + TILE_SIZE )
             bar_width = int((food.foodEnergy / FOOD_MAX_ENERGY) * 50)
             pg.draw.rect(screen, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
             screen.blit(food.getFoodImage(), position)
 
 
     def drawStaticMap(self):
-        self.surface.fill(( 137, 207, 240))
+        self.surface.fill(( 0, 0, 0))
         for row in self.gameController.getMap(): # x is a list of a double list Map
             for tile in row: # tile is an object in list
                 textureImg = tile.getGrassImage()
                 (x, y) = tile.getRenderCoord()
-                offset = (x + self.surface.get_width()/2, y)
+                offset = (x + self.surface.get_width()/2, y + TILE_SIZE)
                 self.surface.blit(textureImg, offset)
         
     # def createWorld(self, lengthX, lengthY ):

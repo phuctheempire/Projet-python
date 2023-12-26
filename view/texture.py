@@ -62,3 +62,32 @@ def loadExplosionImage():
         ,8: explosion8
     }
     return image
+
+def loadSpawnImage():
+    spawn1 = pg.image.load(IMAGE_PATH + "Spawn.png").convert_alpha()
+    spawn1 = pg.transform.scale(spawn1, (spawn1.get_width()*1, spawn1.get_height()*1))
+    spawn2 = pg.image.load(IMAGE_PATH + "Spawn2.png").convert_alpha()
+    spawn2 = pg.transform.scale(spawn2, (spawn2.get_width()*1, spawn2.get_height()*1))
+    spawn3 = pg.image.load(IMAGE_PATH + "Spawn3.png").convert_alpha()
+    spawn3 = pg.transform.scale(spawn3, (spawn3.get_width()*1, spawn3.get_height()*1))
+    spawn4 = pg.image.load(IMAGE_PATH + "Spawn4.png").convert_alpha()
+    spawn4 = pg.transform.scale(spawn4, (spawn4.get_width()*1, spawn4.get_height()*1))
+    spawn5 = pg.image.load(IMAGE_PATH + "Spawn5.png").convert_alpha()
+    spawn5 = pg.transform.scale(spawn5, (spawn5.get_width()*1, spawn5.get_height()*1))
+    spawn6 = pg.image.load(IMAGE_PATH + "Spawn6.png").convert_alpha()
+    spawn6 = pg.transform.scale(spawn6, (spawn6.get_width()*1, spawn6.get_height()*1))
+    spawn7 = pg.image.load(IMAGE_PATH + "Spawn7.png").convert_alpha()
+    spawn7 = pg.transform.scale(spawn7, (spawn7.get_width()*1, spawn7.get_height()*1))
+    spawn8 = pg.image.load(IMAGE_PATH + "Spawn8.png").convert_alpha()
+    spawn8 = pg.transform.scale(spawn8, (spawn8.get_width()*1, spawn8.get_height()*1))
+    image = {
+        1: spawn1
+        ,2: spawn2
+        ,3: spawn3
+        ,4: spawn4
+        ,5: spawn5
+        ,6: spawn6
+        ,7: spawn7
+        ,8: spawn8
+    }
+    return image

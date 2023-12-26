@@ -87,6 +87,3 @@ class Game:
         )  
 
         pg.display.flip()
-
-
-

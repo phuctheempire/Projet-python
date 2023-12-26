@@ -57,7 +57,7 @@ class GameControl:
         bob1.spawn(tile1)
         bob1.mass = 2
         bob1.velocity = 2
-        x2 = random.randint(0, GRID_LENGTH - 1)
+        x2 = random.randindoldt(0, GRID_LENGTH - 1)
         y2 = random.randint(0, GRID_LENGTH - 1)
         tile2 = self.getMap()[x2][y2]
         bob2 = Bob(random.randint(0, 1000))

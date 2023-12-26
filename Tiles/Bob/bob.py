@@ -4,6 +4,7 @@ from Tiles.tiles import Tile
 from GameControl.gameControl import GameControl
 from view.texture import loadBobImage
 from view.texture import loadExplosionImage
+from view.texture import loadSpawnImage
 import random
 from GameControl.settings import *
 # from Tiles.Food.food import Food
@@ -20,7 +21,7 @@ class Bob:
         self.velocity = 1
         self.id = id
         self.alive = True
-        # self.PreviousTile : Optional[Tile] = None
+        self.PreviousTile : Optional[Tile] = None
         self.CurrentTile : Optional[Tile] = None
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
@@ -33,8 +34,8 @@ class Bob:
 
 ################ Die and Born ############################
     def spawn(self, tile: 'Tile'):
-        # self.PreviousTile = tile
         self.CurrentTile = tile
+        self.PreviousTile = self.CurrentTile
         self.CurrentTile.addBob(self)
         GameControl.getInstance().addToNewBornQueue(self)
         self.determineNextTile()  
@@ -60,7 +61,7 @@ class Bob:
         # self.determineNextTile()
 
     def move(self):
-        # self.PreviousTile = self.CurrentTile
+        self.PreviousTile = self.CurrentTile
         self.CurrentTile.removeBob(self)
         self.NextTile.addBob(self)
         self.CurrentTile = self.NextTile
@@ -143,7 +144,9 @@ class Bob:
         
 ######################## Find next tile #####################################
     def determineNextTile(self):
-        self.Hunt()
+        if ( self.ListPredator() != []):
+            self.Run()
+        else: self.Hunt()
 
     # Map Scanning
     def getNearbyBobs(self) -> list['Bob']:
@@ -170,9 +173,11 @@ class Bob:
             if Prey != None:
                 self.TargetTile = Prey.CurrentTile
                 self.NextTile = self.HuntNextTile()
+                print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
             else:
                 self.TargetTile = self.setRandomTile()
                 self.NextTile = self.HuntNextTile()
+                print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
     
     def getLargestAndNearestFoodTile(self) -> Tile:
         # Get the list of nearby tiles
@@ -212,11 +217,12 @@ class Bob:
     
     def HuntNextTile(self):
         #Temporary
+        print("Hunting next tile")
         target = self.TargetTile
         if self.CurrentTile == self.TargetTile:
             return self.TargetTile
-        elif ( target == self.CurrentTile.getNearbyTiles(0)):
-            return target
+        # elif ( target == self.CurrentTile.getNearbyTiles(0)):
+        #     return target
         else:
             (x,y) = Tile.CountofTile(target, self.CurrentTile)
             if ( y == 0 and x != 0 ):
@@ -231,11 +237,11 @@ class Bob:
                     return self.CurrentTile.getDirectionTiles("Down")
             else:
                 if ( x > 0 and y > 0):
-                    upright = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (upright)
+                    downLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
+                    return random.choice (downLeft)
                 elif ( x > 0 and y < 0):
-                    downRight = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (downRight)
+                    upLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
+                    return random.choice (upLeft)
                 elif ( x < 0 and y > 0):
                     upLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left"))
                     return random.choice(upLeft)
@@ -244,6 +250,11 @@ class Bob:
                     return random.choice(downLeft)
 
 ############################# Run ###########################################
+
+    def Run(self):
+        self.PredatorTile = self.NearestPredator()
+        self.NextTile = self.RunNextTile()
+        # print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
 
     def ListPredator(self) -> list['Bob']:
         listBobs = self.getNearbyBobs()
@@ -266,6 +277,44 @@ class Bob:
                     predator = pred
             return predator.CurrentTile
         else: return None
+    
+    def RunNextTile(self):
+        #Temporary
+        print("Running next tile")
+        predator = self.PredatorTile
+        if self.CurrentTile == self.PredatorTile:
+            return self.randomAdjacent()
+        # elif ( predator == self.CurrentTile.getNearbyTiles(0)):
+        #     return target
+        else:
+            (x,y) = Tile.CountofTile(predator, self.CurrentTile)
+            if ( y == 0 and x != 0 ):
+                if ( x > 0):
+                    return self.CurrentTile.getDirectionTiles("Left") if self.CurrentTile.getDirectionTiles("Left") != None else self.CurrentTile
+                else:
+                    return self.CurrentTile.getDirectionTiles("Right") if self.CurrentTile.getDirectionTiles("Right") != None else self.CurrentTile
+            elif ( x == 0 and y != 0):
+                if ( y > 0):
+                    return self.CurrentTile.getDirectionTiles("Down")  if self.CurrentTile.getDirectionTiles("Down") != None else self.CurrentTile
+                else:
+                    return self.CurrentTile.getDirectionTiles("Up") if self.CurrentTile.getDirectionTiles("Up") != None else self.CurrentTile
+            else:
+                if ( x > 0 and y > 0):
+                    dl = [self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left")]
+                    downLeft = [tile for tile in dl if tile != None] 
+                    return random.choice(downLeft) if downLeft != [] else self.CurrentTile
+                elif ( x > 0 and y < 0):
+                    ul = [self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left")]
+                    upLeft = [tile for tile in ul if tile != None]
+                    return random.choice(upLeft) if upLeft != [] else self.CurrentTile
+                elif ( x < 0 and y > 0):
+                    dr = [self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right")]
+                    downRight = [tile for tile in dr if tile != None]
+                    return random.choice(downRight) if downRight != [] else self.CurrentTile
+                else:
+                    ur = [self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right")]
+                    upRight = [tile for tile in ur if tile != None]
+                    return random.choice(upRight) if upRight != [] else self.CurrentTile
 
     # def scanForTarget(self) -> Tile:
     #     listFood = self.getNearbyFood()
@@ -285,20 +334,25 @@ class Bob:
     
 
     def setRandomTile(self):     
-        nearbyTiles = self.CurrentTile.getNearbyTiles(0)
+        nearbyTiles = self.CurrentTile.getNearbyTiles(1)
         return random.choice(nearbyTiles)
-
+    def randomAdjacent(self):
+        nearbyTiles = self.CurrentTile.getNearbyTiles(1)
+        nearbyTiles.remove(self.CurrentTile)
+        return random.choice(nearbyTiles)
+    
     def getBobTexture(self):
         return loadBobImage()["Bob"]
     def getExplodeTexture(self, progression):
         return loadExplosionImage()[progression]
-
-    def getPreviousTile(self) -> Tile:
-        return self.PreviousTile
+    def getSpawnTexture(self, progression):
+        return loadSpawnImage()[progression]
     def getCurrentTile(self) -> Tile:
         return self.CurrentTile
     def getNextTile(self) -> Tile:
         return self.NextTile
+    def getPreviousTile(self) -> Tile:
+        return self.PreviousTile
 
 
 
