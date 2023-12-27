@@ -256,12 +256,12 @@ class World:
 
     def drawStaticMap(self):
         self.surface.fill(( 0, 0, 0))
-        for row in self.gameController.getMap(): # x is a list of a double list Map
-            for tile in row: # tile is an object in list
-                textureImg = tile.getGrassImage()
-                (x, y) = tile.getRenderCoord()
-                offset = (x + self.surface.get_width()/2, y + TILE_SIZE)
-                self.surface.blit(textureImg, offset)
+        # for row in self.gameController.getMap(): # x is a list of a double list Map
+        #     for tile in row: # tile is an object in list
+        #         textureImg = tile.getGrassImage()
+        #         (x, y) = tile.getRenderCoord()
+        #         offset = (x + self.surface.get_width()/2, y + TILE_SIZE)
+        #         self.surface.blit(textureImg, offset)
         
     # def createWorld(self, lengthX, lengthY ):
     #     world = []

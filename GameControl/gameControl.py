@@ -46,7 +46,7 @@ class GameControl:
             tile = self.getMap()[x][y]
             bob = Bob(random.randint(0, 1000))
             bob.spawn(tile)
-        self.pushToList()
+        # self.pushToList()
 
     def eatingTest(self):
         from Tiles.Bob.bob import Bob
@@ -56,7 +56,7 @@ class GameControl:
         bob1 = Bob(random.randint(0, 1000))
         bob1.spawn(tile1)
         bob1.mass = 2
-        bob1.velocity = 2
+        bob1.velocity = 4
         x2 = random.randint(0, GRID_LENGTH - 1)
         y2 = random.randint(0, GRID_LENGTH - 1)
         tile2 = self.getMap()[x2][y2]
@@ -149,7 +149,10 @@ class GameControl:
         return self.currentTick
     def getDay(self):
         return self.currentDay
-    
+    def getDiedQueue(self):
+        return self.diedQueue
+
+
     @staticmethod
     def getInstance():
         if GameControl.instance is None:

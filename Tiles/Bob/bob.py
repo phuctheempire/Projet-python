@@ -18,7 +18,7 @@ class Bob:
         self.mass = 1
         self.memory = Optional[Tile]; 
         self.vision: 'int' = VISION
-        self.velocity = 1
+        self.velocity = 2
         self.id = id
         self.alive = True
         self.PreviousTile : Optional[Tile] = None
@@ -54,17 +54,20 @@ class Bob:
         print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
         self.PreviousTile = self.CurrentTile
         self.PreviousTiles.append(self.CurrentTile)
-        for _ in range(self.velocity):
-            self.move()
-            self.PreviousTiles.append(self.CurrentTile)
-            self.energy -= 2
-            self.interact()
-            # print("interacting")
-            if ( self.energy <= 0):
-                # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
-                self.die()
-            # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
-            self.determineNextTile()
+        for _ in range(int(self.velocity)):
+            if self in GameControl.getInstance().getDiedQueue():
+                break
+            else:
+                self.move()
+                self.PreviousTiles.append(self.CurrentTile)
+                self.energy -= 1
+                self.interact()
+                # print("interacting")
+                if ( self.energy <= 0):
+                    # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
+                    self.die()
+                # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
+                self.determineNextTile()
 
     def move(self):
         self.CurrentTile.removeBob(self)
@@ -150,7 +153,7 @@ class Bob:
         
 ######################## Find next tile #####################################
     def determineNextTile(self):
-        for _ in range(self.velocity):
+        for _ in range(int(self.velocity)):
             if ( self.ListPredator() != []):
                 self.Run()
             else: self.Hunt()
