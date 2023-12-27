@@ -64,7 +64,7 @@ class GameControl:
         bob2.spawn(tile2)
         bob2.mass = 1
         bob2.velocity = 1
-        self.pushToList()
+        # self.pushToList()
 
 
     def pushToList(self):
@@ -123,6 +123,8 @@ class GameControl:
         self.pushToList()
         self.wipeBobs()
         self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
+        for bob in self.listBobs:
+            bob.clearPreviousTiles()
         for bob in self.listBobs:
             if bob not in self.diedQueue:
                 bob.action()

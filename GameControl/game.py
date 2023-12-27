@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame as pg
 import sys
-# from GameControl.gameControl import GameControlư
+# from GameControl.gameControl import GameControl
 from GameControl.settings import *
 from view.utils import draw_text
 from view.camera import Camera

@@ -21,8 +21,8 @@ class Bob:
         self.velocity = 1
         self.id = id
         self.alive = True
-        # self.PreviousTile : Optional[Tile] = None
-
+        self.PreviousTile : Optional[Tile] = None
+        self.PreviousTiles : list['Tile'] = []
         self.CurrentTile : Optional[Tile] = None
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
@@ -37,6 +37,7 @@ class Bob:
     def spawn(self, tile: 'Tile'):
         self.CurrentTile = tile
         self.PreviousTile = self.CurrentTile
+        self.PreviousTiles.append(self.CurrentTile)
         self.CurrentTile.addBob(self)
         GameControl.getInstance().addToNewBornQueue(self)
         self.determineNextTile()  
@@ -52,9 +53,11 @@ class Bob:
     def action(self):
         print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
         self.PreviousTile = self.CurrentTile
+        self.PreviousTiles.append(self.CurrentTile)
         for _ in range(self.velocity):
             self.move()
-            self.energy -= 3
+            self.PreviousTiles.append(self.CurrentTile)
+            self.energy -= 2
             self.interact()
             # print("interacting")
             if ( self.energy <= 0):
@@ -357,7 +360,10 @@ class Bob:
         return self.NextTile
     def getPreviousTile(self) -> Tile:
         return self.PreviousTile
-
+    def getPreviousTiles(self) -> list['Tile']:
+        return self.PreviousTiles
+    def clearPreviousTiles(self):
+        self.PreviousTiles.clear()
 
 
 
