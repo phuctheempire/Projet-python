@@ -21,7 +21,8 @@ class Bob:
         self.velocity = 1
         self.id = id
         self.alive = True
-        self.PreviousTile : Optional[Tile] = None
+        # self.PreviousTile : Optional[Tile] = None
+
         self.CurrentTile : Optional[Tile] = None
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
@@ -50,18 +51,19 @@ class Bob:
 
     def action(self):
         print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
-        self.move()
-        self.energy -= 3
-        self.interact()
-        # print("interacting")
-        if ( self.energy <= 0):
-            # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
-            self.die()
-        # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
-        # self.determineNextTile()
+        self.PreviousTile = self.CurrentTile
+        for _ in range(self.velocity):
+            self.move()
+            self.energy -= 3
+            self.interact()
+            # print("interacting")
+            if ( self.energy <= 0):
+                # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
+                self.die()
+            # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
+            self.determineNextTile()
 
     def move(self):
-        self.PreviousTile = self.CurrentTile
         self.CurrentTile.removeBob(self)
         self.NextTile.addBob(self)
         self.CurrentTile = self.NextTile
@@ -102,6 +104,7 @@ class Bob:
                 self.eat(unluckyBob)
     
     def eat(self, other: 'Bob'):
+        other.PreviousTile = other.CurrentTile
         if self.energy + other.energy <=  self.energyMax:
             self.energy += other.energy # need rework here
             other.die()
@@ -144,9 +147,10 @@ class Bob:
         
 ######################## Find next tile #####################################
     def determineNextTile(self):
-        if ( self.ListPredator() != []):
-            self.Run()
-        else: self.Hunt()
+        for _ in range(self.velocity):
+            if ( self.ListPredator() != []):
+                self.Run()
+            else: self.Hunt()
 
     # Map Scanning
     def getNearbyBobs(self) -> list['Bob']:

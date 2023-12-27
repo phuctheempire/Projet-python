@@ -126,9 +126,9 @@ class GameControl:
         for bob in self.listBobs:
             if bob not in self.diedQueue:
                 bob.action()
-        for bob in self.listBobs:
-            if bob not in self.diedQueue:
-                bob.determineNextTile()
+        # for bob in self.listBobs:
+        #     if bob not in self.diedQueue:
+                
         self.currentTick += 1
         if self.currentTick == TICKS_PER_DAY:
             self.currentTick = 0
