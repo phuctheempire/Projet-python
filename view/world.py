@@ -165,7 +165,7 @@ class World:
                 if ( walkProgression < FPS/2):
                     if nbInteval == 0:
                         (x, y) = bob.getCurrentTile().getRenderCoord()
-                        (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                        (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                         position = (X, Y)
                         bar_width = int((bob.energy / bob.energyMax) * 50)
                         pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))

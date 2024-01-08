@@ -5,6 +5,7 @@ from GameControl.gameControl import GameControl
 from view.texture import loadBobImage
 from view.texture import loadExplosionImage
 from view.texture import loadSpawnImage
+from view.texture import loadJellyImage
 import random
 from math import floor
 from GameControl.settings import *
@@ -378,6 +379,8 @@ class Bob:
     
     def getBobTexture(self):
         return loadBobImage()["Bob"]
+    def getJellyTexture(self):
+        return loadJellyImage()["GreenLeft"]
     def getExplodeTexture(self, progression):
         return loadExplosionImage()[progression]
     def getSpawnTexture(self, progression):
