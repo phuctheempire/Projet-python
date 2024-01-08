@@ -48,6 +48,7 @@ def loadJellyImage():
         "PurpleLeft": purpleLeft,
         "PurpleRight": purpleRight
     }
+    return image
 
 def loadFoodImage():
     food = pg.image.load(IMAGE_PATH + "food.png").convert_alpha()

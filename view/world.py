@@ -169,7 +169,7 @@ class World:
                         position = (X, Y)
                         bar_width = int((bob.energy / bob.energyMax) * 50)
                         pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
-                        screen.blit(bob.getBobTexture(), position)
+                        screen.blit(bob.getJellyTexture(), position)
                     else:
                         for i in range( nbInteval):
                             if ( i*FPS) / (nbInteval * 2) <= walkProgression < (i+1)*FPS / (nbInteval * 2):
