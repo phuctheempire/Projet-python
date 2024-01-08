@@ -1,5 +1,7 @@
 import pygame as pg
 from GameControl.game import Game
+from pygame.locals import *
+flags = HWSURFACE | DOUBLEBUF
 
 def main():
 
@@ -8,7 +10,8 @@ def main():
 
     pg.init()
     pg.mixer.init()
-    screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
+    # screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
+    screen = pg.display.set_mode((1920,1080), flags)
     #screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
     clock = pg.time.Clock()
     

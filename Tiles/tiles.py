@@ -12,8 +12,8 @@ class Tile:
     def __init__(self, gridX: int, gridY: int ):
         self.gameController = GameControl.getInstance()
         self.foodEnergy: 'float' = 0
-        self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
-        self.foodImg = loadFoodImage()["Food"]
+        self.grassImg = loadGrassImage() if random.randint(0,1) == 0 else loadFlowerImage()
+        self.foodImg = loadFoodImage()
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY

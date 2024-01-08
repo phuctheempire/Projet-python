@@ -2,10 +2,10 @@
 from typing import Optional
 from Tiles.tiles import Tile
 from GameControl.gameControl import GameControl
-from view.texture import loadBobImage
-from view.texture import loadExplosionImage
-from view.texture import loadSpawnImage
-from view.texture import loadJellyImage
+# from view.texture import loadBobImage
+# from view.texture import loadExplosionImage
+# from view.texture import loadSpawnImage
+from view.texture import *
 import random
 from math import floor
 from GameControl.settings import *
@@ -18,6 +18,8 @@ class Bob:
     def __init__( self):
         self.id = Bob.id
         Bob.id += 1
+        self.age = 0
+        self.isHunting = False
 
         self.energy: 'float' = BOB_SPAWN_ENERGY
         self.energyMax = BOB_MAX_ENERGY
@@ -40,7 +42,7 @@ class Bob:
         # self.targetTile : Optional[Tile] = None
         self.memoryPoint: 'float' = DEFAULT_MEMORY_POINT
         self.memoryTile = Optional[Tile]
-        self.image = self.getBobTexture()
+        # self.image = self.getBobTexture()
 
 ################ Die and Born ############################
     def spawn(self, tile: 'Tile'):
@@ -182,8 +184,10 @@ class Bob:
         # for _ in range(int(self.velocity)):
         if ( self.ListPredator() != []):
             self.Run()
-        else: self.Hunt()
-
+            self.isHunting = False
+        else: 
+            self.Hunt()
+            # self.isHunting = True
     # Map Scanning
     def getNearbyBobs(self) -> list['Bob']:
         NearTiles = self.CurrentTile.getNearbyTiles(self.vision)
@@ -210,9 +214,11 @@ class Bob:
                 self.TargetTile = Prey.CurrentTile
                 self.NextTile = self.HuntNextTile()
                 print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
+                self.isHunting = True
             else:
                 self.TargetTile = self.setRandomTile()
                 self.NextTile = self.HuntNextTile()
+                self.isHunting = False
                 print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
     
     def getLargestAndNearestFoodTile(self) -> Tile:
@@ -377,10 +383,26 @@ class Bob:
         nearbyTiles.remove(self.CurrentTile)
         return random.choice(nearbyTiles)
     
-    def getBobTexture(self):
-        return loadBobImage()["Bob"]
+    # def getBobTexture(self):
+    #     return loadBobImage()["Bob"]
     def getJellyTexture(self):
-        return loadJellyImage()["GreenLeft"]
+        if ( self.isHunting == True):
+            if ( GameControl.getInstance().getTick() % 2 == 0):
+                return loadPurpleLeft()
+            else:
+                return loadPurpleRight()
+        else:
+            if ( self.age <= 1):
+                if ( GameControl.getInstance().getTick() % 2 == 0):
+                    return loadGreenLeft()
+                else:
+                    return loadGreenRight()
+            else:
+                if ( GameControl.getInstance().getTick() % 2 == 0):
+                    return loadBlueLeft()
+                else:
+                    return loadBlueRight()
+
     def getExplodeTexture(self, progression):
         return loadExplosionImage()[progression]
     def getSpawnTexture(self, progression):

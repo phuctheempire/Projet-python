@@ -16,6 +16,7 @@ class GameControl:
         self.nbBobs: 'int'= 0
         self.nbBobsSpawned = 0
         self.listBobs : list['Bob'] = []
+        self.listFoods: set['Tile'] = set()
         self.newBornQueue : list['Bob'] = []
         self.diedQueue: list['Bob'] = []
         self.currentTick = 0
@@ -53,21 +54,21 @@ class GameControl:
         x1 = random.randint(0, GRID_LENGTH - 1)
         y1 = random.randint(0, GRID_LENGTH - 1)
         tile1 = self.getMap()[x1][y1]
-        bob1 = Bob(random.randint(0, 1000))
+        bob1 = Bob()
         bob1.spawn(tile1)
         bob1.mass = 2
         bob1.velocity = 1.5
         x2 = random.randint(0, GRID_LENGTH - 1)
         y2 = random.randint(0, GRID_LENGTH - 1)
         tile2 = self.getMap()[x2][y2]
-        bob2 = Bob(random.randint(0, 1000))
+        bob2 = Bob()
         bob2.spawn(tile2)
         bob2.mass = 1
         bob2.velocity = 1
         x3 = random.randint(0, GRID_LENGTH - 1)
         y3 = random.randint(0, GRID_LENGTH - 1)
         tile3 = self.getMap()[x3][y3]
-        bob3 = Bob(random.randint(0, 1000))
+        bob3 = Bob()
         bob3.spawn(tile3)
         bob3.mass = 4
         bob3.velocity = 2
@@ -103,21 +104,23 @@ class GameControl:
         self.setMap(world)
     
     def wipeFood(self):
-        for row in self.getInstance().getMap():
-            for tile in row:
-                if tile.getEnergy() == FOOD_ENERGY:
-                    tile.removeFood()
-    
+        # for row in self.getInstance().getMap():
+        #     for tile in row:
+        for tile in self.listFoods:
+            # if tile.getEnergy() == FOOD_ENERGY:
+            tile.removeFood()
+        self.listFoods.clear()
     def respawnFood(self):
-        couples: list[tuple] = []
+        # couples: list[tuple] = []
         for _ in range(NB_SPAWN_FOOD):
             x = random.randint(0,GRID_LENGTH-1)
             y = random.randint(0,GRID_LENGTH-1)
-            while (x, y) in couples:
-                x = random.randint(0,GRID_LENGTH-1)
-                y = random.randint(0,GRID_LENGTH-1)
+            # while (x, y) in couples:
+            #     x = random.randint(0,GRID_LENGTH-1)
+            #     y = random.randint(0,GRID_LENGTH-1)
             self.getMap()[x][y].spawnFood()
-            couples.append((x, y))
+            self.listFoods.add(self.getMap()[x][y])
+            # couples.append((x, y))
 
     def updateRenderTick(self):
         self.renderTick += 1
