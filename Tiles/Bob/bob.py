@@ -175,7 +175,7 @@ class Bob:
         newBob.velocity = random.uniform(self.velocity - VAR_VELO, self.velocity + VAR_VELO)
         newBob.vision = random.choice([self.vision - VAR_VISION, self.vision, self.vision + VAR_VISION]) if self.vision - VAR_VISION >= 0 else random.choice([0, self.vision,self.vision + VAR_VISION])
         newBob.spawn(self.CurrentTile)
-        self.energy = 150
+        self.energy = 50
         
 ######################## Find next tile #####################################
     def determineNextTile(self):

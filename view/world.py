@@ -164,12 +164,12 @@ class World:
                 nbInteval = len(bob.getPreviousTiles()) - 1
                 if ( walkProgression < FPS/2):
                     if nbInteval == 0:
-                        (x, y) = bob.getCurrentTile().getRenderCoord()
-                        (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                        position = (X, Y)
+                        (destX, destY) = bob.getCurrentTile().getRenderCoord()
+                        (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                        finish = (desX, desY + TILE_SIZE)
                         bar_width = int((bob.energy / bob.energyMax) * 50)
-                        pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
-                        screen.blit(bob.getJellyTexture(), position)
+                        pg.draw.rect(screen, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+                        screen.blit(bob.getJellyTexture(), finish)
                     else:
                         for i in range( nbInteval):
                             if ( i*FPS) / (nbInteval * 2) <= walkProgression < (i+1)*FPS / (nbInteval * 2):
