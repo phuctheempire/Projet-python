@@ -231,12 +231,13 @@ class World:
 
         for bob in self.gameController.diedQueue:
             (x, y) = bob.getPreviousTile().getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
             render = False
-            if ( camera.scroll.x < x < camera.scroll.x + RESOLUTION[0] and camera.scroll.y < y < camera.scroll.y + RESOLUTION[1]):
+            if ( camera.scroll.x < X < camera.scroll.x + RESOLUTION[0] and camera.scroll.y < Y < camera.scroll.y + RESOLUTION[1]):
                 render = True
             if render:
-                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                position = (X, Y)
+                # (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                # position = (X, Y)
                 # print(bob.getNextTile())
                 (destX, destY) = bob.getCurrentTile().getRenderCoord()
                 (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
@@ -265,11 +266,13 @@ class World:
             if bob not in self.gameController.diedQueue:
                 # (x, y) = bob.getPreviousTile().getRenderCoord()
                 # (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture()t_height() - TILE_SIZE ) + camera.scroll.y)
-                (destX, destY) = bob.getCurrentTile().getRenderCoord()
+                (x,y) = bob.getCurrentTile().getRenderCoord()
+                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                 render = False
-                if ( camera.scroll.x < destX < camera.scroll.x + RESOLUTION[0] and camera.scroll.y < destY < camera.scroll.y + RESOLUTION[1]):
+                if ( camera.scroll.x < X < camera.scroll.x + RESOLUTION[0] and camera.scroll.y < Y < camera.scroll.y + RESOLUTION[1]):
                     render = True
                 if render:
+                    (destX, destY) = bob.getCurrentTile().getRenderCoord()
                     (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getJellyTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
                     # position = (X, Y + TILE_SIZE)
                     # start = (X + (desX - X) * (2 *walkProgression/FPS), Y + (desY - Y) * (2* walkProgression/FPS) + TILE_SIZE)
@@ -302,6 +305,7 @@ class World:
     def drawFood(self, screen, camera):
         for food in self.gameController.getFoodTiles():
             (x, y) = food.getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2, y - (food.getFoodImage().get_height() - TILE_SIZE ) + camera.scroll.y)
             render = False
             if ( camera.scroll.x < x < camera.scroll.x + RESOLUTION[0] and camera.scroll.y < y < camera.scroll.y + RESOLUTION[1]):
                 render = True
