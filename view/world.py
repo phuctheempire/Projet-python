@@ -163,17 +163,25 @@ class World:
             if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
                 nbInteval = len(bob.getPreviousTiles()) - 1
                 if ( walkProgression < FPS/2):
-                    for i in range( nbInteval):
-                        if ( i*FPS) / (nbInteval * 2) <= walkProgression < (i+1)*FPS / (nbInteval * 2):
-                            (x, y) = bob.getPreviousTiles()[i].getRenderCoord()
-                            (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                            (destX, destY) = bob.getPreviousTiles()[i+1].getRenderCoord()
-                            (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
-                            pos = (X + (desX - X) * (walkProgression - (i*FPS)/(2 * nbInteval)) * (2 * nbInteval) / FPS , Y + (desY - Y) * (walkProgression - (i*FPS)/(2 * nbInteval) ) * (2 * nbInteval) / FPS  + TILE_SIZE  )
-                            bar_width = int((bob.energy / bob.energyMax) * 50)
-                            pg.draw.rect(screen, (255, 0, 0), (pos[0], pos[1] - 5, bar_width, 5))
-                            screen.blit(bob.getBobTexture(), pos)
-                        else: pass
+                    if nbInteval == 0:
+                        (x, y) = bob.getCurrentTile().getRenderCoord()
+                        (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                        position = (X, Y)
+                        bar_width = int((bob.energy / bob.energyMax) * 50)
+                        pg.draw.rect(screen, (255, 0, 0), (position[0], position[1] - 5, bar_width, 5))
+                        screen.blit(bob.getBobTexture(), position)
+                    else:
+                        for i in range( nbInteval):
+                            if ( i*FPS) / (nbInteval * 2) <= walkProgression < (i+1)*FPS / (nbInteval * 2):
+                                (x, y) = bob.getPreviousTiles()[i].getRenderCoord()
+                                (X, Y) = (x + self.surface.get_width()/2, y - (bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                                (destX, destY) = bob.getPreviousTiles()[i+1].getRenderCoord()
+                                (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
+                                pos = (X + (desX - X) * (walkProgression - (i*FPS)/(2 * nbInteval)) * (2 * nbInteval) / FPS , Y + (desY - Y) * (walkProgression - (i*FPS)/(2 * nbInteval) ) * (2 * nbInteval) / FPS  + TILE_SIZE  )
+                                bar_width = int((bob.energy / bob.energyMax) * 50)
+                                pg.draw.rect(screen, (255, 0, 0), (pos[0], pos[1] - 5, bar_width, 5))
+                                screen.blit(bob.getBobTexture(), pos)
+                            else: pass
                 else:
                     (destX, destY) = bob.getCurrentTile().getRenderCoord()
                     (desX, desY) = (destX + self.surface.get_width()/2, destY - ( + bob.getBobTexture().get_height() - TILE_SIZE ) + camera.scroll.y)
@@ -249,13 +257,13 @@ class World:
             (x, y) = food.getRenderCoord()
             (X, Y) = (x + self.surface.get_width()/2 , y - (food.getFoodImage().get_height() - TILE_SIZE ) + camera.scroll.y)
             position = (X , Y + TILE_SIZE )
-            bar_width = int((food.foodEnergy / FOOD_MAX_ENERGY) * 50)
+            bar_width = int((food.foodEnergy / FOOD_ENERGY) * 50)
             pg.draw.rect(screen, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
             screen.blit(food.getFoodImage(), position)
 
 
     def drawStaticMap(self):
-        self.surface.fill(( 0, 0, 0))
+        self.surface.fill((195, 177, 225))
         # for row in self.gameController.getMap(): # x is a list of a double list Map
         #     for tile in row: # tile is an object in list
         #         textureImg = tile.getGrassImage()

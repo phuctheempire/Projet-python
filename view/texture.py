@@ -26,6 +26,29 @@ def loadBobImage():
         "Bob": bob
     }
     return image
+
+# def loadBobImage():
+#     greenLeft = pg.image.load(IMAGE_PATH + "Green.png").convert_alpha()
+#     greenLeft = pg.transform.scale(greenLeft, (greenLeft.get_width()*1, greenLeft.get_height()*1))
+#     greenRight = pg.image.load(IMAGE_PATH + "Green1.png").convert_alpha()
+#     greenRight = pg.transform.scale(greenRight, (greenRight.get_width()*1, greenRight.get_height()*1))
+#     blueLeft = pg.image.load(IMAGE_PATH + "Blue.png").convert_alpha()
+#     blueLeft = pg.transform.scale(blueLeft, (blueLeft.get_width()*1, blueLeft.get_height()*1))
+#     blueRight = pg.image.load(IMAGE_PATH + "Blue1.png").convert_alpha()
+#     blueRight = pg.transform.scale(blueRight, (blueRight.get_width()*1, blueRight.get_height()*1))
+#     purpleLeft = pg.image.load(IMAGE_PATH + "Purple.png").convert_alpha()
+#     purpleLeft = pg.transform.scale(purpleLeft, (purpleLeft.get_width()*1, purpleLeft.get_height()*1))
+#     purpleRight = pg.image.load(IMAGE_PATH + "Purple1.png").convert_alpha()
+#     purpleRight = pg.transform.scale(purpleRight, (purpleRight.get_width()*1, purpleRight.get_height()*1))
+#     image = {
+#         "GreenLeft": greenLeft,
+#         "GreenRight": greenRight,
+#         "BlueLeft": blueLeft,
+#         "BlueRight": blueRight,
+#         "PurpleLeft": purpleLeft,
+#         "PurpleRight": purpleRight
+#     }
+
 def loadFoodImage():
     food = pg.image.load(IMAGE_PATH + "food.png").convert_alpha()
     food = pg.transform.scale(food, (food.get_width()*0.25, food.get_height()*0.25))

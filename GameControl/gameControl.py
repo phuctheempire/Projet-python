@@ -44,7 +44,7 @@ class GameControl:
             x = random.randint(0, GRID_LENGTH - 1)
             y = random.randint(0, GRID_LENGTH - 1)
             tile = self.getMap()[x][y]
-            bob = Bob(random.randint(0, 1000))
+            bob = Bob()
             bob.spawn(tile)
         # self.pushToList()
 
@@ -56,7 +56,7 @@ class GameControl:
         bob1 = Bob(random.randint(0, 1000))
         bob1.spawn(tile1)
         bob1.mass = 2
-        bob1.velocity = 4
+        bob1.velocity = 1.5
         x2 = random.randint(0, GRID_LENGTH - 1)
         y2 = random.randint(0, GRID_LENGTH - 1)
         tile2 = self.getMap()[x2][y2]
@@ -64,6 +64,13 @@ class GameControl:
         bob2.spawn(tile2)
         bob2.mass = 1
         bob2.velocity = 1
+        x3 = random.randint(0, GRID_LENGTH - 1)
+        y3 = random.randint(0, GRID_LENGTH - 1)
+        tile3 = self.getMap()[x3][y3]
+        bob3 = Bob(random.randint(0, 1000))
+        bob3.spawn(tile3)
+        bob3.mass = 4
+        bob3.velocity = 2
         # self.pushToList()
 
 
@@ -98,7 +105,7 @@ class GameControl:
     def wipeFood(self):
         for row in self.getInstance().getMap():
             for tile in row:
-                if tile.getEnergy() == FOOD_MAX_ENERGY:
+                if tile.getEnergy() == FOOD_ENERGY:
                     tile.removeFood()
     
     def respawnFood(self):

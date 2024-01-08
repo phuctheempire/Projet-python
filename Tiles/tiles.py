@@ -11,7 +11,7 @@ class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
         self.gameController = GameControl.getInstance()
-        self.foodEnergy = 0
+        self.foodEnergy: 'float' = 0
         self.grassImg = loadGrassImage()["Grass"] if random.randint(0,1) == 0 else loadGrassImage()["Flower"]
         self.foodImg = loadFoodImage()["Food"]
         self.showTile = True
@@ -61,7 +61,7 @@ class Tile:
     def removeFood(self):
         self.foodEnergy = 0
     def spawnFood(self):
-        self.foodEnergy += FOOD_MAX_ENERGY
+        self.foodEnergy += FOOD_ENERGY
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)
     
