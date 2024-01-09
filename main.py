@@ -1,6 +1,8 @@
 import pygame as pg
 from GameControl.game import Game
+from GameControl.EventManager import show_menu
 from pygame.locals import *
+
 flags = HWSURFACE | DOUBLEBUF
 
 def main():
@@ -16,12 +18,12 @@ def main():
     clock = pg.time.Clock()
     
     # implement menus
-
+    show_menu(screen, clock)
     # implement game
     game = Game(screen, clock)
 
     while running:
-
+        
         # start menu goes here
 
         while playing:
