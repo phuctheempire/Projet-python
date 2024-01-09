@@ -38,13 +38,14 @@ button_width, button_height = 300, 50
 play_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 200, button_width, button_height)
 settings_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 300, button_width, button_height)
 quit_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button_width, button_height)
-back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
+# back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
+back_button_rect = pg.Rect(20, 20, button_width, button_height)
 
-grid_value_rects = []
+# grid_value_rects = []
 
 # Déclaration des labels des grilles (à modifier en fonction du contenu de notre jeu, voir résumé du pdf du prof)
-grid_labels = ["Larg:", "Long:", "Energy:", "Velocity:", "Min Energy:", "Mass:", "ScoreMemory:"]
-grid_values = [10, 20, 30, 40, 50, 60, 70]  # Exemple de valeurs initiales
+grid_labels = ["GridLength", "Energy:", "Velocity:", "Min Energy:", "Mass:", "ScoreMemory:"]
+grid_values = [20, 30, 40, 50, 60, 70]  # Exemple de valeurs initiales
 
 # Calcul de la position x pour centraliser les grilles horizontalement
 grid_x = (screen.get_width() - len(max(grid_labels, key=len)) * 10) // 2
@@ -81,9 +82,10 @@ def draw_transparent_grids(labels, values, x, y, transparency):
 
 # Dans la fonction open_settings
 def open_settings():
-    global selected_value_index, grid_value_rects, grid_values, input_text, input_active
+    global selected_value_index, grid_value_rects, grid_values, input_text, settings_open
     input_active = False
     input_text = ""
+    back_button_rect = pg.Rect(20, 20, button_width, button_height)
 
     while True:
         for event in pg.event.get():
@@ -92,6 +94,7 @@ def open_settings():
                 sys.exit()
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if back_button_rect.collidepoint(event.pos):
+                    settings_open = False
                     return  # Retourner au menu principal
                 # Vérifie si la souris a cliqué sur une valeur spécifique
                 for i, rect in enumerate(grid_value_rects):
