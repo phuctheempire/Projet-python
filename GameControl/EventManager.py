@@ -12,6 +12,8 @@ selected_value_index = None
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+PATH = "assets/menu/"
+
 # Ajoutez cette variable globale
 return_to_menu = False
 
@@ -20,11 +22,11 @@ screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
 pg.display.set_caption("Game Menu")
 
 # Charger l'image de fond, plusieurs images disponibles dans le dossier (à en choisir une)
-background_image = pg.image.load("back2.png")
+background_image = pg.image.load(PATH + "back2.png")
 background_image = pg.transform.scale(background_image, screen.get_size())
 
 # Charger la musique de fond
-pg.mixer.music.load("song.mp3")
+pg.mixer.music.load( PATH + "song.mp3")
 pg.mixer.music.set_volume(0.5)  # Le volume de 0.0 à 1.0
 pg.mixer.music.play(-1)  # -1 pour jouer en boucle
 
