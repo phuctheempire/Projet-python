@@ -386,23 +386,23 @@ class Bob:
     
     # def getBobTexture(self):
     #     return loadBobImage()["Bob"]
-    def getJellyTexture(self):
-        if ( self.isHunting == True):
-            if ( GameControl.getInstance().getTick() % 2 == 0):
-                return loadPurpleLeft()
-            else:
-                return loadPurpleRight()
-        else:
-            if ( self.age <= 1):
-                if ( GameControl.getInstance().getTick() % 2 == 0):
-                    return loadGreenLeft()
-                else:
-                    return loadGreenRight()
-            else:
-                if ( GameControl.getInstance().getTick() % 2 == 0):
-                    return loadBlueLeft()
-                else:
-                    return loadBlueRight()
+    # def getJellyTexture(self):
+        # if ( self.isHunting == True):
+        #     if ( GameControl.getInstance().getTick() % 2 == 0):
+        #         return loadPurpleLeft()
+        #     else:
+        #         return loadPurpleRight()
+        # else:
+        #     if ( self.age <= 1):
+        #         if ( GameControl.getInstance().getTick() % 2 == 0):
+        #             return loadGreenLeft()
+        #         else:
+        #             return loadGreenRight()
+        #     else:
+        #         if ( GameControl.getInstance().getTick() % 2 == 0):
+        #             return loadBlueLeft()
+        #         else:
+        #             return loadBlueRight()
 
     def getExplodeTexture(self, progression):
         return loadExplosionImage()[progression]
