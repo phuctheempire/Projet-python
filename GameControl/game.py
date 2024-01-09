@@ -31,7 +31,7 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(FPS)
+            self.clock.tick(5*FPS)
             self.events()
             self.update()
             # self.draw()
@@ -85,5 +85,12 @@ class Game:
             (0,0,0),
             (10, 70)
         )  
+        draw_text(
+            self.screen,
+            'camera={}'.format([self.camera.scroll.x, self.camera.scroll.y]),
+            25,
+            (0,0,0),
+            (10, 90)
+        )
 
         pg.display.flip()

@@ -207,6 +207,7 @@ class Bob:
         if ( Target != None):
             self.TargetTile = Target
             self.NextTile = self.HuntNextTile()
+            self.isHunting = False
         else:
         # We find prey :
             Prey = self.getSmallestPrey(self.getPraysInListBob(self.getNearbyBobs()))
