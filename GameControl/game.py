@@ -23,8 +23,8 @@ class Game:
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height) 
         self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
-        # self.gameController.initiateBobs(NB_BOB)
-        self.gameController.eatingTest()
+        self.gameController.initiateBobs(NB_BOB)
+        # self.gameController.eatingTest()
         self.gameController.respawnFood()
         
     

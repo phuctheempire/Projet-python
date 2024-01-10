@@ -41,11 +41,14 @@ quit_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button
 # back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
 back_button_rect = pg.Rect(20, 20, button_width, button_height)
 
-# grid_value_rects = []
+grid_value_rects = []
 
 # Déclaration des labels des grilles (à modifier en fonction du contenu de notre jeu, voir résumé du pdf du prof)
-grid_labels = ["GridLength", "Energy:", "Velocity:", "Min Energy:", "Mass:", "ScoreMemory:"]
-grid_values = [20, 30, 40, 50, 60, 70]  # Exemple de valeurs initiales
+grid_labels = ["GridLength:", "Nb Bobs:", "Bob Spawned Energy:", "Bob Max Energy:" , "Nb Spawned Food:"  "Food Energy", 
+               "Perception Flat Penalty: ", "Memory Flat Energy: ",  "Default velocity:", "Default mass", "Default Vision", 
+               "Default Memory point", "Mass Variation", "Velocity variation", "Vision variation" , "Memory point variation", "Self Reproduction",
+                "Sexual reproduction" ]
+grid_values = [100, 100, 100, 200, 200 ,100, 1/5, 1/5, 1, 1, 1, 0, 0.1, 0.1, 1, 1, True, True]  # Exemple de valeurs initiales
 
 # Calcul de la position x pour centraliser les grilles horizontalement
 grid_x = (screen.get_width() - len(max(grid_labels, key=len)) * 10) // 2
@@ -74,11 +77,14 @@ def draw_transparent_grids(labels, values, x, y, transparency):
     global grid_value_rects
     grid_value_rects = []  # Réinitialise la liste des rectangles
     for i, (label, value) in enumerate(zip(labels, values)):
-        draw_text(label, WHITE, x, y + i * 50)
-        value_rect = pg.Rect(x + 200, y + i * 50, 200, 40)
-        pg.draw.rect(screen, (WHITE[0], WHITE[1], WHITE[2], transparency), value_rect)
-        draw_text(str(value), BLACK, x + 300, y + 20 + i * 50)
-        grid_value_rects.append(value_rect)
+        draw_text(label, WHITE, x, y + 20 + i * 50) # Vẽ label thông số
+        value_rect = pg.Rect(x + 200, y + i * 50, 200, 40) # Tạo hình chữ nhật thông số
+        pg.draw.rect(screen, (WHITE[0], WHITE[1], WHITE[2], transparency), value_rect) # Vẽ hình chữ nhật thông số
+        draw_text(str(value), BLACK, x + 300, y + 20 + i * 50) # Vẽ giá trị thông số
+        grid_value_rects.append(value_rect) #  Pour cliquer 
+
+
+# def draw_transparent_grids ( labels , values , x , y , transparency ):
 
 # Dans la fonction open_settings
 def open_settings():
@@ -105,25 +111,394 @@ def open_settings():
 
             elif event.type == pg.KEYDOWN:
                 if input_active:
-                    if event.key == pg.K_RETURN:
-                        try:
-                            new_value = int(input_text)
-                            grid_values[selected_value_index] = new_value
-                            input_active = False
-                            input_text = ""
-                            selected_value_index = None
-                        except ValueError:
-                            print("La valeur doit être un entier.")
-                            input_text = ""
-                    elif event.key == pg.K_BACKSPACE:
-                        input_text = input_text[:-1]
-                    else:
-                        input_text += event.unicode
+                    match selected_value_index:
+            #             grid_labels = ["GridLength:", "Nb Bobs:", "Bob Spawned Energy:", "Bob Max Energy:" , "Nb Spawned Food:"  "Food Energy", 
+            #    "Perception Flat Penalty: ", "Memory Flat Energy: ",  "Default velocity:", "Default mass", "Default Vision", 
+            #    "Default Memory point", "Mass Variation", "Velocity variation", "Vision variation" , "Memory point variation", "Self Reproduction",
+            #     "Sexual reproduction" ]
+                        case None:
+                            pass
+                        case 0:
+                            if event.key == pg.K_RETURN:
+                                new_value = int(input_text)
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un entier.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 1000:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 4:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 3 caractère.")
+                        case 1: # nbBobs                            
+                            if event.key == pg.K_RETURN:
+                                new_value = int(input_text)
+                                if not isinstance(new_value, int):
+                                    print(type(new_value))
+                                    print(isinstance(new_value, int))
+                                    print("La valeur doit être un entier.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value <= 500:
+                                        grid_values[selected_value_index] = new_value
+                                        print(grid_values[selected_value_index])
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                        # print(grid_values[selected_value_index])
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 3:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 3 caractère.")
+                        case 2: # Bob Spawned Energy
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un entier.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value <= 1000:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 4:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 5 caractère.")
+                        case 3: # Bob Max Energy
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un entier.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value <= 1000:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 4:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 5 caractère.")
+                        case 4: # Nb Spawned Food
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un entier.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value <= 1000:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 4:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")
+                        case 5: # Food Energy
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un entier.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value <= 2000:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 4:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")
+                        case 6: # Perception Flat Penalty
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, float):
+                                    # print("La valeur doit être un float.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 1:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 5:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")    
+                        case 7: # Memory Flat Energy
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, float):
+                                    # print("La valeur doit être un float.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 1:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else: 
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else:
+                                if len(input_text) < 5:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")
+                        case 8: # Default velocity
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, float):
+                                    # print("La valeur doit être un float.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 5:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")
+                        case 9: # Default mass
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, float):
+                                    # print("La valeur doit être un float.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 2:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")
+                        case 10: # Default Vision
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un int.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 100:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 3:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 3 caractère.")     
+                        case 11: # Default Memory point
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un int.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 2:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 3 caractère.") 
+                        case 12: # Mass Variation
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, float):
+                                    # print("La valeur doit être un float.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 5:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")          
+                        case 13: # Velocity variation
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, float):
+                                    # print("La valeur doit être un float.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 5:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 4 caractère.")
+                        case 14: #Vision Variation
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un int.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 2:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 2 caractère.")
+                        case 15:
+                            if event.key == pg.K_RETURN:
+                                new_value = input_text
+                                if not isinstance(new_value, int):
+                                    # print("La valeur doit être un int.")
+                                    input_text = ""
+                                    input_active = False
+                                else:
+                                    if 0 < new_value < 10:
+                                        grid_values[selected_value_index] = new_value
+                                        input_active = False
+                                        input_text = ""
+                                        selected_value_index = None
+                                    else:
+                                        input_text = ""
+                                        input_active = False
+                            elif event.key == pg.K_BACKSPACE:
+                                input_text = input_text[:-1]
+                            else: 
+                                if len(input_text) < 2:
+                                    input_text += event.unicode
+                                else:
+                                    print("La valeur ne doit pas dépasser 2 caractère.")                             
+                            
+
+
+                    
 
         screen.blit(background_image, (0, 0))
 
         # Dessiner les grilles avec transparence
-        draw_transparent_grids(grid_labels, grid_values, grid_x, grid_y, 50)
+        draw_transparent_grids(grid_labels, grid_values, 500, 100, 50)
         # Dessiner le bouton de retour avec transparence
         draw_transparent_button("BACK", back_button_rect, 128)
 
@@ -137,12 +512,11 @@ def open_settings():
             pg.draw.rect(screen, WHITE, (grid_value_rects[selected_value_index].x, grid_value_rects[selected_value_index].y, 200, 40))
             input_surface = font.render(input_text, True, BLACK)  # Couleur de la police en noir
             input_rect = input_surface.get_rect(center=(grid_value_rects[selected_value_index].centerx, grid_value_rects[selected_value_index].centery))
-            pg.draw.rect(screen, WHITE, (input_rect.x - 5, input_rect.y - 5, input_rect.width + 10, input_rect.height + 10), border_radius=5)  # Couleur de fond du rectangle en blanc
+            # pg.draw.rect(screen, WHITE, (input_rect.x - 5, input_rect.y - 5, input_rect.width + 10, input_rect.height + 10), border_radius=5)  # Couleur de fond du rectangle en blanc
             screen.blit(input_surface, input_rect)
 
         pg.display.flip()
             
-
 
 # Dans la fonction show_menu
 def show_menu(screen, clock):
