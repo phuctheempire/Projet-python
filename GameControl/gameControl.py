@@ -1,5 +1,6 @@
 import random
-from GameControl.settings import *
+# from GameControl.settings import *
+from GameControl.setting import Setting
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
@@ -12,6 +13,7 @@ class GameControl:
     #initialisation of grids:
     def __init__(self):
         # raise Exception("This class is a singleton!")
+        self.setting = Setting.getSettings()
         self.grid : list[list['Tile']] = None
         self.nbBobs: 'int'= 0
         self.nbBobsSpawned = 0
@@ -42,8 +44,8 @@ class GameControl:
         from Tiles.Bob.bob import Bob
         for _ in range(nbBobs):
             print("Adding bob")
-            x = random.randint(0, GRID_LENGTH - 1)
-            y = random.randint(0, GRID_LENGTH - 1)
+            x = random.randint(0, self.setting.getGridLength() - 1)
+            y = random.randint(0, self.setting.getGridLength() - 1)
             tile = self.getMap()[x][y]
             bob = Bob()
             bob.spawn(tile)
@@ -51,22 +53,22 @@ class GameControl:
 
     def eatingTest(self):
         from Tiles.Bob.bob import Bob
-        x1 = random.randint(0, GRID_LENGTH - 1)
-        y1 = random.randint(0, GRID_LENGTH - 1)
+        x1 = random.randint(0, self.setting.getGridLength() - 1)
+        y1 = random.randint(0, self.setting.getGridLength() - 1)
         tile1 = self.getMap()[x1][y1]
         bob1 = Bob()
         bob1.spawn(tile1)
         bob1.mass = 2
         bob1.velocity = 1.5
-        x2 = random.randint(0, GRID_LENGTH - 1)
-        y2 = random.randint(0, GRID_LENGTH - 1)
+        x2 = random.randint(0, self.setting.getGridLength() - 1)
+        y2 = random.randint(0, self.setting.getGridLength() - 1)
         tile2 = self.getMap()[x2][y2]
         bob2 = Bob()
         bob2.spawn(tile2)
         bob2.mass = 1
         bob2.velocity = 1
-        x3 = random.randint(0, GRID_LENGTH - 1)
-        y3 = random.randint(0, GRID_LENGTH - 1)
+        x3 = random.randint(0, self.setting.getGridLength() - 1)
+        y3 = random.randint(0, self.setting.getGridLength() - 1)
         tile3 = self.getMap()[x3][y3]
         bob3 = Bob()
         bob3.spawn(tile3)
@@ -112,19 +114,19 @@ class GameControl:
         self.listFoods.clear()
     def respawnFood(self):
         # couples: list[tuple] = []
-        for _ in range(NB_SPAWN_FOOD):
-            x = random.randint(0,GRID_LENGTH-1)
-            y = random.randint(0,GRID_LENGTH-1)
+        for _ in range(self.setting.getNbSpawnFood()):
+            x = random.randint(0,self.setting.getGridLength()-1)
+            y = random.randint(0,self.setting.getGridLength()-1)
             # while (x, y) in couples:
-            #     x = random.randint(0,GRID_LENGTH-1)
-            #     y = random.randint(0,GRID_LENGTH-1)
+            #     x = random.randint(0,self.setting.getGridLength()-1)
+            #     y = random.randint(0,self.setting.getGridLength()-1)
             self.getMap()[x][y].spawnFood()
             self.listFoods.add(self.getMap()[x][y])
             # couples.append((x, y))
 
     def updateRenderTick(self):
         self.renderTick += 1
-        if self.renderTick == FPS:
+        if self.renderTick == self.setting.getFps():
             self.renderTick = 0
             self.increaseTick()
         
@@ -142,7 +144,7 @@ class GameControl:
         #     if bob not in self.diedQueue:
                 
         self.currentTick += 1
-        if self.currentTick == TICKS_PER_DAY:
+        if self.currentTick == self.setting.getTicksPerDay():
             self.currentTick = 0
             self.increaseDay()
 

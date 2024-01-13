@@ -2,13 +2,14 @@
 from typing import Optional
 from Tiles.tiles import Tile
 from GameControl.gameControl import GameControl
+from GameControl.setting import Setting
 # from view.texture import loadBobImage
 # from view.texture import loadExplosionImage
 # from view.texture import loadSpawnImage
 from view.texture import *
 import random
 from math import floor
-from GameControl.settings import *
+# from GameControl.settings import *
 # from Tiles.Food.food import Food
 # We need a function that search for the source of energy in the map ( both bob and tiles ): We need to call the visionTiles function
 # We need a function that compare the mass of the other bob ( call the other tile ) 
@@ -16,16 +17,17 @@ from GameControl.settings import *
 class Bob: 
     id = 0
     def __init__( self):
+        self.setting = Setting.getSettings()
         self.id = Bob.id
         Bob.id += 1
         self.age = 0
         self.isHunting = False
 
-        self.energy: 'float' = BOB_SPAWN_ENERGY
-        self.energyMax = BOB_MAX_ENERGY
+        self.energy: 'float' = self.setting.getBobSpawnEnergy()
+        self.energyMax = self.setting.getBobMaxEnergy()
 
-        self.mass: 'float' = DEFAULT_MASS
-        self.velocity: 'float' = DEFAULT_VELOCITY
+        self.mass: 'float' = self.setting.getDefaultMass()
+        self.velocity: 'float' = self.setting.getDefaultVelocity()
         self.speedBuffer = 0
         self.speed = self.velocity + self.speedBuffer
         # self.alive = True
@@ -34,13 +36,13 @@ class Bob:
         self.PreviousTiles : list['Tile'] = []
         self.CurrentTile : Optional[Tile] = None
 
-        self.vision: 'float' = DEFAULT_VISION
+        self.vision: 'float' = self.setting.getDefaultVision()
         self.TargetTile : Optional[Tile] = None
         self.NextTile : Optional[Tile] = None
         self.PredatorTile : Optional[Tile] = None
         # self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
         # self.targetTile : Optional[Tile] = None
-        self.memoryPoint: 'float' = DEFAULT_MEMORY_POINT
+        self.memoryPoint: 'float' = self.setting.getDefaultMemoryPoint()
         self.memoryTile = Optional[Tile]
         # self.image = self.getBobTexture()
 
@@ -62,7 +64,7 @@ class Bob:
 ################## Action ##################################
 
     def action(self):
-        print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
+        # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
         self.PreviousTile = self.CurrentTile
         self.PreviousTiles.append(self.CurrentTile)
         # self.buffer += self.velocity
@@ -97,10 +99,10 @@ class Bob:
         kinecticEnergy = self.mass * self.velocity**2
         self.energy -= kinecticEnergy
     def consumePerceptionEnergy(self):
-        perceptionEnergy = self.vision * (PERCEPTION_FLAT_PENALTY)
+        perceptionEnergy = self.vision * (self.setting.getPerceptionFlatPenalty())
         self.energy -= perceptionEnergy
     def consumeMemoryEnergy(self):
-        memoryEnergy = self.memory * (MEMORY_FLAT_PENALTY)
+        memoryEnergy = self.memory * (self.setting.getMemoryFlatPenalty())
         self.energy -= memoryEnergy
 
 ##################### Interact in one tick  #############################
@@ -116,19 +118,19 @@ class Bob:
         if ( energy == 0):
             pass
         else:
-            print("Spot food energy = ", energy, "Current Energy is ", self.energy)
-            if(self.energy < BOB_MAX_ENERGY):
-                if ( self.energy + energy < BOB_MAX_ENERGY):
+            # print("Spot food energy = ", energy, "Current Energy is ", self.energy)
+            if(self.energy < self.setting.getBobMaxEnergy()):
+                if ( self.energy + energy < self.setting.getBobMaxEnergy()):
                     self.energy += energy
                     self.CurrentTile.foodEnergy = 0
                 else:
-                    self.CurrentTile.foodEnergy -= (BOB_MAX_ENERGY - self.energy)
-                    self.energy = BOB_MAX_ENERGY
+                    self.CurrentTile.foodEnergy -= (self.setting.getBobMaxEnergy() - self.energy)
+                    self.energy = self.setting.getBobMaxEnergy()
 
         while (self.energy < self.energyMax):
             preyBobs = self.getPraysInListBob(self.CurrentTile.getBobs())
-            print("Same tile bob = ", self.CurrentTile.getBobs())
-            print("Spot prey = ", preyBobs)
+            # print("Same tile bob = ", self.CurrentTile.getBobs())
+            # print("Spot prey = ", preyBobs)
             if ( preyBobs == []):
                 break
             else:
@@ -173,9 +175,9 @@ class Bob:
     def reproduce(self):
         newBob = Bob()
         newBob.energy = 50
-        newBob.mass = random.uniform(self.mass - VAR_MASS, self.mass + VAR_MASS)
-        newBob.velocity = random.uniform(self.velocity - VAR_VELO, self.velocity + VAR_VELO)
-        newBob.vision = random.choice([self.vision - VAR_VISION, self.vision, self.vision + VAR_VISION]) if self.vision - VAR_VISION >= 0 else random.choice([0, self.vision,self.vision + VAR_VISION])
+        newBob.mass = random.uniform(self.mass - self.setting.getMassVariation(), self.mass + self.setting.getMassVariation())
+        newBob.velocity = random.uniform(self.velocity - self.setting.getVelocityVariation(), self.velocity + self.setting.getVelocityVariation())
+        newBob.vision = random.choice([self.vision - self.setting.getVisionVariation(), self.vision, self.vision + self.setting.getVisionVariation()]) if self.vision - self.setting.getVisionVariation() >= 0 else random.choice([0, self.vision,self.vision + self.setting.getVisionVariation()])
         newBob.spawn(self.CurrentTile)
         self.energy = 50
         
@@ -199,7 +201,7 @@ class Bob:
                     if ( bob != self):
                         seenBobs.append(bob)
             else: pass
-        print("Seen bobs = ", seenBobs)
+        # print("Seen bobs = ", seenBobs)
         return seenBobs   
 ######################## Hunt ###############################################
     def Hunt(self):
@@ -214,13 +216,13 @@ class Bob:
             if Prey != None:
                 self.TargetTile = Prey.CurrentTile
                 self.NextTile = self.HuntNextTile()
-                print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
+                # print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
                 self.isHunting = True
             else:
                 self.TargetTile = self.setRandomTile()
                 self.NextTile = self.HuntNextTile()
                 self.isHunting = False
-                print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
+                # print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
     
     def getLargestAndNearestFoodTile(self) -> Tile:
         # Get the list of nearby tiles
@@ -260,7 +262,7 @@ class Bob:
     
     def HuntNextTile(self):
         #Temporary
-        print("Hunting next tile")
+        # print("Hunting next tile")
         target = self.TargetTile
         if self.CurrentTile == self.TargetTile:
             return self.TargetTile
@@ -323,7 +325,7 @@ class Bob:
     
     def RunNextTile(self):
         #Temporary
-        print("Running next tile")
+        # print("Running next tile")
         predator = self.PredatorTile
         if self.CurrentTile == self.PredatorTile:
             return self.randomAdjacent()

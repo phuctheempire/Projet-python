@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 import pygame as pg
 import random
 from view.texture import *
-from GameControl.settings import *
+from GameControl.setting import Setting
 from GameControl.gameControl import GameControl
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
@@ -11,6 +11,7 @@ class Tile:
 
     def __init__(self, gridX: int, gridY: int ):
         self.gameController = GameControl.getInstance()
+        self.setting = Setting.getSettings()
         self.foodEnergy: 'float' = 0
         # self.grassImg = loadGrassImage() if random.randint(0,1) == 0 else loadFlowerImage()
         # self.foodImg = loadFoodImage()
@@ -20,10 +21,10 @@ class Tile:
         self.listBob : list['Bob'] = []
         # self.listFood : list["Food"] = []
 
-        CartCoord = [(gridX*TILE_SIZE, gridY*TILE_SIZE), 
-                     (gridX*TILE_SIZE + TILE_SIZE, gridY*TILE_SIZE), 
-                     (gridX*TILE_SIZE + TILE_SIZE, gridY*TILE_SIZE + TILE_SIZE), 
-                     (gridX*TILE_SIZE, gridY*TILE_SIZE + TILE_SIZE)]
+        CartCoord = [(gridX*self.setting.getTileSize(), gridY*self.setting.getTileSize()), 
+                     (gridX*self.setting.getTileSize() + self.setting.getTileSize(), gridY*self.setting.getTileSize()), 
+                     (gridX*self.setting.getTileSize() + self.setting.getTileSize(), gridY*self.setting.getTileSize() + self.setting.getTileSize()), 
+                     (gridX*self.setting.getTileSize(), gridY*self.setting.getTileSize() + self.setting.getTileSize())]
 
         def CartToIso(x, y):
             return (x - y, (x + y) / 2)
@@ -61,7 +62,7 @@ class Tile:
     def removeFood(self):
         self.foodEnergy = 0
     def spawnFood(self):
-        self.foodEnergy += FOOD_ENERGY
+        self.foodEnergy += self.setting.getFoodEnergy()
     def removeBob(self, bob: 'Bob'):
         self.listBob.remove(bob)
     
@@ -69,10 +70,10 @@ class Tile:
     def getDirectionTiles(self, orientation: int)-> list['Tile']:
         tempmap = GameControl.getInstance().getMap()
         coord = {
-            "Up": tempmap[self.gridX][self.gridY+1] if self.gridY+1 < GRID_LENGTH else None,
+            "Up": tempmap[self.gridX][self.gridY+1] if self.gridY+1 < self.setting.getGridLength() else None,
             "Down": tempmap[self.gridX][self.gridY-1] if self.gridY-1 >= 0 else None,
             "Left": tempmap[self.gridX-1][self.gridY] if self.gridX-1 >= 0 else None,
-            "Right": tempmap[self.gridX+1][self.gridY] if self.gridX+1 < GRID_LENGTH else None
+            "Right": tempmap[self.gridX+1][self.gridY] if self.gridX+1 < self.setting.getGridLength() else None
         }
         return coord[orientation]
 
@@ -88,7 +89,7 @@ class Tile:
         tempTiles = []
         for coord in tempCoord:
             try:
-                if self.gridX + coord[0] > GRID_LENGTH-1 or self.gridY + coord[1] > GRID_LENGTH-1 or self.gridX + coord[0] < 0 or self.gridY + coord[1] < 0:
+                if self.gridX + coord[0] > self.setting.getGridLength()-1 or self.gridY + coord[1] > self.setting.getGridLength()-1 or self.gridX + coord[0] < 0 or self.gridY + coord[1] < 0:
                     continue
                 tempTiles.append(tempMap[self.gridX + coord[0]][self.gridY + coord[1]])
             except IndexError:

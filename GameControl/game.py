@@ -2,36 +2,39 @@ from typing import TYPE_CHECKING
 import pygame as pg
 import sys
 # from GameControl.gameControl import GameControl
-from GameControl.settings import *
+# from GameControl.settings import *
+from GameControl.setting import Setting
 from view.utils import draw_text
 from view.camera import Camera
 from view.world import World
 # from GameControl.settings import *
 # import random
-
+from GameControl.EventManager import *
 from GameControl.gameControl import GameControl
 
 
 class Game:
 
     def __init__(self, screen, clock):
-
+        self.setting = Setting.getSettings()
         self.gameController = GameControl.getInstance()
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height) 
-        self.gameController.createWorld(GRID_LENGTH,GRID_LENGTH) 
-        self.gameController.initiateBobs(NB_BOB)
+        self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
+        self.gameController.initiateBobs(self.setting.getNbBob())
         # self.gameController.eatingTest()
         self.gameController.respawnFood()
+        print("Game: ", self.setting.getGridLength(), self.setting.getNbBob(), self.setting.getFps(), self.setting.getTileSize()) 
+    
         
     
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(5*FPS)
+            self.clock.tick(5*self.setting.getFps())
             self.events()
             self.update()
             # self.draw()
@@ -49,6 +52,8 @@ class Game:
                 if event.key == pg.K_ESCAPE:
                     pg.quit()
                     sys.exit()
+                if event.key == pg.K_BACKSPACE:
+                    openIngamesetting()
 
     def update(self):
         self.camera.update()
@@ -59,7 +64,7 @@ class Game:
         self.world.draw(self.screen, self.camera)
         draw_text(
             self.screen,
-            'fps={}'.format(round(self.clock.get_fps())),
+            'FPS={}'.format(round(self.clock.get_fps())),
             25,
             (0,0,0),
             (10, 10)
