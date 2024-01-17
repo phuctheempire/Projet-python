@@ -14,7 +14,7 @@ class World:
         self.height = height
         self.renderTick = 0
         self.surface = pg.Surface((self.setting.getSurfaceWidth(), self.setting.getSurfaceHeight())).convert_alpha()
-        self.zoom : 'float' = 1
+        self.zoom : 'float' = self.width / self.setting.getSurfaceWidth()
 
 
 
@@ -24,12 +24,38 @@ class World:
         self.drawStaticMap(self.surface, camera)
         self.drawFood(self.surface, camera)
         self.drawBob(self.surface, camera, self.gameController.renderTick)
-        # newSf = pg.Surface((SURFACE_WIDTH * self.zoom, SURFACE_HEIGHT * self.zoom)).convert_alpha()
+        # newSf = pg.Surface((self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom)).convert_alpha()
         # pg.transform.smoothscale_by(self.surface, self.zoom, newSf)
         # screen.blit(newSf, (camera.scroll.x, camera.scroll.y))
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
-        
+    
+    def drawSimu(self, screen, camera):
+        self.drawSimuStaticMap(self.surface, camera)
+        self.drawSimuFood(self.surface, camera)
+        self.drawSimuBob(self.surface, camera)
+        newSf = pg.Surface((self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom)).convert_alpha()
+        pg.transform.smoothscale_by(self.surface, self.zoom, newSf)
+        screen.blit(newSf, (0, 0))
+        # screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
 
+
+    def drawSimuBob(self,surface, camera):
+        greenLeft = loadGreenLeft()
+        greenRight = loadGreenRight()
+        blueLeft = loadBlueLeft()
+        blueRight = loadBlueRight()
+        purpleLeft = loadPurpleLeft()
+        purpleRight = loadPurpleRight()
+        for bob in self.gameController.listBobs:
+            (destX, destY) = bob.getCurrentTile().getRenderCoord()
+            (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
+            finish = (desX, desY + self.setting.getTileSize())
+            a,b = finish
+            bar_width = int((bob.energy / bob.energyMax) * 50)
+            pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+            if bob.isHunting:
+                surface.blit(purpleLeft, finish)
+            else: surface.blit(greenLeft, finish)
 
     def drawBob(self, surface, camera, walkProgression ):
         greenLeft = loadGreenLeft()
@@ -38,6 +64,7 @@ class World:
         blueRight = loadBlueRight()
         purpleLeft = loadPurpleLeft()
         purpleRight = loadPurpleRight()
+        
         
         for bob in self.gameController.listBobs:
             if (bob not in self.gameController.diedQueue) and (bob not in self.gameController.newBornQueue):
@@ -49,7 +76,7 @@ class World:
                             (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
                             finish = (desX, desY + self.setting.getTileSize())
                             a,b = finish
-                            if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
+                            if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
                                 bar_width = int((bob.energy / bob.energyMax) * 50)
                                 pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
                                 if bob.isHunting:
@@ -65,7 +92,7 @@ class World:
                                     (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
                                     pos = (X + (desX - X) * (walkProgression - (i*self.setting.getFps())/(2 * nbInteval)) * (2 * nbInteval) / self.setting.getFps() , Y + (desY - Y) * (walkProgression - (i*self.setting.getFps())/(2 * nbInteval) ) * (2 * nbInteval) / self.setting.getFps()  + self.setting.getTileSize()  )
                                     a,b = pos
-                                    if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
+                                    if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
                                         bar_width = int((bob.energy / bob.energyMax) * 50)
                                         pg.draw.rect(surface, (255, 0, 0), (pos[0], pos[1] - 5, bar_width, 5))
                                         if bob.isHunting:
@@ -78,7 +105,7 @@ class World:
                         (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
                         finish = (desX, desY + self.setting.getTileSize())
                         a,b = finish
-                        if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
+                        if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
                             bar_width = int((bob.energy / bob.energyMax) * 50)
                             pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
                             if bob.isHunting:
@@ -98,7 +125,7 @@ class World:
             start = (X + (desX - X) * (2 *walkProgression/self.setting.getFps()), Y + (desY - Y) * (2* walkProgression/self.setting.getFps()) + self.setting.getTileSize())
             finish = (desX, desY + self.setting.getTileSize())
             a , b = finish
-            if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
+            if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
                 if (walkProgression < self.setting.getFps()/2):
                     surface.blit(greenLeft, start)
                 elif self.setting.getFps()/2 <= walkProgression < self.setting.getFps()/2 + self.setting.getFps()/16:
@@ -129,7 +156,7 @@ class World:
                 # start = (X + (desX - X) * (2 *walkProgression/self.setting.getFps()), Y + (desY - Y) * (2* walkProgression/self.setting.getFps()) + self.setting.getTileSize())
                 finish = (desX, desY + self.setting.getTileSize())
                 a,b = finish
-                if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
+                if -64 <= (a  + camera.scroll.x) <= 1920 and -64 <= (b  + camera.scroll.y)  <= 1080:
                     if walkProgression < self.setting.getFps()/2:
                         # screen.blit(greenLefttart) # need to change to newborn bob texture later
                         # pg.draw.rect(screen, (255, 0, 0), (start[0], start[1] - 5, bar_width, 5))
@@ -155,7 +182,6 @@ class World:
                         surface.blit(bob.getSpawnTexture(8), finish)
                 else: pass
 
-
     def drawFood(self, surface, camera):
         foodTexture = loadFoodImage()
         for food in self.gameController.getFoodTiles():
@@ -163,23 +189,52 @@ class World:
             (X, Y) = (x + self.surface.get_width()/2  , y - (foodTexture.get_height() - self.setting.getTileSize() ) )
             position = (X , Y + self.setting.getTileSize() )
             a,b = position
-            if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
+            if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
                 bar_width = int((food.foodEnergy / self.setting.getFoodEnergy()) * 50)
                 pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
                 surface.blit(foodTexture, position)
             else: pass
+
+    def drawSimuFood(self, surface, camera):
+        foodTexture = loadFoodImage()
+        for food in self.gameController.getFoodTiles():
+            (x, y) = food.getRenderCoord()
+            (X, Y) = (x + self.surface.get_width()/2  , y - (foodTexture.get_height() - self.setting.getTileSize() ) )
+            position = (X , Y + self.setting.getTileSize() )
+            a,b = position
+            bar_width = int((food.foodEnergy / self.setting.getFoodEnergy()) * 50)
+            pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
+            surface.blit(foodTexture, position)
 
 
     def drawStaticMap(self, surface, camera):
         surface.fill((195, 177, 225))
         # surface.blit(loadMap(), (0,0))
         textureImg = loadGrassImage()
+        flowImg = loadFlowerImage()
         for row in self.gameController.getMap(): # x is a list of a double list Map
             for tile in row: # tile is an object in list
                 (x, y) = tile.getRenderCoord()
                 offset = (x + self.surface.get_width()/2 , y + self.setting.getTileSize())
                 a,b = offset
-                if 0 <= (a * self.zoom + camera.scroll.x) <= 1920 and 0 <= (b * self.zoom + camera.scroll.y)  <= 1080:
-                    surface.blit(textureImg, offset)
+                if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
+                    if tile.flower:
+                        surface.blit(flowImg, offset)
+                    else:
+                        surface.blit(textureImg, offset)
                 else: pass
   
+    def drawSimuStaticMap(self, surface, camera):
+        surface.fill((195, 177, 225))
+        # # surface.blit(loadMap(), (0,0))
+        # textureImg = loadGrassImage()
+        # flowImg = loadFlowerImage()
+        # for row in self.gameController.getMap(): # x is a list of a double list Map
+        #     for tile in row: # tile is an object in list
+        #         (x, y) = tile.getRenderCoord()
+        #         offset = (x + self.surface.get_width()/2 , y + self.setting.getTileSize())
+        #         a,b = offset
+        #         if tile.flower:
+        #             surface.blit(flowImg, offset)
+        #         else:
+        #             surface.blit(textureImg, offset)

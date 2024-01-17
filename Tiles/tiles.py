@@ -15,6 +15,7 @@ class Tile:
         self.foodEnergy: 'float' = 0
         # self.grassImg = loadGrassImage() if random.randint(0,1) == 0 else loadFlowerImage()
         # self.foodImg = loadFoodImage()
+        self.flower:'int' = 0 if random.randint(0,1) == 0 else 1
         self.showTile = True
         self.gridX = gridX
         self.gridY = gridY

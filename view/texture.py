@@ -14,12 +14,12 @@ setting = Setting.getSettings()
 
 def loadGrassImage():
     grass =pg.image.load(setting.getImagePath() + "grass.png").convert_alpha()
-    grass = pg.transform.scale(grass, (grass.get_width()*0.5, grass.get_height()*0.5))
+    # grass = pg.transform.scale(grass, (grass.get_width()*0.5, grass.get_height()*0.5))
     return grass
 
 def loadFlowerImage():
     flower = pg.image.load(setting.getImagePath() + "flower.png").convert_alpha()
-    flower = pg.transform.scale(flower, (flower.get_width()*0.5, flower.get_height()*0.5))
+    # flower = pg.transform.scale(flower, (flower.get_width()*0.5, flower.get_height()*0.5))
     return flower
 
 # def loadBobImage():

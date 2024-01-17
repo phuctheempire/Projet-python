@@ -3,6 +3,7 @@ class Setting:
     
     def __init__ (self):
         self.tileSize = 32
+        self.simuMode = True
         self.resolutionX = 1920
         self.resolutionY = 1080
         self.fps = 16
@@ -34,7 +35,11 @@ class Setting:
         self.surfaceHeight = self.tileSize * self.gridLength + self.tileSize * 2
         self.ticksPerDay = 50
         self.imagePath = 'assets/graphics/'
-    
+        # self.zoom
+
+    # def getZoom(self):
+    #     return self.zoom
+
     def getTileSize(self):
         return self.tileSize
     

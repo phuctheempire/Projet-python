@@ -34,12 +34,20 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(5*self.setting.getFps())
-            self.events()
-            self.update()
-            # self.draw()
-            self.gameController.updateRenderTick()
-            self.draw()
+            if self.setting.simuMode:
+                self.clock.tick(5*self.setting.getFps())
+                self.events()
+                self.update()
+                # self.draw()
+                self.gameController.increaseTick()
+                self.drawSimu()
+            else:
+                self.clock.tick(5*self.setting.getFps())
+                self.events()
+                self.update()
+                # self.draw()
+                self.gameController.updateRenderTick()
+                self.draw()
             
 
 
@@ -53,12 +61,54 @@ class Game:
                     pg.quit()
                     sys.exit()
                 if event.key == pg.K_BACKSPACE:
+                    self.gameController.renderTick = 0
                     openIngamesetting()
 
     def update(self):
         self.camera.update()
         
-        
+    def drawSimu(self):
+        self.screen.fill((137, 207, 240))
+        self.world.drawSimu(self.screen, self.camera)
+        draw_text(
+            self.screen,
+            'FPS={}'.format(round(self.clock.get_fps())),
+            25,
+            (0,0,0),
+            (10, 10)
+        )  
+        draw_text(
+            self.screen,
+            'gameTick={}'.format(round(self.gameController.getRenderTick())),
+            25,
+            (0,0,0),
+            (10, 30)
+        )  
+        draw_text(
+            self.screen,
+            'Tick={}'.format(round(self.gameController.getTick())),
+            25,
+            (0,0,0),
+            (10, 50)
+        )  
+        draw_text(
+            self.screen,
+            'Day={}'.format(round(self.gameController.getDay())),
+            25,
+            (0,0,0),
+            (10, 70)
+        )  
+        draw_text(
+            self.screen,
+            'camera={}'.format([self.camera.scroll.x, self.camera.scroll.y]),
+            25,
+            (0,0,0),
+            (10, 90)
+        )
+
+        pg.display.flip()
+
+
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
