@@ -63,6 +63,9 @@ class Game:
                 if event.key == pg.K_BACKSPACE:
                     self.gameController.renderTick = 0
                     openIngamesetting()
+                if event.key == pg.K_SPACE:
+                    self.gameController.renderTick = 0
+                    pause(self.screen,self.camera)
 
     def update(self):
         self.camera.update()

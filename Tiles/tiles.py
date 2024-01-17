@@ -32,7 +32,7 @@ class Tile:
         self.isoCoord = [CartToIso(x, y) for x, y in CartCoord]
 
         self.renderCoord = (min([x for x, y in self.isoCoord]), min([y for x, y in self.isoCoord]))
-
+    get
     # Setter and getter
     def getRenderCoord(self):
         return self.renderCoord

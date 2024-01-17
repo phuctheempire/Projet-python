@@ -28,7 +28,9 @@ class World:
         # pg.transform.smoothscale_by(self.surface, self.zoom, newSf)
         # screen.blit(newSf, (camera.scroll.x, camera.scroll.y))
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
-    
+
+
+
     def drawSimu(self, screen, camera):
         self.drawSimuStaticMap(self.surface, camera)
         self.drawSimuFood(self.surface, camera)
@@ -51,8 +53,8 @@ class World:
             (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
             finish = (desX, desY + self.setting.getTileSize())
             a,b = finish
-            bar_width = int((bob.energy / bob.energyMax) * 50)
-            pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+            # bar_width = int((bob.energy / bob.energyMax) * 50)
+            # pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
             if bob.isHunting:
                 surface.blit(purpleLeft, finish)
             else: surface.blit(greenLeft, finish)
@@ -202,8 +204,8 @@ class World:
             (X, Y) = (x + self.surface.get_width()/2  , y - (foodTexture.get_height() - self.setting.getTileSize() ) )
             position = (X , Y + self.setting.getTileSize() )
             a,b = position
-            bar_width = int((food.foodEnergy / self.setting.getFoodEnergy()) * 50)
-            pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
+            # bar_width = int((food.foodEnergy / self.setting.getFoodEnergy()) * 50)
+            # pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
             surface.blit(foodTexture, position)
 
 
@@ -238,3 +240,8 @@ class World:
         #             surface.blit(flowImg, offset)
         #         else:
         #             surface.blit(textureImg, offset)
+
+    def drawPause(self, screen, camera):
+        self.drawStaticPauseMap(self.surface, camera)
+        self.drawPauseFood(self.surface, camera)
+        self.drawPauseBob(self.surface, camera)

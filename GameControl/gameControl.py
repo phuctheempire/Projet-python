@@ -102,6 +102,7 @@ class GameControl:
                 world.append([])
                 for j in range(lengthY):
                     tile = Tile(gridX=i,gridY= j)
+                    
                     world[i].append(tile)
         self.setMap(world)
     

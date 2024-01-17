@@ -8,6 +8,8 @@ pg.mixer.init()
 
 selected_value_index = None
 from GameControl.setting import Setting
+from GameControl.gameControl import GameControl
+from view.world import *
 # Couleurs
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -15,6 +17,7 @@ BLACK = (0, 0, 0)
 PATH = "assets/menu/"
 
 setting = Setting.getSettings()
+gameController = GameControl.getInstance()
 # Ajoutez cette variable globale
 return_to_menu = False
 
@@ -162,20 +165,8 @@ def open_settings():
             elif event.type == pg.KEYDOWN:
                 if input_active:
                     match selected_value_index:
-            #             grid_labels = ["GRID LENGTH", "NUMBER BOB", "BOB SPAWN ENERGY", "BOB MAX ENERGY" , "NUMBER SPAWNED FOOD"  "FOOD ENERGY", 
-            #    "PERCEPTION FLAT PENALTY", "MEMORY FLAT PENALTY",  "DEFAULT VELOCITY", "DEFAULT MASS", "DEFAULT VISION", 
-            #    "DEFAULT MEMORY POINT", "MASS VARIATION", "VELOCITY VARIATION", "VISION VARIATION" , "MEMORY VARIATION", "SELF REPRODUCTION  ",
-            #     "SEXUAL REPRODUCTION" ]
                         case None:
                             pass
-            #             grid_dict = {"GRID LENGTH": 100,
-            #    "NUMBER BOB": 200, "NUMBER SPAWNED FOOD": 100,  "FOOD ENERGY": 100,
-            #    "BOB SPAWN ENERGY": 200, "BOB MAX ENERGY": 50 ,"BOB NEWBORN ENERGY": 100, "SEXUAL BORN ENERGY": 0.5, "BOB STATIONARY ENERGY LOSS": 150, "BOB SELF REPRODUCTION ENERGY LOSS": 100, "BOB SEXUAL REPRODUCTION LOSS": 150, "BOB SEXUAL REPRODUCTION LEVEL": 1/5,
-            #     "PERCEPTION FLAT PENALTY": 1/5, "MEMORY FLAT PENALTY": 1,
-            #     "DEFAULT VELOCITY": 1, "DEFAULT MASS": 1, "DEFAULT VISION": 4, "DEFAULT MEMORY POINT": 0,
-            #     "MASS VARIATION": 0.1, "VELOCITY VARIATION": 0.1, "VISION VARIATION": 1 , "MEMORY VARIATION": 1,
-            #     "SELF REPRODUCTION  ": True,"SEXUAL REPRODUCTION": True
-            #    }
                         case "FPS":
                             if event.key == pg.K_RETURN:
                                     if input_text == "":
@@ -244,6 +235,9 @@ def open_settings():
                                         else:
                                             if 0 < new_value <= 200:
                                                 setting.setGridLength(new_value)
+                                                print("Setting grid length to ", new_value)
+                                                print("Surface width: ", setting.getSurfaceWidth())
+                                                print("Surface height: ", setting.getSurfaceHeight())
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
                                                 input_text = ""
@@ -2056,3 +2050,96 @@ def show_menu(screen, clock):
             open_settings()
 
         pg.display.flip()
+
+
+def pause( screen, camera ):
+    # Declaration des rectangles des map:
+    pauseSurface = pg.Surface((setting.getSurfaceWidth(), setting.getSurfaceHeight())).convert_alpha()
+    print(setting.getSurfaceWidth(), setting.getSurfaceHeight())
+    while True:
+        ########################## Draw map #######################################################
+        screen.fill((0, 0, 0))
+        pauseSurface.fill((195, 177, 225))
+        # surface.blit(loadMap(), (0,0))
+        textureImg = loadGrassImage()
+        flowImg = loadFlowerImage()
+        for row in gameController.getMap(): # x is a list of a double list Map
+            for tile in row: # tile is an object in list
+                (x, y) = tile.getRenderCoord()
+                offset = (x + setting.getSurfaceWidth()/2 , y + setting.getTileSize())
+                a,b = offset
+                if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
+                    if tile.flower:
+                        pauseSurface.blit(flowImg, offset)
+                    else:
+                        pauseSurface.blit(textureImg, offset)
+                else: pass
+        
+
+        ########################## Draw Bob #######################################################
+        greenLeft = loadGreenLeft()
+        greenRight = loadGreenRight()
+        blueLeft = loadBlueLeft()
+        blueRight = loadBlueRight()
+        purpleLeft = loadPurpleLeft()
+        purpleRight = loadPurpleRight()
+        for bob in gameController.listBobs:
+            (destX, destY) = bob.getCurrentTile().getRenderCoord()
+            (desX, desY) = (destX + setting.getSurfaceWidth()//2 , destY - ( + 50 - setting.getTileSize() ) )
+            finish = (desX, desY + setting.getTileSize())
+            a,b = finish
+            # bar_width = int((bob.energy / bob.energyMax) * 50)
+            # pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+            if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
+                if bob.isHunting:
+                    pauseSurface.blit(purpleLeft, finish)
+                else: pauseSurface.blit(greenLeft, finish)
+        ########################## Draw Food #######################################################
+        foodTexture = loadFoodImage()
+        for food in gameController.getFoodTiles():
+            (x, y) = food.getRenderCoord()
+            (X, Y) = (x + setting.getSurfaceWidth()//2  , y - (foodTexture.get_height() - setting.getTileSize() ) )
+            position = (X , Y + setting.getTileSize() )
+            a,b = position
+            # bar_width = int((food.foodEnergy / setting.getFoodEnergy()) * 50)
+            # pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
+            pauseSurface.blit(foodTexture, position)
+        listRect = []
+        camera.update()
+        for row in gameController.getMap():
+            for tile in row:
+                (x,y) = tile.getRenderCoord()
+                offset = ( x + setting.getSurfaceWidth()//2 , y + setting.getTileSize()  ) 
+                a, b = offset
+                if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
+                    listRect.append((tile,(a + camera.scroll.x, b + camera.scroll.y)))
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    return
+        mouse_x, mouse_y = pg.mouse.get_pos()
+        for coord in listRect:
+            if coord[1][0] <= mouse_x <= coord[1][0] + 64 and coord[1][1] + 8 <= mouse_y <= coord[1][1] + 24:
+                print(coord[0].gridX, coord[0].gridY)
+                if len(coord[0].getBobs()) != 0:
+                    if ( mouse_y - camera.scroll.y - 150 >= 0 ):
+                        if ( mouse_x - camera.scroll.x -100 < 0 ):
+                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x +50 , mouse_y - camera.scroll.y -50 , 200, 100))
+                        elif( mouse_x - camera.scroll.x + 100 > 1920  ):
+                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -250 , mouse_y - camera.scroll.y - 50 , 200, 100))
+                        else:
+                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -100 , mouse_y - camera.scroll.y - 150 , 200, 100))
+                    else:
+                        pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -100 , mouse_y - camera.scroll.y + 50 , 200, 100))
+
+
+
+
+
+        screen.blit(pauseSurface, (camera.scroll.x, camera.scroll.y))    
+        pg.display.flip()
+
+        
