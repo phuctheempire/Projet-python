@@ -3,7 +3,7 @@ class Setting:
     
     def __init__ (self):
         self.tileSize = 32
-        self.simuMode = False
+        self.simuMode = True
         self.resolutionX = 1920
         self.resolutionY = 1080
         self.fps = 16
