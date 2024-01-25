@@ -10,10 +10,7 @@ selected_value_index = None
 from GameControl.setting import Setting
 from GameControl.gameControl import GameControl
 from view.world import *
-from view.utils import *
-from Tiles.Bob import *
-from Tiles.tiles import *
-# Couleurs  
+# Couleurs
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -2209,62 +2206,19 @@ def pause( screen, camera ):
             if coord[1][0] <= mouse_x <= coord[1][0] + 64 and coord[1][1] + 8 <= mouse_y <= coord[1][1] + 24:
                 print(coord[0].gridX, coord[0].gridY)
                 if len(coord[0].getBobs()) != 0:
-                    nb = len(coord[0].getBobs())
-                # for bob in coord[0].getBobs():
-                    if ( mouse_y - 150 >= 0 ):
-                        if ( mouse_x - 50*nb < 0 ):
-                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x +50 , mouse_y - camera.scroll.y -50 , 100 * nb, 100))
-                            i = 0
-                            for bob in coord[0].getBobs():
-                                draw_text(pauseSurface, f"ID: {bob.id}", 15,(0,0,0),(mouse_x - camera.scroll.x +50 + 100*i + 5 , mouse_y - camera.scroll.y -50 + 5))
-                                draw_text(pauseSurface, f"Energy: {bob.energy:.3f}", 15,(0,0,0),(mouse_x - camera.scroll.x +50+ 100*i + 5 , mouse_y - camera.scroll.y -50 + 15))
-                                draw_text(pauseSurface, f"Mass: {bob.mass:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x +50+ 100*i + 5 , mouse_y - camera.scroll.y -50 + 25)))
-                                draw_text(pauseSurface, f"Vision: {bob.vision:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x +50+ 100*i + 5 , mouse_y - camera.scroll.y -50 + 35)))
-                                draw_text(pauseSurface, f"Velocity: {bob.velocity:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x +50+ 100*i + 5 , mouse_y - camera.scroll.y -50 + 45)))
-                                draw_text(pauseSurface, f"Memory: {bob.memoryPoint:.3f}",15,(0,0,0) , ((mouse_x - camera.scroll.x +50+ 100*i + 5 , mouse_y - camera.scroll.y -50 + 55)))
-                                # draw_text(pauseSurface, f"-------------------------------------------------------------",15,(0,0,0) , ((mouse_x - camera.scroll.x +50 + 5 , mouse_y - camera.scroll.y -50 + 65)))
-                                i += 1
-
-
-                        elif( mouse_x + 50*nb > 1920  ):
-                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x - 50 - 100*nb , mouse_y - camera.scroll.y - 50 , 100 * nb, 100))
-                            i = 0
-                            for bob in coord[0].getBobs():
-                                draw_text(pauseSurface, f"ID: {bob.id}", 15,(0,0,0),(mouse_x - camera.scroll.x - 50 -100*nb + 100*i + 5 , mouse_y - camera.scroll.y -50 + 5))
-                                draw_text(pauseSurface, f"Energy: {bob.energy:.3f}", 15,(0,0,0),(mouse_x - camera.scroll.x -50 -100*nb + 100*i + 5 , mouse_y - camera.scroll.y -50 + 15))
-                                draw_text(pauseSurface, f"Mass: {bob.mass:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 -100*nb + 100*i + 5 , mouse_y - camera.scroll.y -50 + 25)))
-                                draw_text(pauseSurface, f"Vision: {bob.vision:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 -100*nb + 100*i + 5 , mouse_y - camera.scroll.y -50 + 35)))
-                                draw_text(pauseSurface, f"Velocity: {bob.velocity:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 -100*nb + 100*i + 5 , mouse_y - camera.scroll.y -50 + 45)))
-                                draw_text(pauseSurface, f"Memory: {bob.memoryPoint:.3f}",15,(0,0,0) , ((mouse_x - camera.scroll.x -50 -100*nb + 100*i + 5 , mouse_y - camera.scroll.y -50 + 55)))
-                                # draw_text(pauseSurface, f"-------------------------------------------------------------",15,(0,0,0) , ((mouse_x - camera.scroll.x -250 + 5 , mouse_y - camera.scroll.y -50 + 65)))
-                                i += 1
-
-
+                    if ( mouse_y - camera.scroll.y - 150 >= 0 ):
+                        if ( mouse_x - camera.scroll.x -100 < 0 ):
+                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x +50 , mouse_y - camera.scroll.y -50 , 200, 100))
+                        elif( mouse_x - camera.scroll.x + 100 > 1920  ):
+                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -250 , mouse_y - camera.scroll.y - 50 , 200, 100))
                         else:
-                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -50 * nb , mouse_y - camera.scroll.y - 150 , 100 * nb, 100))
-                            i = 0
-                            for bob in coord[0].getBobs():
-                                draw_text(pauseSurface, f"ID: {bob.id}", 15,(0,0,0),(mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y -150 + 5))
-                                draw_text(pauseSurface, f"Energy: {bob.energy:.3f}", 15,(0,0,0),(mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y -150 + 15))
-                                draw_text(pauseSurface, f"Mass: {bob.mass:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y -150 + 25)))
-                                draw_text(pauseSurface, f"Vision: {bob.vision:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y -150 + 35)))
-                                draw_text(pauseSurface, f"Velocity: {bob.velocity:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y -150 + 45)))
-                                draw_text(pauseSurface, f"Memory: {bob.memoryPoint:.3f}",15,(0,0,0) , ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y -150 + 55)))
-                                # draw_text(pauseSurface, f"-------------------------------------------------------------",15,(0,0,0) , ((mouse_x - camera.scroll.x -100 + 5 , mouse_y - camera.scroll.y -150 + 65)))
-                                i += 1
-
+                            pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -100 , mouse_y - camera.scroll.y - 150 , 200, 100))
                     else:
-                        pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -50 * nb , mouse_y - camera.scroll.y + 50 , 100 * nb, 100))
-                        i = 0
-                        for bob in coord[0].getBobs():
-                            draw_text(pauseSurface, f"ID: {bob.id}", 15,(0,0,0),(mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y + 50 + 5))
-                            draw_text(pauseSurface, f"Energy: {bob.energy:.3f}", 15,(0,0,0),(mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y + 50 + 15))
-                            draw_text(pauseSurface, f"Mass: {bob.mass:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y + 50 + 25)))
-                            draw_text(pauseSurface, f"Vision: {bob.vision:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y + 50 + 35)))
-                            draw_text(pauseSurface, f"Velocity: {bob.velocity:.3f}",15,(0,0,0), ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y + 50 + 45)))
-                            draw_text(pauseSurface, f"Memory: {bob.memoryPoint:.3f}",15,(0,0,0) , ((mouse_x - camera.scroll.x -50 * nb + 100*i + 5 , mouse_y - camera.scroll.y + 50 + 55)))
-                            # draw_text(pauseSurface, f"-------------------------------------------------------------",15,(0,0,0) , ((mouse_x - camera.scroll.x -100 + 5 , mouse_y - camera.scroll.y + 50 + 65)))
-                            i += 1
+                        pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -100 , mouse_y - camera.scroll.y + 50 , 200, 100))
+
+
+
+
 
         screen.blit(pauseSurface, (camera.scroll.x, camera.scroll.y))    
         pg.display.flip()
