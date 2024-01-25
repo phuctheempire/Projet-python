@@ -61,7 +61,7 @@ def loadBlueLeft():
 
 def loadFoodImage():
     food = pg.image.load(setting.getImagePath() + "food.png").convert_alpha()
-    food = pg.transform.scale(food, (food.get_width()*0.25, food.get_height()*0.25))
+    # food = pg.transform.scale(food, (food.get_width()*0.25, food.get_height()*0.25))
     return food
 
 def loadExplosionImage():

@@ -21,9 +21,10 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
+        self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height) 
-        self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
+
         self.gameController.initiateBobs(self.setting.getNbBob())
         # self.gameController.eatingTest()
         self.gameController.respawnFood()
@@ -34,20 +35,23 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
+            self.clock.tick(5*self.setting.getFps())
+            self.events()
+            self.update()
+            # self.draw()
             if self.setting.simuMode:
-                self.clock.tick(5*self.setting.getFps())
-                self.events()
-                self.update()
-                # self.draw()
                 self.gameController.increaseTick()
-                self.drawSimu()
+                self.drawSimu() 
             else:
-                self.clock.tick(5*self.setting.getFps())
-                self.events()
-                self.update()
-                # self.draw()
                 self.gameController.updateRenderTick()
                 self.draw()
+            # else:
+            #     self.clock.tick(5*self.setting.getFps())
+            #     self.events()
+            #     self.update()
+            #     # self.draw()
+            #     self.gameController.updateRenderTick()
+            #     self.draw()
             
 
 
@@ -66,6 +70,9 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.gameController.renderTick = 0
                     pause(self.screen,self.camera)
+                if event.key == pg.K_CAPSLOCK:
+                    self.gameController.renderTick = 0
+                    self.setting.simuMode = not self.setting.simuMode
 
     def update(self):
         self.camera.update()
@@ -73,38 +80,39 @@ class Game:
     def drawSimu(self):
         self.screen.fill((137, 207, 240))
         self.world.drawSimu(self.screen, self.camera)
+
         draw_text(
             self.screen,
             'FPS={}'.format(round(self.clock.get_fps())),
-            25,
+            15,
             (0,0,0),
             (10, 10)
         )  
         draw_text(
             self.screen,
             'gameTick={}'.format(round(self.gameController.getRenderTick())),
-            25,
+            15,
             (0,0,0),
             (10, 30)
         )  
         draw_text(
             self.screen,
             'Tick={}'.format(round(self.gameController.getTick())),
-            25,
+            15,
             (0,0,0),
             (10, 50)
         )  
         draw_text(
             self.screen,
             'Day={}'.format(round(self.gameController.getDay())),
-            25,
+            15,
             (0,0,0),
             (10, 70)
         )  
         draw_text(
             self.screen,
             'camera={}'.format([self.camera.scroll.x, self.camera.scroll.y]),
-            25,
+            15,
             (0,0,0),
             (10, 90)
         )

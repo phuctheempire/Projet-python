@@ -13,8 +13,16 @@ class World:
         self.width = width
         self.height = height
         self.renderTick = 0
-        self.surface = pg.Surface((self.setting.getSurfaceWidth(), self.setting.getSurfaceHeight())).convert_alpha()
         self.zoom : 'float' = self.width / self.setting.getSurfaceWidth()
+        self.mapSurface = pg.Surface((self.setting.getSurfaceWidth(), self.setting.getSurfaceHeight())).convert_alpha()
+        self.surface = pg.Surface((self.setting.getSurfaceWidth(), self.setting.getSurfaceHeight())).convert_alpha()
+        self.newSf = pg.Surface((self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom)).convert_alpha()
+        self.simuSf = pg.Surface((self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom)).convert_alpha()
+
+        self.initSimuStaticMap(self.mapSurface, Camera(self.width, self.height))
+        pg.transform.smoothscale(self.mapSurface, (self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom), self.newSf)
+
+########################################## Draw a normal map ##########################################
 
 
 
@@ -22,6 +30,8 @@ class World:
         # self.drawBob(self.surface, Camera(self.width, self.height))
         # self.surface = pg.Surface((self.setting.getSurfaceWidth(), self.setting.getSurfaceHeight())).convert_alpha()
         self.drawStaticMap(self.surface, camera)
+        # self.surface.fill((195, 177, 225))
+        # self.surface.blit(self.mapSurface, (0,0))
         self.drawFood(self.surface, camera)
         self.drawBob(self.surface, camera, self.gameController.renderTick)
         # newSf = pg.Surface((self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom)).convert_alpha()
@@ -29,35 +39,23 @@ class World:
         # screen.blit(newSf, (camera.scroll.x, camera.scroll.y))
         screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
 
-
-
-    def drawSimu(self, screen, camera):
-        self.drawSimuStaticMap(self.surface, camera)
-        self.drawSimuFood(self.surface, camera)
-        self.drawSimuBob(self.surface, camera)
-        newSf = pg.Surface((self.setting.getSurfaceWidth() * self.zoom, self.setting.getSurfaceHeight() * self.zoom)).convert_alpha()
-        pg.transform.smoothscale_by(self.surface, self.zoom, newSf)
-        screen.blit(newSf, (0, 0))
-        # screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
-
-
-    def drawSimuBob(self,surface, camera):
-        greenLeft = loadGreenLeft()
-        greenRight = loadGreenRight()
-        blueLeft = loadBlueLeft()
-        blueRight = loadBlueRight()
-        purpleLeft = loadPurpleLeft()
-        purpleRight = loadPurpleRight()
-        for bob in self.gameController.listBobs:
-            (destX, destY) = bob.getCurrentTile().getRenderCoord()
-            (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
-            finish = (desX, desY + self.setting.getTileSize())
-            a,b = finish
-            # bar_width = int((bob.energy / bob.energyMax) * 50)
-            # pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
-            if bob.isHunting:
-                surface.blit(purpleLeft, finish)
-            else: surface.blit(greenLeft, finish)
+    def drawStaticMap(self, surface, camera):
+        surface.fill((195, 177, 225))
+        # surface.blit(loadMap(), (0,0))
+        textureImg = loadGrassImage()
+        flowImg = loadFlowerImage()
+        for row in self.gameController.getMap(): # x is a list of a double list Map
+            for tile in row: # tile is an object in list
+                (x, y) = tile.getRenderCoord()
+                offset = (x + self.surface.get_width()/2 , y + self.setting.getTileSize())
+                a,b = offset
+                if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
+                    if tile.flower:
+                        surface.blit(flowImg, offset)
+                    else:
+                        surface.blit(textureImg, offset)
+                else: pass
+        # surface.blit(self.mapSurface, (0,0))
 
     def drawBob(self, surface, camera, walkProgression ):
         greenLeft = loadGreenLeft()
@@ -188,30 +186,70 @@ class World:
         foodTexture = loadFoodImage()
         for food in self.gameController.getFoodTiles():
             (x, y) = food.getRenderCoord()
-            (X, Y) = (x + self.surface.get_width()/2  , y - (foodTexture.get_height() - self.setting.getTileSize() ) )
+            (X, Y) = (x + self.surface.get_width()/2  , y - ( 50 - self.setting.getTileSize() ) )
             position = (X , Y + self.setting.getTileSize() )
             a,b = position
             if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
                 bar_width = int((food.foodEnergy / self.setting.getFoodEnergy()) * 50)
-                pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
+                pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1] - 5, bar_width, 5))
                 surface.blit(foodTexture, position)
             else: pass
 
+################################################### Simu Mode ###################################################
+
+    def drawSimu(self, screen, camera):
+        # self.initSimuStaticMap(self.surface, camera)
+        # screen.blit(newSf, (0, (1080-( self.setting.getSurfaceHeight()*1920/self.setting.getSurfaceWidth()))/2))
+        self.simuSf.fill((195, 177, 225))
+        self.simuSf.blit(self.newSf, (0,0))
+        self.drawSimuFood(self.simuSf, camera)
+        self.drawSimuBob(self.simuSf, camera)
+        screen.blit(self.simuSf, (0, (1080-( self.setting.getSurfaceHeight()*1920/self.setting.getSurfaceWidth()))/2))
+        # screen.blit(self.surface, (camera.scroll.x, camera.scroll.y))
+
+
+    def drawSimuBob(self,surface, camera):
+        greenLeft = loadGreenLeft()
+        greenRight = loadGreenRight()
+        blueLeft = loadBlueLeft()
+        blueRight = loadBlueRight()
+        purpleLeft = loadPurpleLeft()
+        purpleRight = loadPurpleRight()
+        greenLeft = pg.transform.scale(greenLeft, (int(greenLeft.get_width() * self.zoom), int(greenLeft.get_height() * self.zoom)))
+        greenRight = pg.transform.scale(greenRight, (int(greenRight.get_width() * self.zoom), int(greenRight.get_height() * self.zoom)))
+        blueLeft = pg.transform.scale(blueLeft, (int(blueLeft.get_width() * self.zoom), int(blueLeft.get_height() * self.zoom)))
+        blueRight = pg.transform.scale(blueRight, (int(blueRight.get_width() * self.zoom), int(blueRight.get_height() * self.zoom)))
+        purpleLeft = pg.transform.scale(purpleLeft, (int(purpleLeft.get_width() * self.zoom), int(purpleLeft.get_height() * self.zoom)))
+        purpleRight = pg.transform.scale(purpleRight, (int(purpleRight.get_width() * self.zoom), int(purpleRight.get_height() * self.zoom)))
+        for bob in self.gameController.listBobs:
+            (destX, destY) = bob.getCurrentTile().getRenderCoord()
+            (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )
+            finish = (desX, desY + self.setting.getTileSize())
+            a,b = finish
+            # bar_width = int((bob.energy / bob.energyMax) * 50)
+            # pg.draw.rect(surface, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
+            if bob.isHunting:
+                surface.blit(purpleLeft, (a*self.zoom, b*self.zoom))
+            else: surface.blit(greenLeft, (a*self.zoom, b*self.zoom))
+
+
     def drawSimuFood(self, surface, camera):
         foodTexture = loadFoodImage()
+        foodTexture = pg.transform.scale(foodTexture, (int(foodTexture.get_width() * self.zoom), int(foodTexture.get_height() * self.zoom)))
         for food in self.gameController.getFoodTiles():
             (x, y) = food.getRenderCoord()
-            (X, Y) = (x + self.surface.get_width()/2  , y - (foodTexture.get_height() - self.setting.getTileSize() ) )
+            (X, Y) = (x + self.surface.get_width()/2  , y - (50 - self.setting.getTileSize() ) )
             position = (X , Y + self.setting.getTileSize() )
             a,b = position
             # bar_width = int((food.foodEnergy / self.setting.getFoodEnergy()) * 50)
             # pg.draw.rect(surface, (0, 0, 255), (position[0] + 5, position[1]+ 20, bar_width, 5))
-            surface.blit(foodTexture, position)
+            surface.blit(foodTexture, (a*self.zoom, b*self.zoom))
 
 
-    def drawStaticMap(self, surface, camera):
+
+  
+    def initSimuStaticMap(self, surface, camera):
         surface.fill((195, 177, 225))
-        # surface.blit(loadMap(), (0,0))
         textureImg = loadGrassImage()
         flowImg = loadFlowerImage()
         for row in self.gameController.getMap(): # x is a list of a double list Map
@@ -219,29 +257,14 @@ class World:
                 (x, y) = tile.getRenderCoord()
                 offset = (x + self.surface.get_width()/2 , y + self.setting.getTileSize())
                 a,b = offset
-                if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
-                    if tile.flower:
-                        surface.blit(flowImg, offset)
-                    else:
-                        surface.blit(textureImg, offset)
-                else: pass
-  
-    def drawSimuStaticMap(self, surface, camera):
-        surface.fill((195, 177, 225))
-        # # surface.blit(loadMap(), (0,0))
-        # textureImg = loadGrassImage()
-        # flowImg = loadFlowerImage()
-        # for row in self.gameController.getMap(): # x is a list of a double list Map
-        #     for tile in row: # tile is an object in list
-        #         (x, y) = tile.getRenderCoord()
-        #         offset = (x + self.surface.get_width()/2 , y + self.setting.getTileSize())
-        #         a,b = offset
-        #         if tile.flower:
-        #             surface.blit(flowImg, offset)
-        #         else:
-        #             surface.blit(textureImg, offset)
+                if tile.flower:
+                    surface.blit(flowImg, offset)
+                else:
+                    surface.blit(textureImg, offset)
 
-    def drawPause(self, screen, camera):
-        self.drawStaticPauseMap(self.surface, camera)
-        self.drawPauseFood(self.surface, camera)
-        self.drawPauseBob(self.surface, camera)
+##################################################################################################################################################
+
+    # def drawPause(self, screen, camera):
+    #     self.drawStaticPauseMap(self.surface, camera)
+    #     self.drawPauseFood(self.surface, camera)
+    #     self.drawPauseBob(self.surface, camera)

@@ -2044,7 +2044,7 @@ def show_menu(screen, clock):
         if not settings_open:
             # Center the buttons horizontally and vertically
             draw_transparent_button("PLAY", play_button_rect, 128)
-            draw_transparent_button("settingS", settings_button_rect, 128)
+            draw_transparent_button("SETTINGS", settings_button_rect, 128)
             draw_transparent_button("QUIT", quit_button_rect, 128)
         else:
             open_settings()
@@ -2125,18 +2125,15 @@ def pause( screen, camera ):
             if coord[1][0] <= mouse_x <= coord[1][0] + 64 and coord[1][1] + 8 <= mouse_y <= coord[1][1] + 24:
                 print(coord[0].gridX, coord[0].gridY)
                 if len(coord[0].getBobs()) != 0:
-                    if ( mouse_y - camera.scroll.y - 150 >= 0 ):
-                        if ( mouse_x - camera.scroll.x -100 < 0 ):
+                    if ( mouse_y - 150 >= 0 ):
+                        if ( mouse_x -100 < 0 ):
                             pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x +50 , mouse_y - camera.scroll.y -50 , 200, 100))
-                        elif( mouse_x - camera.scroll.x + 100 > 1920  ):
+                        elif( mouse_x + 100 > 1920  ):
                             pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -250 , mouse_y - camera.scroll.y - 50 , 200, 100))
                         else:
                             pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -100 , mouse_y - camera.scroll.y - 150 , 200, 100))
                     else:
                         pg.draw.rect(pauseSurface, (225, 255, 123), pg.Rect( mouse_x - camera.scroll.x -100 , mouse_y - camera.scroll.y + 50 , 200, 100))
-
-
-
 
 
         screen.blit(pauseSurface, (camera.scroll.x, camera.scroll.y))    
