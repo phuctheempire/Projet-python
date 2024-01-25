@@ -19,7 +19,7 @@ def main():
     
     # implement menus
     show_menu(screen, clock)
-    # implement game
+    # implement game 
     game = Game(screen, clock)
 
     while running:
