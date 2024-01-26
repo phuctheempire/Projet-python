@@ -1,27 +1,21 @@
-# For path pinding purposes
-from typing import Optional
 from Tiles.tiles import Tile
 from GameControl.gameControl import GameControl
 from GameControl.setting import Setting
-# from view.texture import loadBobImage
-# from view.texture import loadExplosionImage
-# from view.texture import loadSpawnImage
+from Tiles.directions import directionsDict, directionsList
 from view.texture import *
 import random
 from math import floor
-# from GameControl.settings import *
-# from Tiles.Food.food import Food
-# We need a function that search for the source of energy in the map ( both bob and tiles ): We need to call the visionTiles function
-# We need a function that compare the mass of the other bob ( call the other tile ) 
-# Function that make bob move according to the vision, the memory and the predator 
+
 class Bob: 
     id = 0
-    def __init__( self):
+    def __init__(self):
         self.setting = Setting.getSettings()
+
         self.id = Bob.id
         Bob.id += 1
         self.age = 0
         self.isHunting = False
+        self.alreadyInteracted = False
 
         self.energy: 'float' = self.setting.getBobSpawnEnergy()
         self.energyMax = self.setting.getBobMaxEnergy()
@@ -29,22 +23,25 @@ class Bob:
         self.mass: 'float' = self.setting.getDefaultMass()
         self.velocity: 'float' = self.setting.getDefaultVelocity()
         self.speedBuffer = 0
-        self.speed = self.velocity + self.speedBuffer
-        # self.alive = True
+        self.speed = self.velocity 
 
-        self.PreviousTile : Optional[Tile] = None
+        self.PreviousTile : 'Tile' = None
         self.PreviousTiles : list['Tile'] = []
-        self.CurrentTile : Optional[Tile] = None
+        self.CurrentTile : 'Tile' = None
 
         self.vision: 'float' = self.setting.getDefaultVision()
-        self.TargetTile : Optional[Tile] = None
-        self.NextTile : Optional[Tile] = None
-        self.PredatorTile : Optional[Tile] = None
-        # self.huntOrRun: 'int'= 1 # 1 for hunt, 0 for run
-        # self.targetTile : Optional[Tile] = None
+        self.effectiveVision = round(self.vision)
+
+        self.NextTile : 'Tile' = None
+        self.predator : 'Bob' = None
+        self.prey : 'Bob' = None
+        self.foodTilesInVision : list['Tile'] = []
+
         self.memoryPoint: 'float' = self.setting.getDefaultMemoryPoint()
-        self.memoryTile = Optional[Tile]
-        # self.image = self.getBobTexture()
+        self.memorySpace = 2 * round(self.memoryPoint)
+        self.memorySpaceLeft = self.memorySpace
+        self.visitedTiles: list['Tile'] = []
+        self.foodTilesInMemo: dict('Tile', 'float') = {}
 
 ################ Die and Born ############################
     def spawn(self, tile: 'Tile'):
@@ -52,38 +49,60 @@ class Bob:
         self.PreviousTile = self.CurrentTile
         self.PreviousTiles.append(self.CurrentTile)
         self.CurrentTile.addBob(self)
-        GameControl.getInstance().addToNewBornQueue(self)
-        self.determineNextTile()  
+        GameControl.getInstance().addToNewBornQueue(self) 
 
     def die(self):
         self.CurrentTile.removeBob(self)
         GameControl.getInstance().addToDiedQueue(self)
         # self.alive = False
-############################################################
+    
+    ####################### Reproduction #####################################
+    def reproduce(self):
+        newBob = Bob()
+        newBob.energy = 50
+        newBob.mass = round(random.uniform(self.mass - self.setting.getMassVariation(), self.mass + self.setting.getMassVariation()), 2)
+        newBob.velocity = round(random.uniform(self.velocity - self.setting.getVelocityVariation(), self.velocity + self.setting.getVelocityVariation()), 2)
+        newBob.vision = random.choice([max(0, self.vision - self.setting.getVisionVariation()), self.vision, self.vision + self.setting.getVisionVariation()]) 
+        newBob.memoryPoint = random.choice([max(0, self.memoryPoint - self.setting.getMemoryVariation()), self.memoryPoint, self.memoryPoint + self.setting.getMemoryVariation()])
+        newBob.spawn(self.CurrentTile)
+        self.energy = 50
         
 ################## Action ##################################
-
     def action(self):
-        # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " is acting")
         self.PreviousTile = self.CurrentTile
         self.PreviousTiles.append(self.CurrentTile)
-        # self.buffer += self.velocity
-        for _ in range(floor(self.speed)):
-            if self in GameControl.getInstance().getDiedQueue():
-                break
-            else:
-                self.move()
-                # self.buffer -= 1
-                self.PreviousTiles.append(self.CurrentTile)
+
+        if (self.energy <= 0): 
+            self.die()
+        elif self.energy >= self.setting.getBobMaxEnergy():
+            if (self.setting.getSelfReproduction()):
+                self.reproduce()
+        else:
+            if (self.speed < 1 or self.CurrentTile.getEnergy() != 0 or self.detectPreys(self.CurrentTile.getBobs()) != []):
+                self.consumePerceptionAndMemoryEnergy()
+                self.consumeStationaryEnergy()
                 self.interact()
-                # print("interacting")
-                if ( self.energy <= 0):
-                    # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " died")
-                    self.die()
-                # print("At tick ", GameControl.getInstance().currentTick, " Bob ", self.id, " moved to ", self.CurrentTile.gridX, self.CurrentTile.gridY)
-                self.determineNextTile()
-        self.energy -= ( max(1/2, self.mass*self.velocity**2) + 1/5*self.vision)
-        self.updateSpeed()
+            else:
+                # if not then bob will use its speed and consume kinetic energy to move
+                self.consumePerceptionAndMemoryEnergy()
+                self.consumeKinecticEnergy()
+                for _ in range(floor(self.speed)):
+                    if self in GameControl.getInstance().getDiedQueue():
+                        break
+                    else:
+                        if (self.alreadyInteracted):
+                            self.alreadyInteracted = False
+                            break
+                        else:
+                            if (self.memoryPoint != 0):
+                                self.memorizeVisitedTile(self.CurrentTile)
+                            if (self.effectiveVision != 0):
+                                self.scan()
+                            self.determineNextTile()
+                            self.move()
+                            self.PreviousTiles.append(self.CurrentTile)
+                            self.interact()
+            self.updateSpeed()  
 
     def move(self):
         self.CurrentTile.removeBob(self)
@@ -97,285 +116,248 @@ class Bob:
 ################## Consume Energy ##################################
     def consumeKinecticEnergy(self):
         kinecticEnergy = self.mass * self.velocity**2
-        self.energy -= kinecticEnergy
-    def consumePerceptionEnergy(self):
+        self.energy = max(0, round(self.energy - kinecticEnergy, 2))
+    def consumePerceptionAndMemoryEnergy(self):
         perceptionEnergy = self.vision * (self.setting.getPerceptionFlatPenalty())
-        self.energy -= perceptionEnergy
-    def consumeMemoryEnergy(self):
-        memoryEnergy = self.memory * (self.setting.getMemoryFlatPenalty())
-        self.energy -= memoryEnergy
+        memoryEnergy = self.memoryPoint * (self.setting.getMemoryFlatPenalty())
+        self.energy = max(0, round(self.energy - perceptionEnergy - memoryEnergy, 2)) 
+    def consumeStationaryEnergy(self):
+        self.energy = max(0, round(self.energy - self.setting.getBobStationaryEnergyLoss(), 2)) 
 
 ##################### Interact in one tick  #############################
     def interact(self):
-        self.Consumefood() # si possible
-        # needto Have sex if possible 
-        if ( self.energy == self.energyMax):
-            self.reproduce() # si possible
-
-##################### Eating process #####################################
-    def Consumefood(self):
-        energy = self.CurrentTile.getEnergy()
-        if ( energy == 0):
-            pass
-        else:
-            # print("Spot food energy = ", energy, "Current Energy is ", self.energy)
-            if(self.energy < self.setting.getBobMaxEnergy()):
-                if ( self.energy + energy < self.setting.getBobMaxEnergy()):
-                    self.energy += energy
-                    self.CurrentTile.foodEnergy = 0
-                else:
-                    self.CurrentTile.foodEnergy -= (self.setting.getBobMaxEnergy() - self.energy)
-                    self.energy = self.setting.getBobMaxEnergy()
-
-        while (self.energy < self.energyMax):
-            preyBobs = self.getPraysInListBob(self.CurrentTile.getBobs())
-            # print("Same tile bob = ", self.CurrentTile.getBobs())
-            # print("Spot prey = ", preyBobs)
-            if ( preyBobs == []):
-                break
-            else:
-                unluckyBob = self.getSmallestPrey(preyBobs)
-
+        if (self.CurrentTile.getEnergy() != 0):
+            self.consumeFood()
+        elif (len(self.CurrentTile.getBobs()) > 1):
+            preys = self.detectPreys(self.CurrentTile.getBobs())
+            unluckyBob = self.getSmallestPrey(preys)
+            if (unluckyBob is not None):
                 self.eat(unluckyBob)
-    
-    def eat(self, other: 'Bob'):
-        other.PreviousTile = other.CurrentTile
-        if self.energy + other.energy <=  self.energyMax:
-            self.energy += other.energy # need rework here
-            other.die()
-        else:
-            self.energy = self.energyMax
-            other.die()
+            elif (self.setting.getSelfReproduction()):
+                partners = self.detectPotentialPartners(self.CurrentTile.getBobs())
+                if (partners != []):
+                    partner = self.getRandomPartner(partners)
+                    self.mate(partner)
 
-################### Determine which bob to eat ###########################
-    def getPraysInListBob(self, listBob: list['Bob']) -> list['Bob']:
-        if ( listBob == []):
-            return []
+##################### Interact with foods #####################################
+    def consumeFood(self):
+        energy = self.CurrentTile.getEnergy()
+        if(self.energy < self.setting.getBobMaxEnergy()):
+            if ( self.energy + energy < self.setting.getBobMaxEnergy()):
+                self.energy += energy
+                self.CurrentTile.foodEnergy = 0
+            else:
+                self.CurrentTile.foodEnergy -= (self.setting.getBobMaxEnergy() - self.energy)
+                self.energy = self.setting.getBobMaxEnergy()
+        self.alreadyInteracted = True
+
+################### Interact with other bobs ###########################
+    def canEat(self, bob: 'Bob') -> bool:
+        return bob.mass * 3 / 2 < self.mass
+    
+    def eat(self, bob: 'Bob'):
+        bob.PreviousTile = bob.CurrentTile
+        self.energy = min(self.setting.getBobMaxEnergy(), self.energy + 1/2 * bob.energy * (1 - bob.mass / self.mass))
+        bob.die()
+        self.alreadyInteracted = True
+
+    def canMate(self, bob: 'Bob') -> bool:
+        energyCondition = self.energy >= 150 and bob.energy >= 150
+        return energyCondition and not self.canEat(bob) and not bob.canEat(self)
+
+    def mate(self, partner: 'Bob'):
+        childBob = Bob()
+        childBob.energy = 100
+        childBob.mass = round((self.mass + partner.mass) / 2, 2)
+        childBob.velocity = round((self.velocity + partner.velocity) / 2)
+        childBob.vision = round((self.vision + partner.vision) / 2, 2)
+        childBob.memoryPoint = round((self.memoryPoint + partner.memoryPoint) / 2, 2)
+        childBob.spawn(self.CurrentTile)
+        self.energy -= self.setting.getBobSexualReproductionLoss()
+        partner.energy -= self.setting.getBobSexualReproductionLoss()
+        self.alreadyInteracted = True
+        partner.alreadyInteracted = True
+
+####################### Detect Preys, Predators. Partners and Foods #####################################
+    def detectPreys(self, listBobs: list['Bob']) -> list['Bob']:
+        preys : list['Bob'] = []
+        for bob in listBobs:
+            if (self.canEat(bob)):
+                preys.append(bob)
+        return preys
+    
+    def getSmallestPrey(self, listPreys: list['Bob']) -> 'Bob':
+        if (listPreys != []):
+            smallestMassBob = min(listPreys, key = lambda bob: bob.mass)
+            return smallestMassBob
         else:
-            preyBob : list['Bob'] = []
-            for bob in listBob:
-                if ( bob.mass * 3 / 2 < self.mass):
-                    preyBob.append(bob)
-            return preyBob
-    def getSmallestPrey(self, listPray: list['Bob']) -> 'Bob':
-        if ( listPray == []):
+            return None
+        
+    def detectPredators(self, listBobs: list['Bob']) -> list['Bob']:
+        predators : list['Bob'] = []
+        for bob in listBobs:
+            if (bob.canEat(self)):
+                predators.append(bob)
+        return predators
+    
+    def getClosestPredator(self, listPredators: list['Bob']) -> 'Bob':  
+        if (listPredators != []):
+            closestPredator = min(listPredators, 
+                                 key = lambda bob: Tile.distanceofTile(self.getCurrentTile(), bob.getCurrentTile()))
+            return closestPredator
+        else:
+            return None
+    
+    def detectPotentialPartners(self, listBobs: list['Bob']) -> list['Bob']:
+        potentialPartners: list['Bob'] = []
+        for bob in listBobs:
+            if (self.canMate(bob)):
+                potentialPartners.append(bob)
+        return potentialPartners
+    
+    def getRandomPartner(self, listPartners: list['Bob']) -> 'Bob':
+        return random.choice(listPartners)
+    
+    def getLargestNearestFoodTile(self, listFoodTiles: list['Tile']) -> Tile:
+        if (listFoodTiles == []):
             return None
         else:
-            smallestMassBob = listPray[0]
-            for bob in listPray:
-                if ( bob.mass < smallestMassBob.mass):
-                    smallestMassBob = bob
-            return smallestMassBob
-
-
-
-
-####################### Reproduction #####################################
+            bestFoodTile = min(listFoodTiles, 
+                            key = lambda tile: (Tile.distanceofTile(self.CurrentTile, tile), 
+                                                 -tile.getEnergy()))
+            return bestFoodTile
         
-    def reproduce(self):
-        newBob = Bob()
-        newBob.energy = 50
-        newBob.mass = random.uniform(self.mass - self.setting.getMassVariation(), self.mass + self.setting.getMassVariation())
-        newBob.velocity = random.uniform(self.velocity - self.setting.getVelocityVariation(), self.velocity + self.setting.getVelocityVariation())
-        newBob.vision = random.choice([self.vision - self.setting.getVisionVariation(), self.vision, self.vision + self.setting.getVisionVariation()]) if self.vision - self.setting.getVisionVariation() >= 0 else random.choice([0, self.vision,self.vision + self.setting.getVisionVariation()])
-        newBob.spawn(self.CurrentTile)
-        self.energy = 50
+################ Scan ###########################################
+    def scan(self):
+        tilesInVision = self.CurrentTile.getNearbyTiles(self.effectiveVision)
+
+        seenBobs: list['Bob'] = []
+        newFoodTilesInVision: list['Tile'] = []
+
+        #remove the food in memo if it in vision right now
+        for tile in list(self.foodTilesInMemo.keys()):
+            if (Tile.distanceofTile(self.CurrentTile, tile) <= self.effectiveVision):
+                self.removeFoodTileInMemo(tile)
+
+        #detect bobs and food in vision
+        for tile in tilesInVision:
+            if (tile.getBobs() != []):
+                for bob in tile.getBobs():
+                    if (bob != self):
+                        seenBobs.append(bob)
+            else:
+                if (tile.getEnergy() != 0):
+                    newFoodTilesInVision.append(tile)
+
+        #remember the food in the precendent tick 
+        if (self.memoryPoint != 0):
+            notChosenFoods = list(set(self.foodTilesInVision) - set(newFoodTilesInVision))
+            for tile in notChosenFoods:
+                self.memorizeFoodTile(tile)
         
+        #update the food in vision
+        self.foodTilesInVision = newFoodTilesInVision.copy()
+        
+        #detect predators and preys
+        predatorInVision = self.detectPredators(seenBobs)
+        self.predator = self.getClosestPredator(predatorInVision)
+        
+        preysInVision = self.detectPreys(seenBobs)
+        self.prey = self.getSmallestPrey(preysInVision)
+
+
+################ Use memory #####################################
+    def memorizeVisitedTile(self, tile: 'Tile'):
+        if (tile not in self.visitedTiles):
+            if (self.memorySpaceLeft >= 1):
+                self.visitedTiles.append(tile)
+            else:
+                if (self.visitedTiles != []):
+                    self.visitedTiles.pop(0)
+                self.visitedTiles.append(tile)
+        self.updateMemorySpaceLeft()
+    
+    def memorizeFoodTile(self, tile: 'Tile'):
+        if (self.memorySpaceLeft >= 2 ):
+            self.foodTilesInMemo[tile] = tile.getEnergy()
+        else:
+            if (len(self.visitedTiles) >= 2):
+                self.visitedTiles.pop(0)
+                self.visitedTiles.pop(0)
+                self.foodTilesInMemo[tile] = tile.getEnergy()
+            else:
+                if (self.foodTilesInMemo != {}):
+                    smallestFoodtile = min(self.foodTilesInMemo, key = lambda tile: self.foodTilesInMemo[tile])
+                    if tile.getEnergy() > self.foodTilesInMemo[smallestFoodtile]:
+                        self.foodTilesInMemo.pop(smallestFoodtile)
+                self.foodTilesInMemo[tile] = tile.getEnergy()
+        self.updateMemorySpaceLeft()
+
+    def updateMemorySpaceLeft(self):
+        memorySpaceUsed = len(self.visitedTiles) + 2*len(self.foodTilesInMemo)
+        self.memorySpaceLeft = self.memorySpace - memorySpaceUsed
+    
+    def removeFoodTileInMemo(self, tile: 'Tile'):
+        if (tile in self.foodTilesInMemo):
+            self.foodTilesInMemo.pop(tile)
+            self.updateMemorySpaceLeft()
+
 ######################## Find next tile #####################################
     def determineNextTile(self):
-        # for _ in range(int(self.velocity)):
-        if ( self.ListPredator() != []):
-            self.Run()
+        if (self.predator is not None):
+            self.NextTile = self.runFrom(self.predator)
             self.isHunting = False
-        else: 
-            self.Hunt()
-            # self.isHunting = True
-    # Map Scanning
-    def getNearbyBobs(self) -> list['Bob']:
-        NearTiles = self.CurrentTile.getNearbyTiles(self.vision)
-        # NearTiles.append(self.CurrentTile)
-        seenBobs: list['Bob'] = []
-        for tile in NearTiles:
-            if ( tile.listBob != []):
-                for bob in tile.listBob:
-                    if ( bob != self):
-                        seenBobs.append(bob)
-            else: pass
-        # print("Seen bobs = ", seenBobs)
-        return seenBobs   
-######################## Hunt ###############################################
-    def Hunt(self):
-        Target = self.getLargestAndNearestFoodTile()
-        if ( Target != None):
-            self.TargetTile = Target
-            self.NextTile = self.HuntNextTile()
+        elif (self.foodTilesInVision != []):
+            target = self.getLargestNearestFoodTile(self.foodTilesInVision)
+            self.NextTile = self.moveToward(target)
+            self.isHunting = False
+        elif (self.prey is not None):
+            target = self.prey.getCurrentTile()
+            self.NextTile = self.moveToward(target)
+            self.isHunting = True
+        elif (self.foodTilesInMemo != {}):
+            target = max(self.foodTilesInMemo, key = lambda tile: self.foodTilesInMemo[tile])
+            self.NextTile = self.moveToward(target)
             self.isHunting = False
         else:
-        # We find prey :
-            Prey = self.getSmallestPrey(self.getPraysInListBob(self.getNearbyBobs()))
-            if Prey != None:
-                self.TargetTile = Prey.CurrentTile
-                self.NextTile = self.HuntNextTile()
-                # print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
-                self.isHunting = True
-            else:
-                self.TargetTile = self.setRandomTile()
-                self.NextTile = self.HuntNextTile()
-                self.isHunting = False
-                # print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
-    
-    def getLargestAndNearestFoodTile(self) -> Tile:
-        # Get the list of nearby tiles
-        NearbyTiles = self.CurrentTile.getNearbyTiles(self.vision)
-        NearbyTiles.append(self.CurrentTile)
-        # Get the list of food tiles
-        seenFood: list['Tile'] = []
-        for tile in NearbyTiles:
-            if ( tile.getEnergy() != 0):
-                seenFood.append(tile)
-        if ( seenFood == []): #seen food is list of spotted food tiles
-            return None
-        else:
-            # Get the largestFoodTile
-            energy = seenFood[0].getEnergy()
-            largestFoodTiles: list['Tile'] = []
-            for foodTile in seenFood:
-                if ( foodTile.getEnergy() > energy):
-                    energy = foodTile.getEnergy()
-                else: pass
-            for foodTile in seenFood:
-                if ( foodTile.getEnergy() == energy):
-                    largestFoodTiles.append(foodTile)
-                else: pass
-            # Get the nearestFoodTiles
-            distance = Tile.distanceofTile(self.CurrentTile, largestFoodTiles[0])
-            nearestLargeFoodTiles : list['Tile'] = []
-            for tile in largestFoodTiles:
-                if ( Tile.distanceofTile(self.CurrentTile, tile) < distance):
-                    distance = Tile.distanceofTile(self.CurrentTile, tile)
-            for tile in largestFoodTiles:
-                if ( Tile.distanceofTile(self.CurrentTile, tile) == distance):
-                    nearestLargeFoodTiles.append(tile)
-                else: pass
-            #random the nearestFoodTile in the list
-            return random.choice(nearestLargeFoodTiles)
-    
-    def HuntNextTile(self):
-        #Temporary
-        # print("Hunting next tile")
-        target = self.TargetTile
-        if self.CurrentTile == self.TargetTile:
-            return self.TargetTile
-        # elif ( target == self.CurrentTile.getNearbyTiles(0)):
-        #     return target
-        else:
-            (x,y) = Tile.CountofTile(target, self.CurrentTile)
-            if ( y == 0 and x != 0 ):
-                if ( x > 0):
-                    return self.CurrentTile.getDirectionTiles("Right")
-                else:
-                    return self.CurrentTile.getDirectionTiles("Left")
-            elif ( x == 0 and y != 0):
-                if ( y > 0):
-                    return self.CurrentTile.getDirectionTiles("Up")
-                else:
-                    return self.CurrentTile.getDirectionTiles("Down")
-            else:
-                if ( x > 0 and y > 0):
-                    downLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (downLeft)
-                elif ( x > 0 and y < 0):
-                    upLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right"))
-                    return random.choice (upLeft)
-                elif ( x < 0 and y > 0):
-                    upLeft = (self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left"))
-                    return random.choice(upLeft)
-                else:
-                    downLeft = (self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left"))
-                    return random.choice(downLeft)
+            # move random but not move to the previous tile
+            nearbyTiles = self.CurrentTile.getNearbyTiles(1)
+            nearbyTiles.remove(self.CurrentTile)
+            nearbyTiles = list(set(nearbyTiles) - set(self.visitedTiles))
+            self.NextTile = random.choice(nearbyTiles) if nearbyTiles != [] else self.setRandomTile()
+            self.isHunting = False
 
-############################# Run ###########################################
+######################## Move toward food, prey ###############################################
+    def moveToward(self, target: 'Tile'):
 
-    def Run(self):
-        self.PredatorTile = self.NearestPredator()
-        self.NextTile = self.RunNextTile()
-        # print("Next Tile = ", self.NextTile.gridX, self.NextTile.gridY)
+        (x, y) = Tile.CountofTile(target, self.CurrentTile)
 
-    def ListPredator(self) -> list['Bob']:
-        listBobs = self.getNearbyBobs()
-        listPredator = []
-        for bob in listBobs:
-            if ( bob.mass > (3/2)*self.mass):
-                listPredator.append(bob)
-        if ( listPredator == []):
-            self.huntOrRun = 1
+        x_direction = 0 if x == 0 else (1 if x > 0 else -1)
+        y_direction = 0 if y == 0 else (1 if y > 0 else -1)
+
+        if (x_direction == 0 and y_direction == 0):
+            return self.CurrentTile
         else:
-            self.huntOrRun = 0
-        return listPredator
+            chosenDirection = random.choice(directionsDict[(x_direction, y_direction)])
+            return self.CurrentTile.getDirectionTiles(chosenDirection)
     
-    def NearestPredator(self) -> Tile:
-        listPredator = self.ListPredator()
-        if ( listPredator != []):
-            predator = listPredator[0]
-            for pred in listPredator:
-                if ( Tile.distanceofTile(self.CurrentTile, pred.CurrentTile) < Tile.distanceofTile(self.CurrentTile, predator.CurrentTile)):
-                    predator = pred
-            return predator.CurrentTile
-        else: return None
-    
-    def RunNextTile(self):
-        #Temporary
-        # print("Running next tile")
-        predator = self.PredatorTile
-        if self.CurrentTile == self.PredatorTile:
-            return self.randomAdjacent()
-        # elif ( predator == self.CurrentTile.getNearbyTiles(0)):
-        #     return target
-        else:
-            (x,y) = Tile.CountofTile(predator, self.CurrentTile)
-            if ( y == 0 and x != 0 ):
-                if ( x > 0):
-                    return self.CurrentTile.getDirectionTiles("Left") if self.CurrentTile.getDirectionTiles("Left") != None else self.CurrentTile
-                else:
-                    return self.CurrentTile.getDirectionTiles("Right") if self.CurrentTile.getDirectionTiles("Right") != None else self.CurrentTile
-            elif ( x == 0 and y != 0):
-                if ( y > 0):
-                    return self.CurrentTile.getDirectionTiles("Down")  if self.CurrentTile.getDirectionTiles("Down") != None else self.CurrentTile
-                else:
-                    return self.CurrentTile.getDirectionTiles("Up") if self.CurrentTile.getDirectionTiles("Up") != None else self.CurrentTile
-            else:
-                if ( x > 0 and y > 0):
-                    dl = [self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Left")]
-                    downLeft = [tile for tile in dl if tile != None] 
-                    return random.choice(downLeft) if downLeft != [] else self.CurrentTile
-                elif ( x > 0 and y < 0):
-                    ul = [self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Left")]
-                    upLeft = [tile for tile in ul if tile != None]
-                    return random.choice(upLeft) if upLeft != [] else self.CurrentTile
-                elif ( x < 0 and y > 0):
-                    dr = [self.CurrentTile.getDirectionTiles("Down"), self.CurrentTile.getDirectionTiles("Right")]
-                    downRight = [tile for tile in dr if tile != None]
-                    return random.choice(downRight) if downRight != [] else self.CurrentTile
-                else:
-                    ur = [self.CurrentTile.getDirectionTiles("Up"), self.CurrentTile.getDirectionTiles("Right")]
-                    upRight = [tile for tile in ur if tile != None]
-                    return random.choice(upRight) if upRight != [] else self.CurrentTile
+############################# Run from predators###########################################
+    def runFrom(self, predator: 'Bob'):
+        bestDirection = None
+        bestDistance = 0
 
-    # def scanForTarget(self) -> Tile:
-    #     listFood = self.getNearbyFood()
-    #     if ( listFood != []):
-    #         temp = listFood[0]
-    #         for food in listFood:
-    #             if ( food.energy > temp):
-    #                 temp = food
-    #         temp.getCurrentTile()
-    #     else:
-    #         listBobs = self.getNearbyBobs()
-    #         temp = listBobs[0]
-    #         for bob in listBobs:
-    #             if ( bob.mass < temp.mass):
-    #                 temp = bob
-    #         temp.getCurrentTile()
+        for direction in directionsList:
+            tile = self.CurrentTile.getDirectionTiles(direction)
+            if tile is None:
+                continue
+    
+            # minDistance = min([Tile.distanceofTile(tile, predator.CurrentTile) for predator in predators])
+            minDistance = Tile.distanceofTile(tile, predator.CurrentTile) 
+            if minDistance > bestDistance:
+                bestDirection = direction
+                bestDistance = minDistance
+        
+        return self.CurrentTile.getDirectionTiles(bestDirection)
     
 
     def setRandomTile(self):     
@@ -385,27 +367,7 @@ class Bob:
         nearbyTiles = self.CurrentTile.getNearbyTiles(1)
         nearbyTiles.remove(self.CurrentTile)
         return random.choice(nearbyTiles)
-    
-    # def getBobTexture(self):
-    #     return loadBobImage()["Bob"]
-    # def getJellyTexture(self):
-        # if ( self.isHunting == True):
-        #     if ( GameControl.getInstance().getTick() % 2 == 0):
-        #         return loadPurpleLeft()
-        #     else:
-        #         return loadPurpleRight()
-        # else:
-        #     if ( self.age <= 1):
-        #         if ( GameControl.getInstance().getTick() % 2 == 0):
-        #             return loadGreenLeft()
-        #         else:
-        #             return loadGreenRight()
-        #     else:
-        #         if ( GameControl.getInstance().getTick() % 2 == 0):
-        #             return loadBlueLeft()
-        #         else:
-        #             return loadBlueRight()
-
+        
     def getExplodeTexture(self, progression):
         return loadExplosionImage()[progression]
     def getSpawnTexture(self, progression):
@@ -421,36 +383,7 @@ class Bob:
     def clearPreviousTiles(self):
         self.PreviousTiles.clear()
 
-    def getEnergy(self) -> float:
-        return self.energy
-    def getMass(self) -> float:
-        return self.mass
-    def getVelocity(self) -> float:
-        return self.velocity
-    def getVision(self) -> float:
-        return self.vision
-    def getMemoryPoint(self) -> float:
-        return self.memoryPoint
-    def getId(self) -> int:
-        return self.id
-    
-    def setId(self, id: int):
-        self.id = id
-    def setEnergy(self, energy: float):
-        self.energy = energy
-    def setMass(self, mass: float):
-        self.mass = mass
-    def setVelocity(self, velocity: float):
-        self.velocity = velocity
-    def setVision(self, vision: float):
-        self.vision = vision
-    def setMemoryPoint(self, memoryPoint: float):
-        self.memoryPoint = memoryPoint
-    def setCurrentTile(self, tile: Tile):
-        self.CurrentTile = tile
-    def setPreviousTile(self, tile: Tile):
-        self.PreviousTile = tile
-    
+
 
 
         # self.interact()
