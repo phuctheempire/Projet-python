@@ -383,61 +383,38 @@ class Bob:
     def clearPreviousTiles(self):
         self.PreviousTiles.clear()
 
-
-
-
-        # self.interact()
-        # self.Hunt()
-        # pred = self.NearestPredatorTarget()
-        # if ( pred != None):
-        #     self.Run
-        # else:
-        #     self.Hunt
-        # self.TargetTile = self.setRandomTile()
-        # self.NextTile = self.HuntNextTile()
-        
-     
-            
-
-    # def SpotSmallestPrey(self) -> 'Bob':
-    #     preyBob = self.getPraysInListBob(self.getNearbyBobs())
-    #     if ( preyBob == None):
-    #         return None
-    #     else:
-    #         smallestBob = preyBob[0]
-    #         for bob in preyBob:
-    #             if ( bob.mass < smallestBob.mass):
-    #                 smallestBob = bob
-    #         return smallestBob
-
-
-    # def getMostEnergyPreyBob(self):
-    #     NearbyPrays = self.getPraysInListBob(self.getNearbyBobs)
-    #     target = NearbyPrays[0]
-    #     for prey in NearbyPrays:
-    #         if prey.energy > target.energy : 
-    #             target = prey
-    #         else: pass
-    #     return target
+    def getEnergy(self) -> float:
+        return self.energy
+    def getMass(self) -> float:
+        return self.mass
+    def getVelocity(self) -> float:
+        return self.velocity
+    def getVision(self) -> float:
+        return self.vision
+    def getMemoryPoint(self) -> float:
+        return self.memoryPoint
+    def getId(self) -> int:
+        return self.id
     
-            
+    def setId(self, id: int):
+        self.id = id
+    def setEnergy(self, energy: float):
+        self.energy = energy
+    def setMass(self, mass: float):
+        self.mass = mass
+    def setVelocity(self, velocity: float):
+        self.velocity = velocity
+    def setVision(self, vision: float):
+        self.vision = vision
+    def setMemoryPoint(self, memoryPoint: float):
+        self.memoryPoint = memoryPoint
+    def setCurrentTile(self, tile: Tile):
+        self.CurrentTile = tile
+    def setPreviousTile(self, tile: Tile):
+        self.PreviousTile = tile
 
-    # def getLargestFoodTiles(self) -> list['Tile']:
-    #     NearTiles = self.CurrentTile.getNearbyTile(self.vision)
-    #     NearTiles.append(self.CurrentTile)
-    #     seenFood = []
-    #     for tile in NearTiles:
-    #         if ( tile.getEnergy() != 0):
-    #             seenFood.append(tile)
-    #     if ( seenFood == []): #seen food is list of spotted food tiles
-    #         return None
-    #     else:
-    #         listLargestFoodTiles = []
-    #         largestFoodTile = seenFood[0]
-    #         for foodTile in seenFood:
-    #             if ( foodTile.getEnergy() > largestFoodTile.getEnergy()):
-    #                 largestFoodTile = foodTile
-    #         return largestFoodTile
+
+
 
 
     
