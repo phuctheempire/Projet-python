@@ -132,6 +132,8 @@ class Setting:
     
     def getTicksPerDay(self):
         return self.ticksPerDay
+    def setTicksPerDay(self, ticksPerDay):
+        self.ticksPerDay = ticksPerDay
     
     def getImagePath(self):
         return self.imagePath

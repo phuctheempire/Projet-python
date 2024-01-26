@@ -421,7 +421,36 @@ class Bob:
     def clearPreviousTiles(self):
         self.PreviousTiles.clear()
 
-
+    def getEnergy(self) -> float:
+        return self.energy
+    def getMass(self) -> float:
+        return self.mass
+    def getVelocity(self) -> float:
+        return self.velocity
+    def getVision(self) -> float:
+        return self.vision
+    def getMemoryPoint(self) -> float:
+        return self.memoryPoint
+    def getId(self) -> int:
+        return self.id
+    
+    def setId(self, id: int):
+        self.id = id
+    def setEnergy(self, energy: float):
+        self.energy = energy
+    def setMass(self, mass: float):
+        self.mass = mass
+    def setVelocity(self, velocity: float):
+        self.velocity = velocity
+    def setVision(self, vision: float):
+        self.vision = vision
+    def setMemoryPoint(self, memoryPoint: float):
+        self.memoryPoint = memoryPoint
+    def setCurrentTile(self, tile: Tile):
+        self.CurrentTile = tile
+    def setPreviousTile(self, tile: Tile):
+        self.PreviousTile = tile
+    
 
 
         # self.interact()

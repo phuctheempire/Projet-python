@@ -8,11 +8,13 @@ pg.mixer.init()
 
 selected_value_index = None
 from GameControl.setting import Setting
+from GameControl.game import *
 from GameControl.gameControl import GameControl
 from view.world import *
 from view.utils import *
 from Tiles.Bob import *
 from Tiles.tiles import *
+from GameControl.saveAndLoad import *
 # Couleurs  
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -91,6 +93,7 @@ grid_y = (screen.get_height() - len(grid_dict.keys()) * 50) // 2
 
 # État des paramètres
 settings_open = False
+load_open = False
 
 # Fonction pour dessiner du texte sur l'écran
 def drawText(text, color, x, y):
@@ -2078,21 +2081,18 @@ def openIngamesetting():
 
         pg.display.flip()
             
+def open_load(screen, clock):
+    global return_to_menu, load_open
 
-# Dans la fonction show_menu
-def show_menu(screen, clock):
-    global selected_value_index, grid_value_rects, grid_dict, settings_open, return_to_menu
-
-    # Déclaration des rectangles des boutons de base
+    # Déclaration des rectangles des boutons de chargement
     button_width, button_height = 300, 50
-    play_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 200, button_width, button_height)
-    settings_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 300, button_width, button_height)
-    quit_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button_width, button_height)
-    back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
-    stop_music_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 600, button_width, button_height)
-    play_music_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 700, button_width, button_height)
-    increase_brightness_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 800, button_width, button_height)
-    decrease_brightness_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 900, button_width, button_height)
+    load1_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 200, button_width, button_height)
+    load2_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 300, button_width, button_height)
+    load3_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button_width, button_height)
+    load4_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
+    load5_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 600, button_width, button_height)
+    back_button_rect = pg.Rect(20, 20, button_width, button_height)
+    # Ajoutez d'autres boutons de chargement ici pour chaque sauvegarde
 
     while True:
         for event in pg.event.get():
@@ -2100,20 +2100,71 @@ def show_menu(screen, clock):
                 pg.quit()
                 sys.exit()
             elif event.type == pg.MOUSEBUTTONDOWN:
-                if not settings_open:
-                    if play_button_rect.collidepoint(event.pos):
-                        return_to_menu = False  # Réinitialiser la variable
-                        return  # Retourner au menu principal
-                    elif settings_button_rect.collidepoint(event.pos):
-                        settings_open = True
-                        open_settings() 
-                    elif quit_button_rect.collidepoint(event.pos):
-                        pg.quit()
-                        sys.exit()
-                else:
+                if load1_button_rect.collidepoint(event.pos):
+                    # load_game('save1.pkl')  # Remplacez par le nom de fichier approprié
+                    return_to_menu = False  # Réinitialiser la variable
+                    return 1  # Retourner au menu principal
+                elif load2_button_rect.collidepoint(event.pos):
+                    load_game('save2.pkl')  # Remplacez par le nom de fichier approprié
+                    return_to_menu = False  # Réinitialiser la variable
+                    return  # Retourner au menu principal
+                elif load3_button_rect.collidepoint(event.pos):
+                    load_game('save3.pkl')  # Remplacez par le nom de fichier approprié
+                    return_to_menu = False  # Réinitialiser la variable
+                    return  # Retourner au menu principal
+                elif load4_button_rect.collidepoint(event.pos):
+                    load_game('save4.pkl')  # Remplacez par le nom de fichier approprié
+                    return_to_menu = False  # Réinitialiser la variable
+                    return  # Retourner au menu principal
+                elif load5_button_rect.collidepoint(event.pos):
+                    load_game('save5.pkl')  # Remplacez par le nom de fichier approprié
+                    return_to_menu = False  # Réinitialiser la variable
+                    return  # Retourner au menu principal
+                elif back_button_rect.collidepoint(event.pos):
+                    load_open = False
+                    return_to_menu = True
+                    return
+                # Ajoutez des conditions pour d'autres boutons de chargement ici
+
+        screen.blit(background_image, (0, 0))
+
+        # Center the load buttons horizontally and vertically
+        draw_transparent_button("Load Save 1", load1_button_rect, 128)
+        draw_transparent_button("Load Save 2", load2_button_rect, 128)
+        draw_transparent_button("Load Save 3", load3_button_rect, 128)
+        draw_transparent_button("Load Save 4", load4_button_rect, 128)
+        draw_transparent_button("Load Save 5", load5_button_rect, 128)
+        draw_transparent_button("BACK", back_button_rect, 128)
+        # Ajoutez d'autres boutons de chargement ici
+
+        pg.display.flip()
+
+# Dans la fonction show_menu
+def show_menu(screen, clock):
+    global selected_value_index, grid_value_rects, grid_dict, settings_open, return_to_menu, load_open
+
+    # Déclaration des rectangles des boutons de base
+    button_width, button_height = 300, 50
+    play_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 200, button_width, button_height)
+    load_game_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 300, button_width, button_height)
+    settings_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button_width, button_height)
+    quit_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
+    # back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 600, button_width, button_height)
+    # stop_music_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 700, button_width, button_height)
+    # play_music_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 800, button_width, button_height)
+    # increase_brightness_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 900, button_width, button_height)
+    # decrease_brightness_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 1000, button_width, button_height)
+
+    while True:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                if settings_open:
                     if back_button_rect.collidepoint(event.pos):
                         settings_open = False
-                        return_to_menu = False 
+                        return_to_menu = True
                     if stop_music_button_rect.collidepoint(event.pos):
                         stop_music()
                     if play_music_button_rect.collidepoint(event.pos):
@@ -2122,16 +2173,39 @@ def show_menu(screen, clock):
                         augmenter_luminosite()
                     if decrease_brightness_button_rect.collidepoint(event.pos):
                         diminuer_luminosite()
+                if load_open:
+                    if back_button_rect.collidepoint(event.pos):
+                        load_open = False
+                        return_to_menu = True
+                else:
+                    if play_button_rect.collidepoint(event.pos):
+                        return_to_menu = False  # Réinitialiser la variable
+                        print("Return to menu: ", return_to_menu)
+                        return 0  # Retourner au menu principal
+                    elif settings_button_rect.collidepoint(event.pos):
+                        return_to_menu = False
+                        settings_open = True
+                        open_settings() 
+                    elif quit_button_rect.collidepoint(event.pos):
+                        pg.quit()
+                        sys.exit()
+                    elif load_game_button_rect.collidepoint(event.pos):
+                        return_to_menu = False
+                        load_open = True
+                        return open_load(screen, clock)
 
         screen.blit(background_image, (0, 0))
 
-        if not settings_open:
+        if settings_open:
+            open_settings()
             # Center the buttons horizontally and vertically
-            draw_transparent_button("PLAY", play_button_rect, 128)
+        elif load_open:
+            open_load(screen, clock)
+        else:
+            draw_transparent_button("NEWGAME", play_button_rect, 128)
+            draw_transparent_button("LOAD GAME", load_game_button_rect, 128)
             draw_transparent_button("SETTINGS", settings_button_rect, 128)
             draw_transparent_button("QUIT", quit_button_rect, 128)
-        else:
-            open_settings()
 
         pg.display.flip()
 

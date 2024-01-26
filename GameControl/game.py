@@ -11,6 +11,7 @@ from view.world import World
 # import random
 from GameControl.EventManager import *
 from GameControl.gameControl import GameControl
+from GameControl.saveAndLoad import *
 
 
 class Game:
@@ -21,16 +22,39 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
+        # self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
+        self.world = None
+        self.camera = None
+
+        # self.gameController.initiateBobs(self.setting.getNbBob())
+        # # self.gameController.eatingTest()
+        # self.gameController.respawnFood()
+        # self.createNewGame()
+        print("Game: ", self.setting.getGridLength(), self.setting.getNbBob(), self.setting.getFps(), self.setting.getTileSize()) 
+    
+    def createNewGame(self):
+        self.gameController.initiateGame()
         self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
         self.world = World(self.width, self.height)
         self.camera = Camera(self.width, self.height) 
-
         self.gameController.initiateBobs(self.setting.getNbBob())
         # self.gameController.eatingTest()
         self.gameController.respawnFood()
-        print("Game: ", self.setting.getGridLength(), self.setting.getNbBob(), self.setting.getFps(), self.setting.getTileSize()) 
     
-        
+    def loadGame(self, saveNumber):
+        loadSetting(saveNumber)
+        # print("GridTile:" , self.setting.getGridLength())
+        self.gameController.initiateGame()
+        self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
+        loadGameController(saveNumber)
+        self.world = World(self.width, self.height)
+        self.camera = Camera(self.width, self.height) 
+        # self.gameController.initiateBobs(self.setting.getNbBob())
+        loadBob(saveNumber)
+        loadFood(saveNumber) 
+
+
+
     
     def run(self):
         self.playing = True
@@ -61,6 +85,26 @@ class Game:
                 pg.quit()
                 sys.exit()
             if event.type == pg.KEYDOWN:
+                if event.key == pg.K_END:
+                    self.gameController.renderTick = 0
+                    i = show_menu(self.screen, self.clock)
+                    if i == 0:
+                        print("i = ", i )
+                        print("new game")
+                        self.createNewGame()
+                    elif i == 1:
+                        print("i = ", i )
+                        print("load game")
+                        self.loadGame(1)
+                    elif i == 2:
+                        self.loadGame(2)
+                    elif i == 3:
+                        self.loadGame(3)
+                    elif i == 4:
+                        self.loadGame(4)
+                    elif i == 5:
+                        self.loadGame(5)
+
                 if event.key == pg.K_ESCAPE:
                     pg.quit()
                     sys.exit()
@@ -70,6 +114,9 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.gameController.renderTick = 0
                     pause(self.screen,self.camera)
+                if event.key == pg.K_s:
+                    print("save")
+                    saveGame(1)
                 if event.key == pg.K_CAPSLOCK:
                     self.gameController.renderTick = 0
                     self.setting.simuMode = not self.setting.simuMode

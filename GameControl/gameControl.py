@@ -25,13 +25,37 @@ class GameControl:
         self.currentDay = 0
         self.renderTick = 0
 
+    def initiateGame(self):
+        self.setting = Setting.getSettings()
+        self.grid : list[list['Tile']] = None
+        self.nbBobs: 'int'= 0
+        self.nbBobsSpawned = 0
+        self.listBobs : list['Bob'] = []
+        self.listFoods: set['Tile'] = set()
+        self.newBornQueue : list['Bob'] = []
+        self.diedQueue: list['Bob'] = []
+        self.currentTick = 0
+        self.currentDay = 0
+        self.renderTick = 0
 
     def setMap(self, map):
         self.grid = map
-
     def getMap(self):
         return self.grid
+    def getNbBobs(self):
+        return self.nbBobs
+    def setNbBobs(self, nbBobs):
+        self.nbBobs = nbBobs
     
+
+    def getListBobs(self):
+        return self.listBobs
+    def getNbBobsSpawned(self):
+        return self.nbBobsSpawned
+    def setNbBobsSpawned(self, nbBobsSpawned):
+        self.nbBobsSpawned = nbBobsSpawned
+    def getNewBornQueue(self):
+        return self.newBornQueue
     def getFoodTiles(self) -> list['Tile']:
         foodTiles = []
         for row in self.getMap():
@@ -160,8 +184,12 @@ class GameControl:
         return self.renderTick
     def getTick(self):
         return self.currentTick
+    def setTick(self, tick):
+        self.currentTick = tick
     def getDay(self):
         return self.currentDay
+    def setDay(self, day):
+        self.currentDay = day
     def getDiedQueue(self):
         return self.diedQueue
 
