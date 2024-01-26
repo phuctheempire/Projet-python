@@ -114,9 +114,21 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.gameController.renderTick = 0
                     pause(self.screen,self.camera)
-                if event.key == pg.K_s:
+                if event.key == pg.K_1:
                     print("save")
                     saveGame(1)
+                if event.key == pg.K_2:
+                    print("save")
+                    saveGame(2)
+                if event.key == pg.K_3:
+                    print("save")
+                    saveGame(3)
+                if event.key == pg.K_4:
+                    print("save")
+                    saveGame(4)
+                if event.key == pg.K_5:
+                    print("save")
+                    saveGame(5)
                 if event.key == pg.K_CAPSLOCK:
                     self.gameController.renderTick = 0
                     self.setting.simuMode = not self.setting.simuMode

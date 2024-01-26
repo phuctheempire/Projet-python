@@ -1124,10 +1124,10 @@ def openIngamesetting():
     input_active = False
     input_text = ""
     back_button_rect = pg.Rect(20, 20, button_width, button_height)
-    stop_music_button_rect = pg.Rect(20, 20, button_width, button_height)
-    play_music_button_rect = pg.Rect(20, 20, button_width, button_height)
-    increase_brightness_button_rect = pg.Rect(20, 20, button_width, button_height)
-    decrease_brightness_button_rect = pg.Rect(20, 20, button_width, button_height)
+    stop_music_button_rect = pg.Rect(back_button_rect.right + 10, 20, button_width, button_height)
+    play_music_button_rect = pg.Rect(stop_music_button_rect.right + 10, 20, button_width, button_height)
+    increase_brightness_button_rect = pg.Rect(play_music_button_rect.right + 10, 20, button_width, button_height)
+    decrease_brightness_button_rect = pg.Rect(increase_brightness_button_rect.right + 10, 20, button_width, button_height)
     
 
     while True:
@@ -2106,25 +2106,25 @@ def open_load(screen, clock):
                     return_to_menu = False  # Réinitialiser la variable
                     return 1  # Retourner au menu principal
                 elif load2_button_rect.collidepoint(event.pos):
-                    load_game('save2.pkl')  # Remplacez par le nom de fichier approprié
+                    load_open = False
                     return_to_menu = False  # Réinitialiser la variable
-                    return  # Retourner au menu principal
+                    return 2  # Retourner au menu principal
                 elif load3_button_rect.collidepoint(event.pos):
-                    load_game('save3.pkl')  # Remplacez par le nom de fichier approprié
+                    load_open = False
                     return_to_menu = False  # Réinitialiser la variable
-                    return  # Retourner au menu principal
+                    return 3  # Retourner au menu principal
                 elif load4_button_rect.collidepoint(event.pos):
-                    load_game('save4.pkl')  # Remplacez par le nom de fichier approprié
+                    load_open = False
                     return_to_menu = False  # Réinitialiser la variable
-                    return  # Retourner au menu principal
+                    return 3  # Retourner au menu principal
                 elif load5_button_rect.collidepoint(event.pos):
-                    load_game('save5.pkl')  # Remplacez par le nom de fichier approprié
+                    load_open = False
                     return_to_menu = False  # Réinitialiser la variable
-                    return  # Retourner au menu principal
+                    return 4  # Retourner au menu principal
                 elif back_button_rect.collidepoint(event.pos):
                     load_open = False
                     return_to_menu = True
-                    return
+                    return 5
                 # Ajoutez des conditions pour d'autres boutons de chargement ici
 
         screen.blit(background_image, (0, 0))
