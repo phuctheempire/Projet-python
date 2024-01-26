@@ -2102,6 +2102,7 @@ def open_load(screen, clock):
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if load1_button_rect.collidepoint(event.pos):
                     # load_game('save1.pkl')  # Remplacez par le nom de fichier approprié
+                    load_open = False
                     return_to_menu = False  # Réinitialiser la variable
                     return 1  # Retourner au menu principal
                 elif load2_button_rect.collidepoint(event.pos):
