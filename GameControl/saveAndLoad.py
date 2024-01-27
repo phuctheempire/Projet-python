@@ -12,7 +12,7 @@ from Tiles.tiles import *
 def saveGame( option):
     gameController = GameControl.getInstance()
     setting = Setting.getSettings()
-    file = open(f"save{option}.txt", "w")
+    file = open(f"save/save{option}.txt", "w")
     file.write( f"SETTING GRID_LENGTH {setting.getGridLength()}\n")
     file.write( f"SETTING NB_SPAWN_FOOD {setting.getNbSpawnFood()}\n")
     file.write( f"SETTING FOOD_ENERGY {setting.getFoodEnergy()}\n")
@@ -45,14 +45,22 @@ def saveGame( option):
         file.write(f"BOB {bob.getId()} {bob.getCurrentTile().gridX} {bob.getCurrentTile().gridY} {bob.getEnergy()} {bob.getMass()} {bob.getVelocity()} {bob.getVision()} {bob.getMemoryPoint()}\n")
     for bob in gameController.getNewBornQueue():
         file.write(f"NEW_BORN {bob.getId()} {bob.getCurrentTile().gridX} {bob.getCurrentTile().gridY} {bob.getEnergy()} {bob.getMass()} {bob.getVelocity()} {bob.getVision()} {bob.getMemoryPoint()}\n")
-    for tile in gameController.getFoodTiles():
-        file.write(f"FOOD {tile.gridX} {tile.gridY} {tile.getEnergy()}\n")
+    try:
+        for tile in gameController.getFoodTiles():
+            file.write(f"FOOD {tile.gridX} {tile.gridY} {tile.getEnergy()}\n")
+    except TypeError:
+        pass
+    
     file.close()
 
 def loadSetting(option):
     gameController = GameControl.getInstance()
     print("Loading setting")
-    file = open(f"save{option}.txt", 'r')
+    try:
+        file = open(f"save/save{option}.txt", 'r')
+    except FileNotFoundError:
+        saveGame(option)
+    
     print("File opened")
     for line in file.readlines():
         print("Line: ", line)
@@ -115,7 +123,10 @@ def loadSetting(option):
 
 def loadGameController(option):
     gameController = GameControl.getInstance()
-    file = open(f"save{option}.txt", 'r')
+    try:
+        file = open(f"save/save{option}.txt", 'r')
+    except FileNotFoundError:
+        saveGame(option)
     for line in file.readlines():
         word = line.split()
         if word[0] == "GAME":
@@ -132,7 +143,10 @@ def loadGameController(option):
 
 def loadBob(option):
     gameController = GameControl.getInstance()
-    file = open(f"save{option}.txt", 'r')
+    try:
+        file = open(f"save/save{option}.txt", 'r')
+    except FileNotFoundError:
+        saveGame(option)
     for line in file.readlines():
         word = line.split()
         if word[0] == "BOB":
@@ -168,7 +182,10 @@ def loadBob(option):
 
 def loadFood(option):
     gameController = GameControl.getInstance()
-    file = open(f"save{option}.txt", 'r')
+    try:
+        file = open(f"save/save{option}.txt", 'r')
+    except FileNotFoundError:
+        saveGame(option)
     for line in file.readlines():
         word = line.split()
         if word[0] == "FOOD":
