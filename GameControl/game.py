@@ -12,6 +12,7 @@ from view.world import World
 from GameControl.EventManager import *
 from GameControl.gameControl import GameControl
 from GameControl.saveAndLoad import *
+from view.graph import *
 
 
 class Game:
@@ -87,6 +88,24 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_END:
                     self.gameController.renderTick = 0
+                    #graph methods
+                    save_graph_data()
+                    save_born_data()
+                    save_died_data()
+                    save_mass_data()
+                    save_veloce_data()
+                    save_vision_data()
+                    save_energy_data()
+
+                    show_graph_data()
+                    show_born_data()
+                    show_died_data()
+                    show_mass_data()
+                    show_veloce_data()
+                    show_vision_data()
+                    show_energy_data()
+                    #graph methods
+                if event.key == pg.K_m:
                     i = show_menu(self.screen, self.clock)
                     if i == 0:
                         print("i = ", i )

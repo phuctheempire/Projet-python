@@ -2116,15 +2116,16 @@ def open_load(screen, clock):
                 elif load4_button_rect.collidepoint(event.pos):
                     load_open = False
                     return_to_menu = False  # Réinitialiser la variable
-                    return 3  # Retourner au menu principal
+                    return 4  # Retourner au menu principal
                 elif load5_button_rect.collidepoint(event.pos):
                     load_open = False
                     return_to_menu = False  # Réinitialiser la variable
-                    return 4  # Retourner au menu principal
+                    return 5  # Retourner au menu principal
                 elif back_button_rect.collidepoint(event.pos):
                     load_open = False
                     return_to_menu = True
-                    return 5
+                    return None
+
                 # Ajoutez des conditions pour d'autres boutons de chargement ici
 
         screen.blit(background_image, (0, 0))
@@ -2193,7 +2194,11 @@ def show_menu(screen, clock):
                     elif load_game_button_rect.collidepoint(event.pos):
                         return_to_menu = False
                         load_open = True
-                        return open_load(screen, clock)
+                        i = open_load(screen, clock)
+                        if i == None:
+                            pass
+                        else:
+                            return i
 
         screen.blit(background_image, (0, 0))
 

@@ -1,6 +1,8 @@
 import random
 # from GameControl.settings import *
+import matplotlib.pyplot as plt
 from GameControl.setting import Setting
+# from view.graph import *
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Tiles.Bob.bob import Bob
@@ -21,10 +23,66 @@ class GameControl:
         self.listFoods: set['Tile'] = set()
         self.newBornQueue : list['Bob'] = []
         self.diedQueue: list['Bob'] = []
+        self.nbDied : 'int'= 0
+        self.nbBorn : 'int'= 0
         self.currentTick = 0
         self.currentDay = 0
         self.renderTick = 0
+############################ Graph Data ########################################        
+        self.graphData = []
+        self.diedData = []
+        self.massData = []
+        self.bornData = []
+        self.veloceData = []
+        self.energyData = []
+        self.visionData = []
+        self.toto_tick = 0        
+        self.nbMass = 0
+        self.nbVeloce = 0
+        self.nbVision = 0
+        self.nbEnergy = 0
+        # self.graph = Graph()
+################################# Graph methods ########################################
+    def getMasses(self) -> list[float]:
+        masses = [bob.getMass() for bob in self.getListBobs()]
+        return masses
+    
+    def getVeloce(self) -> list[float]:
+        veloce = [bob.getVelocity() for bob in self.getListBobs()]
+        return veloce
+    
+    def getVision(self) -> list[float]:
+        vision = [bob.getVision() for bob in self.getListBobs()]
+        return vision
+    
+    def getEnergies(self) -> list[float]:
+        energies = [bob.getEnergy() for bob in self.getListBobs()]
+        return energies
+##############################################################################################
+    def updateMassData(self):
+        masses = self.getMasses()
+        masse_moyenne = sum(masses) / len(masses) if masses else 0
+        self.nbMass = masse_moyenne
+        self.massData.append((self.toto_tick, masse_moyenne))
 
+    def updateVeloceData(self):
+        veloce = self.getVeloce()
+        veloce_moyenne = sum(veloce) / len(veloce) if veloce else 0
+        self.nbVeloce = veloce_moyenne
+        self.veloceData.append((self.toto_tick, veloce_moyenne))
+
+    def updateVisionData(self):
+        vision = self.getVision()
+        vision_moyenne = sum(vision) / len(vision) if vision else 0
+        self.nbVision = vision_moyenne
+        self.visionData.append((self.toto_tick, vision_moyenne))
+
+    def updateEnergyData(self):
+        energies = self.getMasses()
+        energy_moyenne = sum(energies) / len(energies) if energies else 0
+        self.nbEnergy = energy_moyenne
+        self.energyData.append((self.toto_tick, energy_moyenne))
+#######################################################################################
     def initiateGame(self):
         self.setting = Setting.getSettings()
         self.grid : list[list['Tile']] = None
@@ -37,6 +95,19 @@ class GameControl:
         self.currentTick = 0
         self.currentDay = 0
         self.renderTick = 0
+############################ Graph Data ########################################
+        self.graphData = []
+        self.diedData = []
+        self.massData = []
+        self.bornData = []
+        self.veloceData = []
+        self.energyData = []
+        self.visionData = []
+        self.toto_tick = 0        
+        self.nbMass = 0
+        self.nbVeloce = 0
+        self.nbVision = 0
+        self.nbEnergy = 0
 
     def setMap(self, map):
         self.grid = map
@@ -46,8 +117,14 @@ class GameControl:
         return self.nbBobs
     def setNbBobs(self, nbBobs):
         self.nbBobs = nbBobs
-    
-
+    def getNbDied(self):
+        return self.nbDied
+    def setNbDied(self, nbDied):
+        self.nbDied = nbDied
+    def getNbMass(self):
+        return self.nbMass
+    def setNbMass(self, nbMass):
+        self.nbMass = nbMass
     def getListBobs(self):
         return self.listBobs
     def getNbBobsSpawned(self):
@@ -110,6 +187,7 @@ class GameControl:
 
     def addToNewBornQueue(self, bob: 'Bob'):
         self.newBornQueue.append(bob)
+        self.nbBorn +=1
     def addToDiedQueue(self, bob: 'Bob'):
         self.diedQueue.append(bob)
 
@@ -117,6 +195,7 @@ class GameControl:
         for bob in self.diedQueue:
             self.listBobs.remove(bob)
             self.nbBobs -= 1
+            self.nbDied += 1
         self.diedQueue.clear()
 
     def createWorld(self, lengthX, lengthY ):
@@ -157,6 +236,8 @@ class GameControl:
         
 
     def increaseTick(self):
+        self.bornData.append((self.toto_tick,self.nbBorn))
+        self.nbBorn = 0
         self.pushToList()
         self.wipeBobs()
         self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
@@ -169,6 +250,18 @@ class GameControl:
         #     if bob not in self.diedQueue:
                 
         self.currentTick += 1
+        self.graphData.append((self.toto_tick,self.nbBobs)) 
+        self.diedData.append((self.toto_tick,self.nbDied))
+        self.nbDied = 0
+        self.massData.append((self.toto_tick,self.nbMass))
+        self.veloceData.append((self.toto_tick,self.nbVeloce))
+        self.visionData.append((self.toto_tick,self.nbVision))
+        self.energyData.append((self.toto_tick,self.nbEnergy))
+        self.updateEnergyData()
+        self.updateMassData()
+        self.updateVeloceData()
+        self.updateVisionData()
+        self.toto_tick +=1
         if self.currentTick == self.setting.getTicksPerDay():
             self.currentTick = 0
             self.increaseDay()
@@ -179,6 +272,13 @@ class GameControl:
         self.wipeFood()
         self.respawnFood()
         self.currentDay += 1
+        self.graphData.append((self.toto_tick,self.nbBobs))
+        self.diedData.append((self.toto_tick,self.nbDied))
+        self.diedData.append((self.toto_tick,self.nbMass))
+        self.bornData.append((self.toto_tick,self.nbBorn))
+        self.veloceData.append((self.toto_tick,self.nbVeloce))
+
+
 
     def getRenderTick(self):
         return self.renderTick
