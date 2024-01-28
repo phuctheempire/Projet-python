@@ -86,7 +86,7 @@ class Game:
                 pg.quit()
                 sys.exit()
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_END:
+                if event.key == pg.K_g:
                     self.gameController.renderTick = 0
                     #graph methods
                     save_graph_data()
@@ -148,7 +148,7 @@ class Game:
                 if event.key == pg.K_5:
                     print("save")
                     saveGame(5)
-                if event.key == pg.K_CAPSLOCK:
+                if event.key == pg.K_s:
                     self.gameController.renderTick = 0
                     self.setting.simuMode = not self.setting.simuMode
 
@@ -158,83 +158,59 @@ class Game:
     def drawSimu(self):
         self.screen.fill((137, 207, 240))
         self.world.drawSimu(self.screen, self.camera)
-
-        draw_text(
-            self.screen,
-            'FPS={}'.format(round(self.clock.get_fps())),
-            15,
-            (0,0,0),
-            (10, 10)
-        )  
-        draw_text(
-            self.screen,
-            'gameTick={}'.format(round(self.gameController.getRenderTick())),
-            15,
-            (0,0,0),
-            (10, 30)
-        )  
-        draw_text(
-            self.screen,
-            'Tick={}'.format(round(self.gameController.getTick())),
-            15,
-            (0,0,0),
-            (10, 50)
-        )  
-        draw_text(
-            self.screen,
-            'Day={}'.format(round(self.gameController.getDay())),
-            15,
-            (0,0,0),
-            (10, 70)
-        )  
-        draw_text(
-            self.screen,
-            'camera={}'.format([self.camera.scroll.x, self.camera.scroll.y]),
-            15,
-            (0,0,0),
-            (10, 90)
-        )
-
+        self.drawIndex()
         pg.display.flip()
 
 
     def draw(self):
         self.screen.fill((137, 207, 240))
         self.world.draw(self.screen, self.camera)
+        self.drawIndex()
+        pg.display.flip()
+
+    def drawIndex( self ):
         draw_text(
             self.screen,
-            'FPS={}'.format(round(self.clock.get_fps())),
+            'FPS: {}'.format(round(self.clock.get_fps())),
             25,
             (0,0,0),
             (10, 10)
         )  
         draw_text(
             self.screen,
-            'gameTick={}'.format(round(self.gameController.getRenderTick())),
+            'Tick: {}'.format(round(self.gameController.getTick())),
             25,
             (0,0,0),
             (10, 30)
         )  
         draw_text(
             self.screen,
-            'Tick={}'.format(round(self.gameController.getTick())),
+            'Day: {}'.format(round(self.gameController.getDay())),
             25,
             (0,0,0),
             (10, 50)
         )  
         draw_text(
             self.screen,
-            'Day={}'.format(round(self.gameController.getDay())),
+            'Number of bobs: {}'.format(self.gameController.getNbBobs()) ,
             25,
             (0,0,0),
             (10, 70)
-        )  
+        )
         draw_text(
             self.screen,
-            'camera={}'.format([self.camera.scroll.x, self.camera.scroll.y]),
+            'Number of foods: {}'.format(len(self.gameController.listFoods)) ,
             25,
             (0,0,0),
             (10, 90)
         )
+        draw_text(
+            self.screen,
+            'Number of bob spawned: {}'.format(self.gameController.getNbBobsSpawned()) ,
+            25,
+            (0,0,0),
+            (10, 110)
+        )
 
-        pg.display.flip()
+
+

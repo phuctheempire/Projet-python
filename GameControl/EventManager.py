@@ -318,7 +318,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 200:
+                                            if 0 <= new_value <= 200:
                                                 setting.setNbBob(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -350,7 +350,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1000:
+                                            if 0 <= new_value <= 1000:
                                                 setting.setNbSpawnFood(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -544,7 +544,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 10:
+                                            if 0 <= new_value <= 10:
                                                 setting.setBobStationaryEnergyLoss(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -582,7 +582,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1000:
+                                            if 0 <= new_value <= 1000:
                                                 setting.setBobSelfReproductionEnergyLoss(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -615,7 +615,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1000:
+                                            if 0 <= new_value <= 1000:
                                                 setting.setBobSexualReproductionLoss(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -681,7 +681,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1:
+                                            if 0 <= new_value <= 1:
                                                 setting.setPerceptionFlatPenalty(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -718,7 +718,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1:
+                                            if 0 <= new_value <= 1:
                                                 setting.setMemoryFlatPenalty(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -829,7 +829,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setDefaultVision(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -841,13 +841,18 @@ def open_settings():
                             elif event.key == pg.K_BACKSPACE:
                                 input_text = input_text[:-1]
                             else:
-                                if len(input_text) < 2:
+                                if len(input_text) < 5:
                                     if event.unicode.isdigit():
                                         input_text += event.unicode
+                                    elif event.unicode == ".":
+                                        if "." in input_text:
+                                            print("La valeur doit être just 1 point.")
+                                        else:
+                                            input_text += event.unicode
                                     else:
-                                        print("La valeur doit être un entier.")
+                                        print("La valeur doit être un float.")
                                 else:
-                                    print("La valeur ne doit pas dépasser 2 caractère.")
+                                    print("La valeur ne doit pas dépasser 5 caractère.")   
                         case "DEFAULT MEMORY POINT": # Default Memory point
                             if event.key == pg.K_RETURN:
                                     if input_text == "":
@@ -861,7 +866,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setDefaultMemoryPoint(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -873,13 +878,18 @@ def open_settings():
                             elif event.key == pg.K_BACKSPACE:
                                 input_text = input_text[:-1]
                             else:
-                                if len(input_text) < 2:
+                                if len(input_text) < 5:
                                     if event.unicode.isdigit():
                                         input_text += event.unicode
+                                    elif event.unicode == ".":
+                                        if "." in input_text:
+                                            print("La valeur doit être just 1 point.")
+                                        else:
+                                            input_text += event.unicode
                                     else:
-                                        print("La valeur doit être un entier.")
+                                        print("La valeur doit être un float.")
                                 else:
-                                    print("La valeur ne doit pas dépasser 2 caractère.")
+                                    print("La valeur ne doit pas dépasser 5 caractère.")   
                         case "MASS VARIATION": # Mass Variation
                             if event.key == pg.K_RETURN:
                                     if input_text == "":
@@ -893,7 +903,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 10:
+                                            if 0 <= new_value <= 10:
                                                 setting.setMassVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -930,7 +940,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 10:
+                                            if 0 <= new_value <= 10:
                                                 setting.setVelocityVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -967,7 +977,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setVisionVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -999,7 +1009,7 @@ def open_settings():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setMemoryVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1278,7 +1288,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 200:
+                                            if 0 <= new_value <= 200:
                                                 setting.setNbBob(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1310,7 +1320,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1000:
+                                            if 0 <= new_value <= 1000:
                                                 setting.setNbSpawnFood(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1504,7 +1514,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 10:
+                                            if 0 <= new_value <= 10:
                                                 setting.setBobStationaryEnergyLoss(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1542,7 +1552,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1000:
+                                            if 0 <= new_value <= 1000:
                                                 setting.setBobSelfReproductionEnergyLoss(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1575,7 +1585,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1000:
+                                            if 0 <= new_value <= 1000:
                                                 setting.setBobSexualReproductionLoss(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1641,7 +1651,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1:
+                                            if 0 <= new_value <= 1:
                                                 setting.setPerceptionFlatPenalty(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1678,7 +1688,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 1:
+                                            if 0 <= new_value <= 1:
                                                 setting.setMemoryFlatPenalty(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1789,7 +1799,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setDefaultVision(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1801,13 +1811,18 @@ def openIngamesetting():
                             elif event.key == pg.K_BACKSPACE:
                                 input_text = input_text[:-1]
                             else:
-                                if len(input_text) < 2:
+                                if len(input_text) < 5:
                                     if event.unicode.isdigit():
                                         input_text += event.unicode
+                                    elif event.unicode == ".":
+                                        if "." in input_text:
+                                            print("La valeur doit être just 1 point.")
+                                        else:
+                                            input_text += event.unicode
                                     else:
-                                        print("La valeur doit être un entier.")
+                                        print("La valeur doit être un float.")
                                 else:
-                                    print("La valeur ne doit pas dépasser 2 caractère.")
+                                    print("La valeur ne doit pas dépasser 5 caractère.")   
                         case "DEFAULT MEMORY POINT": # Default Memory point
                             if event.key == pg.K_RETURN:
                                     if input_text == "":
@@ -1821,7 +1836,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setDefaultMemoryPoint(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1833,13 +1848,18 @@ def openIngamesetting():
                             elif event.key == pg.K_BACKSPACE:
                                 input_text = input_text[:-1]
                             else:
-                                if len(input_text) < 2:
+                                if len(input_text) < 5:
                                     if event.unicode.isdigit():
                                         input_text += event.unicode
+                                    elif event.unicode == ".":
+                                        if "." in input_text:
+                                            print("La valeur doit être just 1 point.")
+                                        else:
+                                            input_text += event.unicode
                                     else:
-                                        print("La valeur doit être un entier.")
+                                        print("La valeur doit être un float.")
                                 else:
-                                    print("La valeur ne doit pas dépasser 2 caractère.")
+                                    print("La valeur ne doit pas dépasser 5 caractère.")  
                         case "MASS VARIATION": # Mass Variation
                             if event.key == pg.K_RETURN:
                                     if input_text == "":
@@ -1853,7 +1873,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 10:
+                                            if 0 <= new_value <= 10:
                                                 setting.setMassVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1890,7 +1910,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 10:
+                                            if 0 <= new_value <= 10:
                                                 setting.setVelocityVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1927,7 +1947,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setVisionVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -1959,7 +1979,7 @@ def openIngamesetting():
                                             input_text = ""
                                             input_active = False
                                         else:
-                                            if 0 < new_value <= 20:
+                                            if 0 <= new_value <= 10:
                                                 setting.setMemoryVariation(new_value)
                                                 grid_dict[selected_value_index] = new_value
                                                 input_active = False
@@ -2222,7 +2242,7 @@ def pause( screen, camera ):
     print(setting.getSurfaceWidth(), setting.getSurfaceHeight())
     while True:
         ########################## Draw map #######################################################
-        screen.fill((0, 0, 0))
+        screen.fill((137, 207, 240))
         pauseSurface.fill((195, 177, 225))
         # surface.blit(loadMap(), (0,0))
         textureImg = loadGrassImage()
@@ -2347,6 +2367,44 @@ def pause( screen, camera ):
                             i += 1
 
         screen.blit(pauseSurface, (camera.scroll.x, camera.scroll.y))    
+        draw_text(screen, f"Paused", 40, (0,0,0), (screen.get_width()//2 - 50, 10))
+        drawIndex ( screen)
         pg.display.flip()
 
-        
+def drawIndex( surface):
+
+    draw_text(
+        surface,
+        'Tick: {}'.format(round(gameController.getTick())),
+        25,
+        (0,0,0),
+        (10, 30)
+    )  
+    draw_text(
+        surface,
+        'Day: {}'.format(round(gameController.getDay())),
+        25,
+        (0,0,0),
+        (10, 50)
+    )  
+    draw_text(
+        surface,
+        'Number of bobs: {}'.format(gameController.getNbBobs()) ,
+        25,
+        (0,0,0),
+        (10, 70)
+    )
+    draw_text(
+        surface,
+        'Number of foods: {}'.format(len(gameController.listFoods)) ,
+        25,
+        (0,0,0),
+        (10, 90)
+    )
+    draw_text(
+        surface,
+        'Number of bob spawned: {}'.format(gameController.getNbBobsSpawned()) ,
+        25,
+        (0,0,0),
+        (10, 110)
+    )

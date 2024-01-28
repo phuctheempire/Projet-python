@@ -23,7 +23,7 @@ class Setting:
         self.memoryFlatPenalty = 0.2
         self.defaultVelocity = 1
         self.defaultMass = 1
-        self.defaultVision = 4
+        self.defaultVision = 1
         self.defaultMemoryPoint = 0
         self.massVariation = 0.1
         self.velocityVariation = 0.1

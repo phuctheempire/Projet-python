@@ -30,10 +30,10 @@ class Bob:
         self.CurrentTile : 'Tile' = None
 
         self.vision: 'float' = self.setting.getDefaultVision()
-        self.effectiveVision = round(self.vision)
 
         self.NextTile : 'Tile' = None
-        self.predator : 'Bob' = None
+        # self.predator: 'Bob' = None
+        self.predators : list['Bob'] = []
         self.prey : 'Bob' = None
         self.foodTilesInVision : list['Tile'] = []
 
@@ -59,13 +59,14 @@ class Bob:
     ####################### Reproduction #####################################
     def reproduce(self):
         newBob = Bob()
-        newBob.energy = 50
+        newBob.energy = setting.getBobNewbornEnergy()
         newBob.mass = round(random.uniform(self.mass - self.setting.getMassVariation(), self.mass + self.setting.getMassVariation()), 2)
         newBob.velocity = round(random.uniform(self.velocity - self.setting.getVelocityVariation(), self.velocity + self.setting.getVelocityVariation()), 2)
+        newBob.speed = self.velocity
         newBob.vision = random.choice([max(0, self.vision - self.setting.getVisionVariation()), self.vision, self.vision + self.setting.getVisionVariation()]) 
         newBob.memoryPoint = random.choice([max(0, self.memoryPoint - self.setting.getMemoryVariation()), self.memoryPoint, self.memoryPoint + self.setting.getMemoryVariation()])
         newBob.spawn(self.CurrentTile)
-        self.energy = 50
+        self.energy = self.energy - self.setting.getBobSelfReproductionEnergyLoss()
         
 ################## Action ##################################
     def action(self):
@@ -96,7 +97,7 @@ class Bob:
                         else:
                             if (self.memoryPoint != 0):
                                 self.memorizeVisitedTile(self.CurrentTile)
-                            if (self.effectiveVision != 0):
+                            if (round(self.vision) != 0):
                                 self.scan()
                             self.determineNextTile()
                             self.move()
@@ -170,6 +171,7 @@ class Bob:
         childBob.energy = 100
         childBob.mass = round((self.mass + partner.mass) / 2, 2)
         childBob.velocity = round((self.velocity + partner.velocity) / 2)
+        childBob.speed = childBob.velocity
         childBob.vision = round((self.vision + partner.vision) / 2, 2)
         childBob.memoryPoint = round((self.memoryPoint + partner.memoryPoint) / 2, 2)
         childBob.spawn(self.CurrentTile)
@@ -177,6 +179,7 @@ class Bob:
         partner.energy -= self.setting.getBobSexualReproductionLoss()
         self.alreadyInteracted = True
         partner.alreadyInteracted = True
+        print("Bob ", self.id, " and Bob ", partner.id, " have a child Bob ", childBob.id)
 
 ####################### Detect Preys, Predators. Partners and Foods #####################################
     def detectPreys(self, listBobs: list['Bob']) -> list['Bob']:
@@ -229,14 +232,14 @@ class Bob:
         
 ################ Scan ###########################################
     def scan(self):
-        tilesInVision = self.CurrentTile.getNearbyTiles(self.effectiveVision)
+        tilesInVision = self.CurrentTile.getNearbyTiles(round(self.vision))
 
         seenBobs: list['Bob'] = []
         newFoodTilesInVision: list['Tile'] = []
 
         #remove the food in memo if it in vision right now
         for tile in list(self.foodTilesInMemo.keys()):
-            if (Tile.distanceofTile(self.CurrentTile, tile) <= self.effectiveVision):
+            if (Tile.distanceofTile(self.CurrentTile, tile) <= round(self.vision)):
                 self.removeFoodTileInMemo(tile)
 
         #detect bobs and food in vision
@@ -259,8 +262,9 @@ class Bob:
         self.foodTilesInVision = newFoodTilesInVision.copy()
         
         #detect predators and preys
-        predatorInVision = self.detectPredators(seenBobs)
-        self.predator = self.getClosestPredator(predatorInVision)
+        # predatorInVision = self.detectPredators(seenBobs)
+        # self.predator = self.getClosestPredator(predatorInVision)
+        self.predators = self.detectPredators(seenBobs)
         
         preysInVision = self.detectPreys(seenBobs)
         self.prey = self.getSmallestPrey(preysInVision)
@@ -304,8 +308,8 @@ class Bob:
 
 ######################## Find next tile #####################################
     def determineNextTile(self):
-        if (self.predator is not None):
-            self.NextTile = self.runFrom(self.predator)
+        if (self.predators != []):
+            self.NextTile = self.runFrom(self.predators)
             self.isHunting = False
         elif (self.foodTilesInVision != []):
             target = self.getLargestNearestFoodTile(self.foodTilesInVision)
@@ -342,7 +346,7 @@ class Bob:
             return self.CurrentTile.getDirectionTiles(chosenDirection)
     
 ############################# Run from predators###########################################
-    def runFrom(self, predator: 'Bob'):
+    def runFrom(self, predators: list['Bob']):
         bestDirection = None
         bestDistance = 0
 
@@ -351,13 +355,13 @@ class Bob:
             if tile is None:
                 continue
     
-            # minDistance = min([Tile.distanceofTile(tile, predator.CurrentTile) for predator in predators])
-            minDistance = Tile.distanceofTile(tile, predator.CurrentTile) 
+            minDistance = min([Tile.distanceofTile(tile, predator.CurrentTile) for predator in predators])
+            # minDistance = Tile.distanceofTile(tile, predator.CurrentTile) 
             if minDistance > bestDistance:
                 bestDirection = direction
                 bestDistance = minDistance
         
-        return self.CurrentTile.getDirectionTiles(bestDirection)
+        return self.CurrentTile.getDirectionTiles(bestDirection) if bestDirection is not None else self.CurrentTile
     
 
     def setRandomTile(self):     
@@ -412,10 +416,6 @@ class Bob:
         self.CurrentTile = tile
     def setPreviousTile(self, tile: Tile):
         self.PreviousTile = tile
-
-
-
-
 
     
         

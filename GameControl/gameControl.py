@@ -117,6 +117,10 @@ class GameControl:
         return self.nbBobs
     def setNbBobs(self, nbBobs):
         self.nbBobs = nbBobs
+    def getNbBorn(self):
+        return self.nbBorn
+    def setNbBorn(self, nbBorn):
+        self.nbBorn = nbBorn
     def getNbDied(self):
         return self.nbDied
     def setNbDied(self, nbDied):
@@ -240,7 +244,7 @@ class GameControl:
         self.nbBorn = 0
         self.pushToList()
         self.wipeBobs()
-        self.listBobs.sort(key=lambda x: x.velocity, reverse=True)
+        self.listBobs.sort(key=lambda x: x.speed, reverse=True)
         for bob in self.listBobs:
             bob.clearPreviousTiles()
         for bob in self.listBobs:
