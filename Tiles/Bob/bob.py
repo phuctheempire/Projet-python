@@ -16,6 +16,7 @@ class Bob:
         self.age = 0
         self.isHunting = False
         self.alreadyInteracted = False
+        self.CurrentTile : 'Tile' = None
 
         self.energy: 'float' = self.setting.getBobSpawnEnergy()
         self.energyMax = self.setting.getBobMaxEnergy()
@@ -24,10 +25,6 @@ class Bob:
         self.velocity: 'float' = self.setting.getDefaultVelocity()
         self.speedBuffer = 0
         self.speed = self.velocity 
-
-        self.PreviousTile : 'Tile' = None
-        self.PreviousTiles : list['Tile'] = []
-        self.CurrentTile : 'Tile' = None
 
         self.vision: 'float' = self.setting.getDefaultVision()
 
@@ -43,6 +40,9 @@ class Bob:
         self.visitedTiles: list['Tile'] = []
         self.foodTilesInMemo: dict('Tile', 'float') = {}
 
+        # for graphic purposes
+        self.PreviousTile : 'Tile' = None
+        self.PreviousTiles : list['Tile'] = []
 ################ Die and Born ############################
     def spawn(self, tile: 'Tile'):
         self.CurrentTile = tile
@@ -59,12 +59,12 @@ class Bob:
     ####################### Reproduction #####################################
     def reproduce(self):
         newBob = Bob()
-        newBob.energy = setting.getBobNewbornEnergy()
+        newBob.energy = self.setting.getBobNewbornEnergy()
         newBob.mass = round(random.uniform(self.mass - self.setting.getMassVariation(), self.mass + self.setting.getMassVariation()), 2)
         newBob.velocity = round(random.uniform(self.velocity - self.setting.getVelocityVariation(), self.velocity + self.setting.getVelocityVariation()), 2)
         newBob.speed = self.velocity
-        newBob.vision = random.choice([max(0, self.vision - self.setting.getVisionVariation()), self.vision, self.vision + self.setting.getVisionVariation()]) 
-        newBob.memoryPoint = random.choice([max(0, self.memoryPoint - self.setting.getMemoryVariation()), self.memoryPoint, self.memoryPoint + self.setting.getMemoryVariation()])
+        newBob.vision = round(random.choice([max(0, self.vision - self.setting.getVisionVariation()), self.vision, self.vision + self.setting.getVisionVariation()]), 2)  
+        newBob.memoryPoint = round(random.choice([max(0, self.memoryPoint - self.setting.getMemoryVariation()), self.memoryPoint, self.memoryPoint + self.setting.getMemoryVariation()]), 2)
         newBob.spawn(self.CurrentTile)
         self.energy = self.energy - self.setting.getBobSelfReproductionEnergyLoss()
         
@@ -79,13 +79,12 @@ class Bob:
             if (self.setting.getSelfReproduction()):
                 self.reproduce()
         else:
+            self.consumePerceptionAndMemoryEnergy()
             if (self.speed < 1 or self.CurrentTile.getEnergy() != 0 or self.detectPreys(self.CurrentTile.getBobs()) != []):
-                self.consumePerceptionAndMemoryEnergy()
                 self.consumeStationaryEnergy()
                 self.interact()
             else:
                 # if not then bob will use its speed and consume kinetic energy to move
-                self.consumePerceptionAndMemoryEnergy()
                 self.consumeKinecticEnergy()
                 for _ in range(floor(self.speed)):
                     if self in GameControl.getInstance().getDiedQueue():
@@ -168,7 +167,7 @@ class Bob:
 
     def mate(self, partner: 'Bob'):
         childBob = Bob()
-        childBob.energy = 100
+        childBob.energy = self.setting.getSexualBornEnergy()
         childBob.mass = round((self.mass + partner.mass) / 2, 2)
         childBob.velocity = round((self.velocity + partner.velocity) / 2)
         childBob.speed = childBob.velocity
@@ -424,4 +423,3 @@ class Bob:
 
         
         
-
