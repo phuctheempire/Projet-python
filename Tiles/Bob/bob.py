@@ -132,7 +132,7 @@ class Bob:
             unluckyBob = self.getSmallestPrey(preys)
             if (unluckyBob is not None):
                 self.eat(unluckyBob)
-            elif (self.setting.getSelfReproduction()):
+            elif (self.setting.getSexualReproduction):
                 partners = self.detectPotentialPartners(self.CurrentTile.getBobs())
                 if (partners != []):
                     partner = self.getRandomPartner(partners)
