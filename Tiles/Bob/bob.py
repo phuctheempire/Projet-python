@@ -161,7 +161,7 @@ class Bob:
         self.alreadyInteracted = True
 
     def canMate(self, bob: 'Bob') -> bool:
-        energyCondition = self.energy >= 150 and bob.energy >= 150
+        energyCondition = self.energy >= self.setting.getBobSexualReproductionLevel() and bob.energy >= self.setting.getBobSexualReproductionLevel()
         return energyCondition and not self.canEat(bob) and not bob.canEat(self)
 
     def mate(self, partner: 'Bob'):
