@@ -2228,7 +2228,7 @@ def show_menu(screen, clock):
         elif load_open:
             open_load(screen, clock)
         else:
-            draw_transparent_button("NEWGAME", play_button_rect, 128)
+            draw_transparent_button("NEW GAME", play_button_rect, 128)
             draw_transparent_button("LOAD GAME", load_game_button_rect, 128)
             draw_transparent_button("SETTINGS", settings_button_rect, 128)
             draw_transparent_button("QUIT", quit_button_rect, 128)

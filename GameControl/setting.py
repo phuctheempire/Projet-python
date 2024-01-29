@@ -23,7 +23,7 @@ class Setting:
         self.memoryFlatPenalty = 0.2
         self.defaultVelocity = 1
         self.defaultMass = 1
-        self.defaultVision = 1
+        self.defaultVision = 0
         self.defaultMemoryPoint = 0
         self.massVariation = 0.1
         self.velocityVariation = 0.1
@@ -153,7 +153,6 @@ class Setting:
         self.nbBob = nbBob
     
 
-
     def setResolutionX(self, resolutionX):
         self.resolutionX = resolutionX
     
@@ -238,11 +237,12 @@ class Setting:
     def setImagePath(self, imagePath):
         self.imagePath = imagePath
 
-    # @staticmethod
+    @staticmethod
     def getSettings():
         if Setting.instance is None:
             if (Setting.instance is not None):
                 raise Exception("This class is a singleton!")
             Setting.instance = Setting()
+            print("Created new setting")
         return Setting.instance
 

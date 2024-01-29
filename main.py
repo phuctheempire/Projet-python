@@ -20,7 +20,7 @@ def main():
     screen = pg.display.set_mode((1920,1080), flags)
     #screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
     clock = pg.time.Clock()
-    setting = Setting.getSettings()
+    # setting = Setting.getSettings()
     # implement menus
     i = show_menu(screen, clock)
     # implement game 

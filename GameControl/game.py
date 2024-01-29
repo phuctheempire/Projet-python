@@ -44,7 +44,7 @@ class Game:
     
     def loadGame(self, saveNumber):
         loadSetting(saveNumber)
-        # print("GridTile:" , self.setting.getGridLength())
+        # self.setting = Setting.getSettings()
         self.gameController.initiateGame()
         self.gameController.createWorld(self.setting.getGridLength(),self.setting.getGridLength()) 
         loadGameController(saveNumber)

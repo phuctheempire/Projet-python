@@ -299,7 +299,7 @@ class GameControl:
 
 
     @staticmethod
-    def getInstance():
+    def  getInstance():
         if GameControl.instance is None:
             if (GameControl.instance is not None):
                 raise Exception("This class is a singleton!")

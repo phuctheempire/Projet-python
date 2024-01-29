@@ -2,16 +2,14 @@ import os
 import sys
 from GameControl.gameControl import GameControl
 from GameControl.EventManager import *
-from GameControl.setting import *
+from GameControl.setting import Setting
 from Tiles.Bob.bob import *
 from Tiles.tiles import *
 
-
-
+setting = Setting.getSettings()
+gameController = GameControl.getInstance()
 
 def saveGame( option):
-    gameController = GameControl.getInstance()
-    setting = Setting.getSettings()
     file = open(f"save/save{option}.txt", "w")
     file.write( f"SETTING GRID_LENGTH {setting.getGridLength()}\n")
     file.write( f"SETTING NB_SPAWN_FOOD {setting.getNbSpawnFood()}\n")
@@ -54,7 +52,8 @@ def saveGame( option):
     file.close()
 
 def loadSetting(option):
-    gameController = GameControl.getInstance()
+    # gameController = GameControl.getInstance()
+
     print("Loading setting")
     try:
         file = open(f"save/save{option}.txt", 'r')
@@ -63,16 +62,11 @@ def loadSetting(option):
     
     print("File opened")
     for line in file.readlines():
-        print("Line: ", line)
         word = line.split()
-        print("Word: ", word)
         if word[0] == "SETTING":
-            print("Setting detected")
             match word[1]:
                 case "GRID_LENGTH":
                     setting.setGridLength(int(word[2]))
-                    print("Setting is now: ", setting.getGridLength())
-                    print("Word: ", word[2])
                 case "NB_SPAWN_FOOD":
                     setting.setNbSpawnFood(int(word[2]))
                 case "FOOD_ENERGY":
@@ -114,15 +108,21 @@ def loadSetting(option):
                 case "MEMORY_POINT_VARIATION":
                     setting.setMemoryVariation(int(word[2]))
                 case "SELF_REPRODUCTION":
-                    setting.setSelfReproduction(bool(word[2]))
+                    if word[2] == "True":
+                        setting.setSelfReproduction(True)
+                    else:
+                        setting.setSelfReproduction(False)
                 case "SEXUAL_REPRODUCTION":
-                    setting.setSexualReproduction(bool(word[2]))
+                    if word[2] == "True":
+                        setting.setSexualReproduction(True)
+                    else:
+                        setting.setSexualReproduction(False)
                 case "TICK_PER_DAY":
                     setting.setTicksPerDay(int(word[2]))
     file.close()
-
+    
 def loadGameController(option):
-    gameController = GameControl.getInstance()
+    # gameController = GameControl.getInstance()
     try:
         file = open(f"save/save{option}.txt", 'r')
     except FileNotFoundError:
@@ -142,7 +142,7 @@ def loadGameController(option):
     file.close()
 
 def loadBob(option):
-    gameController = GameControl.getInstance()
+    # gameController = GameControl.getInstance()
     try:
         file = open(f"save/save{option}.txt", 'r')
     except FileNotFoundError:
@@ -181,7 +181,7 @@ def loadBob(option):
     file.close()
 
 def loadFood(option):
-    gameController = GameControl.getInstance()
+    # gameController = GameControl.getInstance()
     try:
         file = open(f"save/save{option}.txt", 'r')
     except FileNotFoundError:
