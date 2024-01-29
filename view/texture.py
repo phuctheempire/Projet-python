@@ -34,26 +34,17 @@ def loadMap():
     map = pg.transform.scale(map, (setting.SurfaceWidth(), setting.SurfaceHeight()))
     return map
 
-def loadPurpleRight():
-    purpleRight = pg.image.load(setting.getImagePath() + "Purple1.png").convert_alpha()
-    # purpleRight = pg.transform.scale(purpleRight, (purpleRight.get_width()*1, purpleRight.get_height()*1))
     return purpleRight
 def loadPurpleLeft():
     purpleLeft = pg.image.load(setting.getImagePath() + "Purple.png").convert_alpha()
     # purpleLeft = pg.transform.scale(purpleLeft, (purpleLeft.get_width()*1, purpleLeft.get_height()*1))
     return purpleLeft
-def loadGreenRight():
-    greenRight = pg.image.load(setting.getImagePath() + "Green1.png").convert_alpha()
-    # greenRight = pg.transform.scale(greenRight, (greenRight.get_width()*1, greenRight.get_height()*1))
-    return greenRight
+
 def loadGreenLeft():
     greenLeft = pg.image.load(setting.getImagePath() + "Green.png").convert_alpha()
     # greenLeft = pg.transform.scale(greenLeft, (greenLeft.get_width()*1, greenLeft.get_height()*1))
     return greenLeft
-def loadBlueRight():
-    blueRight = pg.image.load(setting.getImagePath() + "Blue1.png").convert_alpha()
-    # blueRight = pg.transform.scale(blueRight, (blueRight.get_width()*1, blueRight.get_height()*1))
-    return blueRight
+
 def loadBlueLeft():
     blueLeft = pg.image.load(setting.getImagePath() + "Blue.png").convert_alpha()
     # blueLeft = pg.transform.scale(blueLeft, (blueLeft.get_width()*1, blueLeft.get_height()*1))

@@ -74,9 +74,8 @@ class Bob:
         self.PreviousTiles.append(self.CurrentTile)
 
         if (self.energy <= 0): 
-            self.die()
-        elif self.energy >= self.setting.getBobMaxEnergy():
-            if (self.setting.getSelfReproduction()):
+            self.die()    
+        elif (self.setting.getSelfReproduction() and self.energy >= self.setting.getBobMaxEnergy()):
                 self.reproduce()
         else:
             self.consumePerceptionAndMemoryEnergy()

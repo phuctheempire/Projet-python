@@ -199,17 +199,10 @@ class Game:
         )
         draw_text(
             self.screen,
-            'Number of foods: {}'.format(len(self.gameController.listFoods)) ,
-            25,
-            (0,0,0),
-            (10, 90)
-        )
-        draw_text(
-            self.screen,
             'Number of bob spawned: {}'.format(self.gameController.getNbBobsSpawned()) ,
             25,
             (0,0,0),
-            (10, 110)
+            (10, 90)
         )
 
 

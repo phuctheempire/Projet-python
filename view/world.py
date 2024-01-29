@@ -59,11 +59,8 @@ class World:
 
     def drawBob(self, surface, camera, walkProgression ):
         greenLeft = loadGreenLeft()
-        greenRight = loadGreenRight()
         blueLeft = loadBlueLeft()
-        blueRight = loadBlueRight()
         purpleLeft = loadPurpleLeft()
-        purpleRight = loadPurpleRight()
         
         
         for bob in self.gameController.listBobs:
@@ -210,17 +207,11 @@ class World:
 
     def drawSimuBob(self,surface, camera):
         greenLeft = loadGreenLeft()
-        greenRight = loadGreenRight()
         blueLeft = loadBlueLeft()
-        blueRight = loadBlueRight()
         purpleLeft = loadPurpleLeft()
-        purpleRight = loadPurpleRight()
         greenLeft = pg.transform.scale(greenLeft, (int(greenLeft.get_width() * self.zoom), int(greenLeft.get_height() * self.zoom)))
-        greenRight = pg.transform.scale(greenRight, (int(greenRight.get_width() * self.zoom), int(greenRight.get_height() * self.zoom)))
         blueLeft = pg.transform.scale(blueLeft, (int(blueLeft.get_width() * self.zoom), int(blueLeft.get_height() * self.zoom)))
-        blueRight = pg.transform.scale(blueRight, (int(blueRight.get_width() * self.zoom), int(blueRight.get_height() * self.zoom)))
         purpleLeft = pg.transform.scale(purpleLeft, (int(purpleLeft.get_width() * self.zoom), int(purpleLeft.get_height() * self.zoom)))
-        purpleRight = pg.transform.scale(purpleRight, (int(purpleRight.get_width() * self.zoom), int(purpleRight.get_height() * self.zoom)))
         for bob in self.gameController.listBobs:
             (destX, destY) = bob.getCurrentTile().getRenderCoord()
             (desX, desY) = (destX + self.surface.get_width()/2 , destY - ( + 50 - self.setting.getTileSize() ) )

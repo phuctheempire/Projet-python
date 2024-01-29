@@ -2262,11 +2262,8 @@ def pause( screen, camera ):
 
         ########################## Draw Bob #######################################################
         greenLeft = loadGreenLeft()
-        greenRight = loadGreenRight()
         blueLeft = loadBlueLeft()
-        blueRight = loadBlueRight()
         purpleLeft = loadPurpleLeft()
-        purpleRight = loadPurpleRight()
         for bob in gameController.listBobs:
             (destX, destY) = bob.getCurrentTile().getRenderCoord()
             (desX, desY) = (destX + setting.getSurfaceWidth()//2 , destY - ( + 50 - setting.getTileSize() ) )
@@ -2396,15 +2393,8 @@ def drawIndex( surface):
     )
     draw_text(
         surface,
-        'Number of foods: {}'.format(len(gameController.listFoods)) ,
-        25,
-        (0,0,0),
-        (10, 90)
-    )
-    draw_text(
-        surface,
         'Number of bob spawned: {}'.format(gameController.getNbBobsSpawned()) ,
         25,
         (0,0,0),
-        (10, 110)
+        (10, 90)
     )
