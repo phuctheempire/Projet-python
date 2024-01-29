@@ -31,7 +31,7 @@ class Game:
         # # self.gameController.eatingTest()
         # self.gameController.respawnFood()
         # self.createNewGame()
-        print("Game: ", self.setting.getGridLength(), self.setting.getNbBob(), self.setting.getFps(), self.setting.getTileSize()) 
+        # print("Game: ", self.setting.getGridLength(), self.setting.getNbBob(), self.setting.getFps(), self.setting.getTileSize()) 
     
     def createNewGame(self):
         self.gameController.initiateGame()
@@ -108,12 +108,12 @@ class Game:
                 if event.key == pg.K_m:
                     i = show_menu(self.screen, self.clock)
                     if i == 0:
-                        print("i = ", i )
-                        print("new game")
+                        # print("i = ", i )
+                        # print("new game")
                         self.createNewGame()
                     elif i == 1:
-                        print("i = ", i )
-                        print("load game")
+                        # print("i = ", i )
+                        # print("load game")
                         self.loadGame(1)
                     elif i == 2:
                         self.loadGame(2)
@@ -134,19 +134,19 @@ class Game:
                     self.gameController.renderTick = 0
                     pause(self.screen,self.camera)
                 if event.key == pg.K_1:
-                    print("save")
+                    # print("save")
                     saveGame(1)
                 if event.key == pg.K_2:
-                    print("save")
+                    # print("save")
                     saveGame(2)
                 if event.key == pg.K_3:
-                    print("save")
+                    # print("save")
                     saveGame(3)
                 if event.key == pg.K_4:
-                    print("save")
+                    # print("save")
                     saveGame(4)
                 if event.key == pg.K_5:
-                    print("save")
+                    # print("save")
                     saveGame(5)
                 if event.key == pg.K_s:
                     self.gameController.renderTick = 0

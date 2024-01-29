@@ -26,28 +26,28 @@ def main():
     # implement game 
     game = Game(screen, clock)
     if i == 0:
-        print("i = ", i )
-        print("new game")
+        # print("i = ", i )
+        # print("new game")
         game.createNewGame()
     elif i == 1:
-        print("i = ", i )
-        print("load game")
+        # print("i = ", i )
+        # print("load game")
         game.loadGame(1)
     elif i == 2:
-        print("i = ", i )
-        print("load game")
+        # print("i = ", i )
+        # print("load game")
         game.loadGame(2)
     elif i == 3:
-        print("i = ", i )
-        print("load game")
+        # print("i = ", i )
+        # print("load game")
         game.loadGame(3)
     elif i == 4:
-        print("i = ", i )
-        print("load game")
+        # print("i = ", i )
+        # print("load game")
         game.loadGame(4)
     elif i == 5:
-        print("i = ", i )
-        print("load game")
+        # print("i = ", i )
+        # print("load game")
         game.loadGame(5)
 
     while running:
