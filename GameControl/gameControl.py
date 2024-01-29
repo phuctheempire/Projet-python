@@ -78,7 +78,7 @@ class GameControl:
         self.visionData.append((self.toto_tick, vision_moyenne))
 
     def updateEnergyData(self):
-        energies = self.getMasses()
+        energies = self.getEnergies()
         energy_moyenne = sum(energies) / len(energies) if energies else 0
         self.nbEnergy = energy_moyenne
         self.energyData.append((self.toto_tick, energy_moyenne))
