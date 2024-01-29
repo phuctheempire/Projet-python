@@ -212,7 +212,7 @@ class Bob:
     def detectPotentialPartners(self, listBobs: list['Bob']) -> list['Bob']:
         potentialPartners: list['Bob'] = []
         for bob in listBobs:
-            if (self.canMate(bob)):
+            if (self.canMate(bob) and bob != self):
                 potentialPartners.append(bob)
         return potentialPartners
     
