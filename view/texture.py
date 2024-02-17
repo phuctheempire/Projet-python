@@ -112,3 +112,11 @@ def loadSpawnImage():
         ,8: spawn8
     }
     return image
+
+def loadDarkGrassImage():
+    darkGrass = pg.image.load(setting.getImagePath() + "darkGrass.png").convert_alpha()
+    return darkGrass
+
+def loadDarkFlowerImage():
+    darkFlower = pg.image.load(setting.getImagePath() + "darkFlower.png").convert_alpha()
+    return darkFlower

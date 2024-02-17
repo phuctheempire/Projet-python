@@ -102,6 +102,8 @@ class Bob:
                             self.PreviousTiles.append(self.CurrentTile)
                             self.interact()
             self.updateSpeed()  
+        for tile in self.CurrentTile.getNearbyTiles(round(self.vision)):
+            tile.seen = True
 
     def move(self):
         self.CurrentTile.removeBob(self)

@@ -44,16 +44,25 @@ class World:
         # surface.blit(loadMap(), (0,0))
         textureImg = loadGrassImage()
         flowImg = loadFlowerImage()
+        darkGrass = loadDarkGrassImage()
+        darkFlower = loadDarkFlowerImage()
+
         for row in self.gameController.getMap(): # x is a list of a double list Map
             for tile in row: # tile is an object in list
                 (x, y) = tile.getRenderCoord()
                 offset = (x + self.surface.get_width()/2 , y + self.setting.getTileSize())
                 a,b = offset
                 if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
-                    if tile.flower:
-                        surface.blit(flowImg, offset)
+                    if tile.seen:
+                        if tile.flower:
+                            surface.blit(flowImg, offset)
+                        else:
+                            surface.blit(textureImg, offset)
                     else:
-                        surface.blit(textureImg, offset)
+                        if tile.flower:
+                            surface.blit(darkFlower, offset)
+                        else:
+                            surface.blit(darkGrass, offset)
                 else: pass
         # surface.blit(self.mapSurface, (0,0))
 
@@ -61,6 +70,25 @@ class World:
         greenLeft = loadGreenLeft()
         blueLeft = loadBlueLeft()
         purpleLeft = loadPurpleLeft()
+
+        explode1 = loadExplosionImage()[1]
+        explode2 = loadExplosionImage()[2]
+        explode3 = loadExplosionImage()[3]
+        explode4 = loadExplosionImage()[4]
+        explode5 = loadExplosionImage()[5]
+        explode6 = loadExplosionImage()[6]
+        explode7 = loadExplosionImage()[7]
+        explode8 = loadExplosionImage()[8]
+
+        spawn1 = loadSpawnImage()[1]
+        spawn2 = loadSpawnImage()[2]
+        spawn3 = loadSpawnImage()[3]
+        spawn4 = loadSpawnImage()[4]
+        spawn5 = loadSpawnImage()[5]
+        spawn6 = loadSpawnImage()[6]
+        spawn7 = loadSpawnImage()[7]
+        spawn8 = loadSpawnImage()[8]
+
         
         
         for bob in self.gameController.listBobs:
@@ -126,21 +154,21 @@ class World:
                 if (walkProgression < self.setting.getFps()/2):
                     surface.blit(greenLeft, start)
                 elif self.setting.getFps()/2 <= walkProgression < self.setting.getFps()/2 + self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(1), finish)
+                    surface.blit(explode1, finish)
                 elif self.setting.getFps()/2 + self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 2*self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(2), finish)
+                    surface.blit(explode2, finish)
                 elif self.setting.getFps()/2 + 2*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 3*self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(3), finish)
+                    surface.blit(explode3, finish)
                 elif self.setting.getFps()/2 + 3*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 4*self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(4), finish)
+                    surface.blit(explode4, finish)
                 elif self.setting.getFps()/2 + 4*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 5*self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(5), finish)
+                    surface.blit(explode5, finish)
                 elif self.setting.getFps()/2 + 5*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 6*self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(6), finish)
+                    surface.blit(explode6, finish)
                 elif self.setting.getFps()/2 + 6*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 7*self.setting.getFps()/16:
-                    surface.blit(bob.getExplodeTexture(7), finish)
+                    surface.blit(explode7, finish)
                 else:
-                    surface.blit(bob.getExplodeTexture(8), finish)
+                    surface.blit(explode8, finish)
             else: pass
   
         for bob in self.gameController.newBornQueue:
@@ -162,21 +190,21 @@ class World:
                     #     screen.blit(greenLeftinish)
                     #     pg.draw.rect(screen, (255, 0, 0), (finish[0], finish[1] - 5, bar_width, 5))
                     elif self.setting.getFps()/2 <= walkProgression < self.setting.getFps()/2 + self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(1), finish)
+                        surface.blit(spawn1, finish)
                     elif self.setting.getFps()/2 + self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 2*self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(2), finish)
+                        surface.blit(spawn2, finish)
                     elif self.setting.getFps()/2 + 2*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 3*self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(3), finish)
+                        surface.blit(spawn3, finish)
                     elif self.setting.getFps()/2 + 3*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 4*self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(4), finish)
+                        surface.blit(spawn4, finish)
                     elif self.setting.getFps()/2 + 4*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 5*self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(5), finish)
+                        surface.blit(spawn5, finish)
                     elif self.setting.getFps()/2 + 5*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 6*self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(6), finish)
+                        surface.blit(spawn6, finish)
                     elif self.setting.getFps()/2 + 6*self.setting.getFps()/16 <= walkProgression < self.setting.getFps()/2 + 7*self.setting.getFps()/16:
-                        surface.blit(bob.getSpawnTexture(7), finish)
+                        surface.blit(spawn7, finish)
                     else:
-                        surface.blit(bob.getSpawnTexture(8), finish)
+                        surface.blit(spawn8, finish)
                 else: pass
 
     def drawFood(self, surface, camera):

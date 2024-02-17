@@ -1,8 +1,9 @@
+
 import pygame as pg
 from GameControl.game import Game
 from GameControl.EventManager import show_menu
 from pygame.locals import *
-
+# from GameControl.inputManager import *
 from GameControl.setting import Setting
 # from GameControl.gameControl import GameControl
 import sys
@@ -17,38 +18,20 @@ def main():
     pg.init()
     pg.mixer.init()
     # screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
-    screen = pg.display.set_mode((1920,1080), flags)
+    screen = pg.display.set_mode((1920,1080), HWSURFACE | DOUBLEBUF)
     #screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
     clock = pg.time.Clock()
     # setting = Setting.getSettings()
     # implement menus
     i = show_menu(screen, clock)
     # implement game 
-    game = Game(screen, clock)
+    game = Game.getInstance(screen, clock)
     if i == 0:
         # print("i = ", i )
         # print("new game")
         game.createNewGame()
-    elif i == 1:
-        # print("i = ", i )
-        # print("load game")
-        game.loadGame(1)
-    elif i == 2:
-        # print("i = ", i )
-        # print("load game")
-        game.loadGame(2)
-    elif i == 3:
-        # print("i = ", i )
-        # print("load game")
-        game.loadGame(3)
-    elif i == 4:
-        # print("i = ", i )
-        # print("load game")
-        game.loadGame(4)
-    elif i == 5:
-        # print("i = ", i )
-        # print("load game")
-        game.loadGame(5)
+    else:
+        game.loadGame(i)
 
     while running:
         

@@ -1,6 +1,8 @@
+from __future__ import annotations
 from typing import TYPE_CHECKING
 import pygame as pg
 import sys
+
 # from GameControl.gameControl import GameControl
 # from GameControl.settings import *
 from GameControl.setting import Setting
@@ -13,10 +15,10 @@ from GameControl.EventManager import *
 from GameControl.gameControl import GameControl
 from GameControl.saveAndLoad import *
 from view.graph import *
-
+# from GameControl.inputManager import *
 
 class Game:
-
+    instance = None
     def __init__(self, screen, clock):
         self.setting = Setting.getSettings()
         self.gameController = GameControl.getInstance()
@@ -54,7 +56,22 @@ class Game:
         loadBob(saveNumber)
         loadFood(saveNumber) 
 
-
+    def saveGameByInput(self, event):
+        if event.key == pg.K_1:
+            # print("save")
+            saveGame(1)
+        if event.key == pg.K_2:
+            # print("save")
+            saveGame(2)
+        if event.key == pg.K_3:
+            # print("save")
+            saveGame(3)
+        if event.key == pg.K_4:
+            # print("save")
+            saveGame(4)
+        if event.key == pg.K_5:
+            # print("save")
+            saveGame(5)
 
     
     def run(self):
@@ -68,6 +85,7 @@ class Game:
                 self.gameController.increaseTick()
                 self.drawSimu() 
             else:
+
                 self.gameController.updateRenderTick()
                 self.draw()
             # else:
@@ -111,19 +129,9 @@ class Game:
                         # print("i = ", i )
                         # print("new game")
                         self.createNewGame()
-                    elif i == 1:
-                        # print("i = ", i )
-                        # print("load game")
-                        self.loadGame(1)
-                    elif i == 2:
-                        self.loadGame(2)
-                    elif i == 3:
-                        self.loadGame(3)
-                    elif i == 4:
-                        self.loadGame(4)
-                    elif i == 5:
-                        self.loadGame(5)
-
+                    else:
+                        self.loadGame(i)
+                self.saveGameByInput(event)
                 if event.key == pg.K_ESCAPE:
                     pg.quit()
                     sys.exit()
@@ -132,22 +140,9 @@ class Game:
                     openIngamesetting()
                 if event.key == pg.K_SPACE:
                     self.gameController.renderTick = 0
-                    pause(self.screen,self.camera)
-                if event.key == pg.K_1:
-                    # print("save")
-                    saveGame(1)
-                if event.key == pg.K_2:
-                    # print("save")
-                    saveGame(2)
-                if event.key == pg.K_3:
-                    # print("save")
-                    saveGame(3)
-                if event.key == pg.K_4:
-                    # print("save")
-                    saveGame(4)
-                if event.key == pg.K_5:
-                    # print("save")
-                    saveGame(5)
+                    res = pause(self.screen,self.camera)
+                    self.setting.simuMode = False
+                    self.modeTransition(res)
                 if event.key == pg.K_s:
                     self.gameController.renderTick = 0
                     self.setting.simuMode = not self.setting.simuMode
@@ -205,5 +200,42 @@ class Game:
             (10, 90)
         )
 
+    def saveGameByInput(self, event):
+        if event.key == pg.K_1:
+            # print("save")
+            saveGame(1)
+        if event.key == pg.K_2:
+            # print("save")
+            saveGame(2)
+        if event.key == pg.K_3:
+            # print("save")
+            saveGame(3)
+        if event.key == pg.K_4:
+            # print("save")
+            saveGame(4)
+        if event.key == pg.K_5:
+            # print("save")
+            saveGame(5)
+    
+    def modeTransition(self, mode):
+        if mode == 'Menu':
+            i = show_menu(self.screen, self.clock)
+            if i == 0:
+                # print("i = ", i )
+                # print("new game")
+                self.createNewGame()
+            else:
+                self.loadGame(i)
+        elif mode == 'InGameSetting':
+            openIngamesetting()
+        else:
+            return
+
+
+    @staticmethod
+    def getInstance(screen, clock):
+        if Game.instance == None:
+            Game.instance = Game(screen, clock)
+        return Game.instance
 
 

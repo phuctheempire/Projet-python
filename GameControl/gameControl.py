@@ -240,6 +240,9 @@ class GameControl:
         
 
     def increaseTick(self):
+        for x in self.grid:
+            for tile in x:
+                tile.seen = False
         self.bornData.append((self.toto_tick,self.nbBorn))
         self.nbBorn = 0
         self.pushToList()

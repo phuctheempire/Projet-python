@@ -2,13 +2,11 @@ import pygame as pg
 import sys
 
 pg.init()
-
-# Gestion de la musique
 pg.mixer.init()
 
 selected_value_index = None
 from GameControl.setting import Setting
-from GameControl.game import *
+import GameControl.game as Game
 from GameControl.gameControl import GameControl
 from view.world import *
 from view.utils import *
@@ -18,12 +16,17 @@ from GameControl.saveAndLoad import *
 # Couleurs  
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-
 PATH = "assets/menu/"
 
+################ Game instance ################
 setting = Setting.getSettings()
 gameController = GameControl.getInstance()
-# Ajoutez cette variable globale
+
+
+
+##################### État du jeu #####################
+settings_open = False
+load_open = False
 return_to_menu = False
 
 
@@ -31,6 +34,8 @@ return_to_menu = False
 screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
 pg.display.set_caption("Game Menu")
 
+
+#################################### Theme, musique et police ####################################
 # Charger l'image de fond, plusieurs images disponibles dans le dossier (à en choisir une)
 background_image = pg.image.load(PATH + "back2.png")
 background_image = pg.transform.scale(background_image, screen.get_size())
@@ -39,16 +44,36 @@ background_image = pg.transform.scale(background_image, screen.get_size())
 pg.mixer.music.load( PATH + "song.mp3")
 pg.mixer.music.set_volume(0.5)  # Le volume de 0.0 à 1.0
 pg.mixer.music.play(-1)  # -1 pour jouer en boucle
+# Initialiser la luminosité à 1.0 (valeur normale)
+luminosite = 1.0
+
+def augmenter_luminosite():
+    global luminosite
+    luminosite += 0.1
+    pg.display.set_gamma(luminosite)
+
+
+def diminuer_luminosite():
+    global luminosite
+    luminosite -= 0.1
+    pg.display.set_gamma(luminosite)
+
+def play_music():
+    pg.mixer.music.play(-1)
+
+def stop_music():
+    pg.mixer.music.stop()
 
 # Police pour les boutons
 font = pg.font.Font(None, 40)
+####################################### ############################################################\
 
+############################ Gestion des boutons ####################################################
 # Déclaration des rectangles des boutons de base
 button_width, button_height = 300, 50
 play_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 200, button_width, button_height)
 settings_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 300, button_width, button_height)
 quit_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button_width, button_height)
-# back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
 back_button_rect = pg.Rect(20, 20, button_width, button_height)
 stop_music_button_rect = pg.Rect(back_button_rect.right + 10, 20, button_width, button_height)
 play_music_button_rect = pg.Rect(stop_music_button_rect.right + 10, 20, button_width, button_height)
@@ -56,15 +81,6 @@ increase_brightness_button_rect = pg.Rect(play_music_button_rect.right + 10, 20,
 decrease_brightness_button_rect = pg.Rect(increase_brightness_button_rect.right + 10, 20, button_width, button_height)
 
 grid_value_rects = dict()  # Réinitialise la liste des rectangles
-
-# Déclaration des labels des grilles (à modifier en fonction du contenu de notre jeu, voir résumé du pdf du prof)
-# grid_labels = ["GRID LENGTH", 
-#                "NUMBER BOB","NUMBER SPAWNED FOOD",  "FOOD ENERGY" ,
-#                "BOB SPAWN ENERGY", "BOB MAX ENERGY" ,"BOB NEWBORN ENERGY", "SEXUAL BORN ENERGY", "BOB STATIONARY ENERGY LOSS", "BOB SELF REPRODUCTION ENERGY LOSS", "BOB SEXUAL REPRODUCTION LOSS", "BOB SEXUAL REPRODUCTION LEVEL",
-#                "PERCEPTION FLAT PENALTY", "MEMORY FLAT PENALTY",  
-#                "DEFAULT VELOCITY", "DEFAULT MASS", "DEFAULT VISION", "DEFAULT MEMORY POINT", 
-#                "MASS VARIATION", "VELOCITY VARIATION", "VISION VARIATION" , "MEMORY VARIATION", 
-            #    "SELF_REPRODUCTIO","SEXUAL REPRODUCTION" ]
 grid_dict = { "FPS": setting.getFps() ,"GRID LENGTH": setting.getGridLength(),
                "NUMBER BOB": setting.getNbBob(), "NUMBER SPAWNED FOOD": setting.getNbSpawnFood(),  "FOOD ENERGY": setting.getFoodEnergy(),
                "BOB SPAWN ENERGY": setting.getBobSpawnEnergy(), "BOB MAX ENERGY": setting.getBobMaxEnergy() ,"BOB NEWBORN ENERGY": setting.getBobNewbornEnergy(), "SEXUAL BORN ENERGY": setting.getSexualBornEnergy(), 
@@ -74,26 +90,14 @@ grid_dict = { "FPS": setting.getFps() ,"GRID LENGTH": setting.getGridLength(),
                 "MASS VARIATION": setting.getMassVariation(), "VELOCITY VARIATION": setting.getVelocityVariation(), "VISION VARIATION": setting.getVelocityVariation() , "MEMORY VARIATION": setting.getMemoryVariation(),
                 "SELF REPRODUCTION": setting.getSelfReproduction(),"SEXUAL REPRODUCTION": setting.getSexualReproduction()
                }
-# settingParam = ["GRID LENGTH", "NUMBER BOB", "NUMBER SPAWNED FOOD", "FOOD ENERGY", 
-#                 "BOB SPAWN ENERGY", "BOB MAX ENERGY", "BOB_BIRTH1_ENERGY", "BOB_BIRTH2_ENERGY", "BOB STATIONARY ENERGY LOSS", "BOB SELF REPRODUCTION ENERGY LOSS", "BOB SEXUAL REPRODUCTION LOSS", "BOB SEXUAL REPRODUCTION LEVEL", 
-#                 "PERCEPTION FLAT PENALTY", "MEMORY FLAT PENALTY", 
-#                 "DEFAULT VELOCITY", "DEFAULT MASS", "DEFAULT VISION", "DEFAULT MEMORY POINT", 
-#                 "VAR_MASS", "VAR_VELO", "VAR_VISION", "VAR_MEMORY_POINT", 
-#                 "SELF REPRODUCTION", "SEXUAL REPRODUCTION"]
-# grid_dict = [100, 200, 100, 100,200, 50, 100 ,0.5, 150, 100, 150, 1/5, 1/5, 1, 1, 4, 0, 0.1, 0.1, 1, 1, True, True]
-# Calcul de la position x pour centraliser les grilles horizontalement
+
 ingameparam = [ "FPS", "NUMBER SPAWNED FOOD" ,  "FOOD ENERGY", "BOB MAX ENERGY", "BOB NEWBORN ENERGY", "SEXUAL BORN ENERGY", "BOB STATIONARY ENERGY LOSS", "BOB SELF REPRODUCTION ENERGY LOSS", 
                "BOB SEXUAL REPRODUCTION LOSS", "BOB SEXUAL REPRODUCTION LEVEL", "PERCEPTION FLAT PENALTY", "MEMORY FLAT PENALTY"
                , "MASS VARIATION", "VELOCITY VARIATION", "VISION VARIATION" , "MEMORY VARIATION", "SELF REPRODUCTION", "SEXUAL REPRODUCTION" ]
 
 grid_x = (screen.get_width() - len(max(grid_dict.keys(), key=len)) * 10) // 2
-
-# Calcul de la position y pour centraliser les grilles verticalement
 grid_y = (screen.get_height() - len(grid_dict.keys()) * 50) // 2
 
-# État des paramètres
-settings_open = False
-load_open = False
 
 # Fonction pour dessiner du texte sur l'écran
 def drawText(text, color, x, y):
@@ -122,49 +126,7 @@ def draw_transparent_grids(labels, values, x, y, transparency):
         cliquer[label] = value_rect
     return cliquer
 
-
-
-# def draw_transparent_grids ( labels , values , x , y , transparency ):
-
-# def save_settings():
-#     global grid_dict, settingParam
-#     # Sauvegarde les paramètres dans un fichier texte
-#     f = open("GameControl/settings.py", "w")
-#     for key, value in grid_dict.items(): 
-#         f.write(key + " = " + str(value) + "\n")
-#     f.write("TILE_SIZE = 32\n")
-#     f.write("RESOLUTIONX = 1920\n")
-#     f.write("RESOLUTIONY = 1080\n")
-#     f.write("SURFACE_WIDTH = TILE_SIZE * GRID LENGTH * 2\n")
-#     f.write("SURFACE_HEIGHT = TILE_SIZE * GRID LENGTH + TILE_SIZE * 2\n")
-#     f.write("TICKS_PER_DAY = 50\n")
-#     f.write("IMAGE_PATH = 'assets/graphics/'\n")
-#     f.close()
-
-
-    # print("Paramètres enregistrés avec succès.")
-
-# Initialiser la luminosité à 1.0 (valeur normale)
-luminosite = 1.0
-
-def augmenter_luminosite():
-    global luminosite
-    luminosite += 0.1
-    pg.display.set_gamma(luminosite)
-
-
-def diminuer_luminosite():
-    global luminosite
-    luminosite -= 0.1
-    pg.display.set_gamma(luminosite)
-
-def play_music():
-    pg.mixer.music.play(-1)
-
-def stop_music():
-    pg.mixer.music.stop()
-
-
+##############################################################################################################
 
 
 # Dans la fonction open_settings
@@ -1103,8 +1065,6 @@ def open_settings():
         grid_value_rects.update(draw_transparent_grids(labels[:len(labels)//2], values[:len(values)//2], 400, 300, 50))
         grid_value_rects.update(draw_transparent_grids(labels[len(labels)//2:], values[len(values)//2:], 1300, 300, 50))
    
-
-
         # draw_transparent_grids(grid_labels[len(grid_labels)//2:], grid_dict[len(grid_dict)//2:], 1100, 100, 50)
         # Dessiner le bouton de retour avec transparence
         draw_transparent_button("BACK", back_button_rect, 128)
@@ -1129,6 +1089,17 @@ def open_settings():
 
         pg.display.flip()
 
+
+
+
+
+
+
+
+
+
+
+########################################## openIngamesetting  ##########################################
 def openIngamesetting():
     global selected_value_index, grid_value_rects, grid_dict, input_text, settings_open, ingameparam
     input_active = False
@@ -1176,20 +1147,9 @@ def openIngamesetting():
             elif event.type == pg.KEYDOWN:
                 if input_active:
                     match selected_value_index:
-            #             grid_labels = ["GRID LENGTH", "NUMBER BOB", "BOB SPAWN ENERGY", "BOB MAX ENERGY" , "NUMBER SPAWNED FOOD"  "FOOD ENERGY", 
-            #    "PERCEPTION FLAT PENALTY", "MEMORY FLAT PENALTY",  "DEFAULT VELOCITY", "DEFAULT MASS", "DEFAULT VISION", 
-            #    "DEFAULT MEMORY POINT", "MASS VARIATION", "VELOCITY VARIATION", "VISION VARIATION" , "MEMORY VARIATION", "SELF REPRODUCTION  ",
-            #     "SEXUAL REPRODUCTION" ]
                         case None:
                             pass
-            #             grid_dict = {"GRID LENGTH": 100,
-            #    "NUMBER BOB": 200, "NUMBER SPAWNED FOOD": 100,  "FOOD ENERGY": 100,
-            #    "BOB SPAWN ENERGY": 200, "BOB MAX ENERGY": 50 ,"BOB NEWBORN ENERGY": 100, "SEXUAL BORN ENERGY": 0.5, "BOB STATIONARY ENERGY LOSS": 150, "BOB SELF REPRODUCTION ENERGY LOSS": 100, "BOB SEXUAL REPRODUCTION LOSS": 150, "BOB SEXUAL REPRODUCTION LEVEL": 1/5,
-            #     "PERCEPTION FLAT PENALTY": 1/5, "MEMORY FLAT PENALTY": 1,
-            #     "DEFAULT VELOCITY": 1, "DEFAULT MASS": 1, "DEFAULT VISION": 4, "DEFAULT MEMORY POINT": 0,
-            #     "MASS VARIATION": 0.1, "VELOCITY VARIATION": 0.1, "VISION VARIATION": 1 , "MEMORY VARIATION": 1,
-            #     "SELF REPRODUCTION  ": True,"SEXUAL REPRODUCTION": True
-            #    }
+
                         case "FPS":
                             if event.key == pg.K_RETURN:
                                     if input_text == "":
@@ -2100,7 +2060,15 @@ def openIngamesetting():
             screen.blit(input_surface, input_rect)
 
         pg.display.flip()
-            
+
+
+
+
+
+
+
+
+####################################### Load Menu ############################################
 def open_load(screen, clock):
     global return_to_menu, load_open
 
@@ -2161,6 +2129,8 @@ def open_load(screen, clock):
 
         pg.display.flip()
 
+
+###################################### Show menu ############################################
 # Dans la fonction show_menu
 def show_menu(screen, clock):
     global selected_value_index, grid_value_rects, grid_dict, settings_open, return_to_menu, load_open
@@ -2171,11 +2141,6 @@ def show_menu(screen, clock):
     load_game_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 300, button_width, button_height)
     settings_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 400, button_width, button_height)
     quit_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 500, button_width, button_height)
-    # back_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 600, button_width, button_height)
-    # stop_music_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 700, button_width, button_height)
-    # play_music_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 800, button_width, button_height)
-    # increase_brightness_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 900, button_width, button_height)
-    # decrease_brightness_button_rect = pg.Rect((screen.get_width() - button_width) // 2, 1000, button_width, button_height)
 
     while True:
         for event in pg.event.get():
@@ -2236,8 +2201,15 @@ def show_menu(screen, clock):
         pg.display.flip()
 
 
+################################## Pause Mode ############################################
+
 def pause( screen, camera ):
     # Declaration des rectangles des map:
+    #screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
+    from GameControl.game import Game
+
+    clock = pg.time.Clock()
+    game = Game.getInstance(screen,clock)
     pauseSurface = pg.Surface((setting.getSurfaceWidth(), setting.getSurfaceHeight())).convert_alpha()
     print(setting.getSurfaceWidth(), setting.getSurfaceHeight())
     while True:
@@ -2247,16 +2219,24 @@ def pause( screen, camera ):
         # surface.blit(loadMap(), (0,0))
         textureImg = loadGrassImage()
         flowImg = loadFlowerImage()
+        darkGrass = loadDarkGrassImage()
+        darkFlower = loadDarkFlowerImage()
         for row in gameController.getMap(): # x is a list of a double list Map
             for tile in row: # tile is an object in list
                 (x, y) = tile.getRenderCoord()
                 offset = (x + setting.getSurfaceWidth()/2 , y + setting.getTileSize())
                 a,b = offset
                 if -64 <= (a + camera.scroll.x) <= 1920 and -64 <= (b + camera.scroll.y)  <= 1080:
-                    if tile.flower:
-                        pauseSurface.blit(flowImg, offset)
+                    if tile.seen:
+                        if tile.flower:
+                            pauseSurface.blit(flowImg, offset)
+                        else:
+                            pauseSurface.blit(textureImg, offset)
                     else:
-                        pauseSurface.blit(textureImg, offset)
+                        if tile.flower:
+                            pauseSurface.blit(darkFlower, offset)
+                        else:
+                            pauseSurface.blit(darkGrass, offset)
                 else: pass
         
 
@@ -2301,6 +2281,11 @@ def pause( screen, camera ):
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     return
+                game.saveGameByInput(event)
+                if event.key == pg.K_m:
+                    return 'Menu'
+                if event.key == pg.K_BACKSPACE:
+                    return 'InGameSetting'
         mouse_x, mouse_y = pg.mouse.get_pos()
         for coord in listRect:
             if coord[1][0] <= mouse_x <= coord[1][0] + 64 and coord[1][1] + 8 <= mouse_y <= coord[1][1] + 24:

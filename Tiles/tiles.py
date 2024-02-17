@@ -30,7 +30,7 @@ class Tile:
         def CartToIso(x, y):
             return (x - y, (x + y) / 2)
         self.isoCoord = [CartToIso(x, y) for x, y in CartCoord]
-
+        self.seen = False
         self.renderCoord = (min([x for x, y in self.isoCoord]), min([y for x, y in self.isoCoord]))
     # Setter and getter
     def getRenderCoord(self):
@@ -91,7 +91,9 @@ class Tile:
             try:
                 if self.gridX + coord[0] > self.setting.getGridLength()-1 or self.gridY + coord[1] > self.setting.getGridLength()-1 or self.gridX + coord[0] < 0 or self.gridY + coord[1] < 0:
                     continue
-                tempTiles.append(tempMap[self.gridX + coord[0]][self.gridY + coord[1]])
+                tempTile = tempMap[self.gridX + coord[0]][self.gridY + coord[1]]
+                tempTiles.append(tempTile)
+
             except IndexError:
                 continue
 
