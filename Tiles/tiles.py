@@ -31,6 +31,7 @@ class Tile:
             return (x - y, (x + y) / 2)
         self.isoCoord = [CartToIso(x, y) for x, y in CartCoord]
         self.seen = False
+        self.hover = False
         self.renderCoord = (min([x for x, y in self.isoCoord]), min([y for x, y in self.isoCoord]))
     # Setter and getter
     def getRenderCoord(self):

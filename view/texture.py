@@ -120,3 +120,11 @@ def loadDarkGrassImage():
 def loadDarkFlowerImage():
     darkFlower = pg.image.load(setting.getImagePath() + "darkFlower.png").convert_alpha()
     return darkFlower
+
+def loadGrassBrightImage():
+    grassBright = pg.image.load(setting.getImagePath() + "grassBright.png").convert_alpha()
+    return grassBright
+
+def loadFlowerBrightImage():
+    flowerBright = pg.image.load(setting.getImagePath() + "flowerBright.png").convert_alpha()
+    return flowerBright

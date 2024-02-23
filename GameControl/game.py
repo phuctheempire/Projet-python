@@ -85,7 +85,6 @@ class Game:
                 self.gameController.increaseTick()
                 self.drawSimu() 
             else:
-
                 self.gameController.updateRenderTick()
                 self.draw()
             # else:
@@ -146,7 +145,9 @@ class Game:
                 if event.key == pg.K_s:
                     self.gameController.renderTick = 0
                     self.setting.simuMode = not self.setting.simuMode
-
+                if event.key == pg.K_r:
+                    self.gameController.renderTick = 0
+                    newObjectMenu(self.screen, self.clock ,self.camera)
     def update(self):
         self.camera.update()
         
